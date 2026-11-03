@@ -1,5 +1,6 @@
-import { useMemo, useState, type FormEvent } from 'react';
+import { useMemo, useState } from 'react';
 import {
+  Alert,
   Box,
   Button,
   Chip,
@@ -23,64 +24,10 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-
-type Vehicle = {
-  id: number;
-  plate: string;
-  model: string;
-  category: string;
-  driver: string;
-  status: 'Ativo' | 'Manutenção' | 'Inativo';
-};
-
-type Driver = {
-  id: number;
-  name: string;
-  license: string;
-  sector: string;
-  status: 'Disponível' | 'Em rota';
-};
-
-const initialVehicles: Vehicle[] = [
-  {
-    id: 1,
-    plate: 'ABC-1D23',
-    model: 'Fiat Argo',
-    category: 'Passeio',
-    driver: 'João Silva',
-    status: 'Ativo',
-  },
-  {
-    id: 2,
-    plate: 'DEF-4G56',
-    model: 'Chevrolet Onix',
-    category: 'Passeio',
-    driver: 'Maria Santos',
-    status: 'Ativo',
-  },
-  {
-    id: 3,
-    plate: 'GHI-7J89',
-    model: 'Fiat Fiorino',
-    category: 'Utilitário',
-    driver: 'Carlos Lima',
-    status: 'Manutenção',
-  },
-  {
-    id: 4,
-    plate: 'JKL-2M34',
-    model: 'Renault Master',
-    category: 'Van',
-    driver: 'Não atribuído',
-    status: 'Inativo',
-  },
-];
-
-const initialDrivers: Driver[] = [
-  { id: 1, name: 'João Silva', license: '12345678901', sector: 'Operações', status: 'Disponível' },
-  { id: 2, name: 'Maria Santos', license: '23456789012', sector: 'Logística', status: 'Em rota' },
-  { id: 3, name: 'Carlos Lima', license: '34567890123', sector: 'Operações', status: 'Disponível' },
-];
+import { initialDrivers, initialVehicles } from './demo-data';
+import type { Vehicle } from './types';
+import { RegistrationDialog } from './RegistrationDialog';
+import { DemoStates } from './DemoStates';
 
 export function HomePage() {
   const [tab, setTab] = useState<'vehicles' | 'drivers'>('vehicles');
@@ -90,19 +37,21 @@ export function HomePage() {
   const [filter, setFilter] = useState('Todos');
   const [open, setOpen] = useState(false);
 
-  const [plate, setPlate] = useState('');
-  const [model, setModel] = useState('');
-  const [category, setCategory] = useState('Passeio');
-  const [name, setName] = useState('');
-  const [license, setLicense] = useState('');
-  const [sector, setSector] = useState('');
+  const [sectorFilter, setSectorFilter] = useState('Todos');
+  const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
+
+  function clearFilters() {
+    setSearch('');
+    setFilter('Todos');
+    setSectorFilter('Todos');
+  }
 
   const visibleVehicles = useMemo(
     () =>
       vehicles.filter((vehicle) => {
         const text = `${vehicle.plate} ${vehicle.model} ${vehicle.driver} ${vehicle.category}`;
         return (
-          text.toLowerCase().includes(search.toLowerCase()) &&
+          text.toLowerCase().includes(search.trim().toLowerCase()) &&
           (filter === 'Todos' || vehicle.status === filter)
         );
       }),
@@ -114,67 +63,13 @@ export function HomePage() {
       drivers.filter((driver) => {
         const text = `${driver.name} ${driver.license} ${driver.sector}`;
         return (
-          text.toLowerCase().includes(search.toLowerCase()) &&
-          (filter === 'Todos' || driver.status === filter)
+          text.toLowerCase().includes(search.trim().toLowerCase()) &&
+          (filter === 'Todos' || driver.status === filter) &&
+          (sectorFilter === 'Todos' || driver.sector === sectorFilter)
         );
       }),
-    [drivers, search, filter],
+    [drivers, search, filter, sectorFilter],
   );
-
-  function handleSave(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    if (tab === 'vehicles') {
-      const normalizedPlate = plate.trim().toUpperCase();
-
-      if (vehicles.some((vehicle) => vehicle.plate === normalizedPlate)) {
-        window.alert('Já existe um veículo com essa placa.');
-        return;
-      }
-
-      setVehicles((current) => [
-        ...current,
-        {
-          id: Date.now(),
-          plate: normalizedPlate,
-          model: model.trim(),
-          category,
-          driver: 'Não atribuído',
-          status: 'Ativo',
-        },
-      ]);
-    } else {
-      if (drivers.some((driver) => driver.license === license.trim())) {
-        window.alert('Já existe um motorista com essa habilitação.');
-        return;
-      }
-
-      setDrivers((current) => [
-        ...current,
-        {
-          id: Date.now(),
-          name: name.trim(),
-          license: license.trim(),
-          sector: sector.trim(),
-          status: 'Disponível',
-        },
-      ]);
-    }
-
-    setOpen(false);
-    setSearch('');
-    setFilter('Todos');
-  }
-
-  function openForm() {
-    setPlate('');
-    setModel('');
-    setCategory('Passeio');
-    setName('');
-    setLicense('');
-    setSector('');
-    setOpen(true);
-  }
 
   const activeVehicles = vehicles.filter((vehicle) => vehicle.status === 'Ativo').length;
   const maintenance = vehicles.filter((vehicle) => vehicle.status === 'Manutenção').length;
@@ -225,8 +120,7 @@ export function HomePage() {
                 value={tab}
                 onChange={(_, value: 'vehicles' | 'drivers') => {
                   setTab(value);
-                  setSearch('');
-                  setFilter('Todos');
+                  clearFilters();
                 }}
               >
                 <Tab label="Veículos" value="vehicles" />
@@ -254,12 +148,12 @@ export function HomePage() {
                 </Typography>
               </Box>
 
-              <Button variant="contained" onClick={openForm}>
+              <Button variant="contained" onClick={() => setOpen(true)}>
                 + Cadastrar {tab === 'vehicles' ? 'veículo' : 'motorista'}
               </Button>
             </Stack>
 
-            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ px: 3, pb: 3 }}>
+            <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{ px: 3, pb: 3 }}>
               <TextField
                 fullWidth
                 size="small"
@@ -287,7 +181,32 @@ export function HomePage() {
                   </MenuItem>
                 ))}
               </TextField>
+              {tab === 'drivers' && (
+                <TextField
+                  select
+                  size="small"
+                  label="Setor"
+                  value={sectorFilter}
+                  onChange={(event) => setSectorFilter(event.target.value)}
+                  sx={{ minWidth: 180 }}
+                >
+                  <MenuItem value="Todos">Todos</MenuItem>
+                  {[...new Set(drivers.map((driver) => driver.sector))].map((sector) => (
+                    <MenuItem key={sector} value={sector}>
+                      {sector}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+              <Button onClick={clearFilters} sx={{ flexShrink: 0 }}>
+                Limpar filtros
+              </Button>
             </Stack>
+            {tab === 'vehicles' && (
+              <Typography variant="body2" color="text.secondary" sx={{ px: 3, pb: 2 }}>
+                Filtro de setor para veículos pendente de definição com a equipe e o backend.
+              </Typography>
+            )}
 
             <TableContainer>
               <Table>
@@ -299,6 +218,7 @@ export function HomePage() {
                       <TableCell>Categoria</TableCell>
                       <TableCell>Motorista</TableCell>
                       <TableCell>Status</TableCell>
+                      <TableCell>Ações</TableCell>
                     </TableRow>
                   ) : (
                     <TableRow>
@@ -331,6 +251,14 @@ export function HomePage() {
                               size="small"
                             />
                           </TableCell>
+                          <TableCell>
+                            <Button
+                              aria-label={`Detalhes do veículo ${vehicle.plate}`}
+                              onClick={() => setSelectedVehicle(vehicle)}
+                            >
+                              Detalhes
+                            </Button>
+                          </TableCell>
                         </TableRow>
                       ))
                     : visibleDrivers.map((driver) => (
@@ -350,8 +278,10 @@ export function HomePage() {
 
                   {(tab === 'vehicles' ? visibleVehicles.length : visibleDrivers.length) === 0 && (
                     <TableRow>
-                      <TableCell colSpan={5} align="center" sx={{ py: 4 }}>
-                        Nenhum registro encontrado.
+                      <TableCell colSpan={tab === 'vehicles' ? 6 : 4} align="center" sx={{ py: 4 }}>
+                        {(tab === 'vehicles' ? vehicles.length : drivers.length) === 0
+                          ? 'Nenhum cadastro nesta lista.'
+                          : 'Nenhum resultado para os filtros selecionados.'}
                       </TableCell>
                     </TableRow>
                   )}
@@ -366,76 +296,51 @@ export function HomePage() {
               registro(s). Dados demonstrativos.
             </Typography>
           </Paper>
+          <DemoStates />
         </Stack>
       </Container>
 
-      <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="sm">
-        <Box component="form" onSubmit={handleSave}>
-          <DialogTitle>Cadastrar {tab === 'vehicles' ? 'veículo' : 'motorista'}</DialogTitle>
-
-          <DialogContent>
-            <Stack spacing={2} sx={{ pt: 1 }}>
-              {tab === 'vehicles' ? (
-                <>
-                  <TextField
-                    label="Placa"
-                    value={plate}
-                    onChange={(event) => setPlate(event.target.value)}
-                    required
-                  />
-                  <TextField
-                    label="Modelo"
-                    value={model}
-                    onChange={(event) => setModel(event.target.value)}
-                    required
-                  />
-                  <TextField
-                    select
-                    label="Categoria"
-                    value={category}
-                    onChange={(event) => setCategory(event.target.value)}
-                  >
-                    {['Passeio', 'Utilitário', 'Van', 'Caminhão', 'Motocicleta'].map((item) => (
-                      <MenuItem key={item} value={item}>
-                        {item}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </>
-              ) : (
-                <>
-                  <TextField
-                    label="Nome completo"
-                    value={name}
-                    onChange={(event) => setName(event.target.value)}
-                    required
-                  />
-                  <TextField
-                    label="Número da habilitação"
-                    value={license}
-                    onChange={(event) => setLicense(event.target.value)}
-                    required
-                  />
-                  <TextField
-                    label="Setor"
-                    value={sector}
-                    onChange={(event) => setSector(event.target.value)}
-                    required
-                  />
-                </>
-              )}
+      {open && (
+        <RegistrationDialog
+          tab={tab}
+          vehicles={vehicles}
+          drivers={drivers}
+          onClose={() => setOpen(false)}
+          onVehicle={(vehicle) => {
+            setVehicles((current) => [...current, vehicle]);
+            clearFilters();
+            setOpen(false);
+          }}
+          onDriver={(driver) => {
+            setDrivers((current) => [...current, driver]);
+            clearFilters();
+            setOpen(false);
+          }}
+        />
+      )}
+      <Dialog
+        open={selectedVehicle !== null}
+        onClose={() => setSelectedVehicle(null)}
+        fullWidth
+        maxWidth="sm"
+        aria-labelledby="vehicle-details-title"
+      >
+        <DialogTitle id="vehicle-details-title">Detalhes do veículo</DialogTitle>
+        <DialogContent>
+          {selectedVehicle && (
+            <Stack spacing={1}>
+              <Typography>Placa: {selectedVehicle.plate}</Typography>
+              <Typography>Modelo: {selectedVehicle.model}</Typography>
+              <Typography>Categoria: {selectedVehicle.category}</Typography>
+              <Typography>Motorista: {selectedVehicle.driver}</Typography>
+              <Typography>Status: {selectedVehicle.status}</Typography>
+              <Alert severity="info">Dados demonstrativos. Integração com a API pendente.</Alert>
             </Stack>
-          </DialogContent>
-
-          <DialogActions sx={{ p: 3 }}>
-            <Button color="inherit" onClick={() => setOpen(false)}>
-              Cancelar
-            </Button>
-            <Button type="submit" variant="contained">
-              Salvar
-            </Button>
-          </DialogActions>
-        </Box>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setSelectedVehicle(null)}>Fechar</Button>
+        </DialogActions>
       </Dialog>
     </Box>
   );
