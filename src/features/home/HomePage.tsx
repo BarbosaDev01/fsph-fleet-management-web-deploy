@@ -1,4 +1,5 @@
-import { Box, Chip, Container, Paper, Stack, Typography } from '@mui/material';
+import { Box, Button, Chip, Container, Paper, Stack, Typography } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 
 const foundations = [
   'React + TypeScript',
@@ -18,6 +19,30 @@ export function HomePage() {
           sx={{ border: '1px solid', borderColor: 'divider', p: { xs: 4, md: 7 } }}
         >
           <Stack spacing={3}>
+            <Button
+              component={RouterLink}
+              to="/usuarios"
+              variant="outlined"
+              sx={{ alignSelf: 'flex-start' }}
+            >
+              Lista de usuários
+            </Button>
+            <Button
+              component={RouterLink}
+              to="/cadastro"
+              variant="contained"
+              sx={{ alignSelf: 'flex-start' }}
+            >
+              Cadastro de usuário
+            </Button>
+            <Button
+              component={RouterLink}
+              to="/recuperar-senha"
+              variant="text"
+              sx={{ alignSelf: 'flex-start' }}
+            >
+              Esqueci minha senha
+            </Button>
             <Typography
               color="primary"
               sx={{ fontWeight: 700, letterSpacing: '0.08em' }}
