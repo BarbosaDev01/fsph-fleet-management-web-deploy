@@ -8,6 +8,26 @@ export const initialVehicles: Vehicle[] = [
     category: 'Passeio',
     driver: 'João Silva',
     status: 'Ativo',
+    // Fictional supplementary details, used only by the local demonstration.
+    year: 2023,
+    sector: 'Administrativo',
+    fuel: 'Flex',
+    crlvExpiry: '2099-12-31',
+    insuranceExpiry: '2099-12-31',
+    capacity: 5,
+    mileage: 45000,
+    occupancy: 1,
+    documentReferences: 'CRLV e seguro demonstrativos, sem arquivos.',
+    lastRefueling: {
+      description: 'Exemplo local: 30 litros, sem transação real.',
+      fuel: 'Gasolina',
+    },
+    card: {
+      limitCents: 150000,
+      usedCents: 25000,
+      expiry: '2099-12-31',
+      notes: 'Carta demonstrativa.',
+    },
   },
   {
     id: 2,
@@ -36,7 +56,29 @@ export const initialVehicles: Vehicle[] = [
 ];
 
 export const initialDrivers: Driver[] = [
-  { id: 1, name: 'João Silva', license: '12345678901', sector: 'Operações', status: 'Disponível' },
+  // Fictional local simulation only; existing names and license identifiers are preserved.
+  {
+    id: 1,
+    name: 'João Silva',
+    license: '12345678901',
+    sector: 'Operações',
+    status: 'Disponível',
+    cpf: '52998224725',
+    phone: '11999990000',
+    email: 'joao@example.test',
+    licenseCategory: 'B',
+    licenseExpiry: '2099-12-31',
+    document: 'CNH',
+    profile: 'Motorista',
+    availability: 'Disponível',
+    shift: {
+      team: 'Equipe demonstrativa',
+      date: '2099-06-15',
+      start: '07:00',
+      end: '12:00',
+      vehicleId: 1,
+    },
+  },
   { id: 2, name: 'Maria Santos', license: '23456789012', sector: 'Logística', status: 'Em rota' },
   { id: 3, name: 'Carlos Lima', license: '34567890123', sector: 'Operações', status: 'Disponível' },
 ];

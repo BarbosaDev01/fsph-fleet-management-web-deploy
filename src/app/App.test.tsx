@@ -5,7 +5,7 @@ import { AppProviders } from '@/app/providers/AppProviders';
 import { routes } from '@/app/router';
 
 describe('App', () => {
-  it('renderiza a página de motoristas e veículos', async () => {
+  it('redireciona para a página de motoristas', async () => {
     const router = createMemoryRouter(routes, { initialEntries: ['/'] });
 
     render(
@@ -16,7 +16,7 @@ describe('App', () => {
 
     expect(
       await screen.findByRole('heading', {
-        name: /motoristas e veículos/i,
+        name: /^motoristas$/i,
       }),
     ).toBeInTheDocument();
 

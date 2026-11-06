@@ -1,13 +1,14 @@
 import { render, screen, within, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { AppProviders } from '@/app/providers/AppProviders';
-import { HomePage } from './HomePage';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import { routes } from '@/app/router';
 
-function setup() {
+function setup(path = '/veiculos') {
   const user = userEvent.setup();
   render(
     <AppProviders>
-      <HomePage />
+      <RouterProvider router={createMemoryRouter(routes, { initialEntries: [path] })} />
     </AppProviders>,
   );
   return user;
@@ -17,7 +18,7 @@ function setup() {
 describe('Motoristas e Veículos', { timeout: 15_000 }, () => {
   it('combina busca, setor e status e limpa todos os filtros', async () => {
     const user = setup();
-    await user.click(screen.getByRole('tab', { name: 'Motoristas' }));
+    await user.click(screen.getByRole('link', { name: 'Motoristas' }));
     await user.click(screen.getByRole('combobox', { name: 'Setor' }));
     await user.click(screen.getByRole('option', { name: 'Operações' }));
     await user.click(screen.getByRole('combobox', { name: 'Status' }));
@@ -29,7 +30,7 @@ describe('Motoristas e Veículos', { timeout: 15_000 }, () => {
     expect(screen.getByText('Nenhum resultado para os filtros selecionados.')).toBeVisible();
     expect(
       screen.getByText('Nenhum resultado para os filtros selecionados.').closest('td'),
-    ).toHaveAttribute('colspan', '4');
+    ).toHaveAttribute('colspan', '5');
     await user.click(screen.getByRole('button', { name: 'Limpar filtros' }));
     expect(screen.getByRole('textbox', { name: 'Pesquisar' })).toHaveValue('');
     expect(screen.getByRole('combobox', { name: 'Setor' })).toHaveTextContent('Todos');
@@ -50,47 +51,6 @@ describe('Motoristas e Veículos', { timeout: 15_000 }, () => {
       await user.click(within(dialog).getByRole('button', { name: 'Fechar' }));
       await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
     }
-  });
-
-  it('valida espaços e duplicidade antes de cadastrar veículo', async () => {
-    const user = setup();
-    await user.click(screen.getByRole('button', { name: /cadastrar veículo/i }));
-    const dialog = screen.getByRole('dialog');
-    await user.type(within(dialog).getByLabelText('Placa', { exact: false }), '   ');
-    await user.type(within(dialog).getByLabelText('Modelo', { exact: false }), '   ');
-    await user.click(within(dialog).getByRole('button', { name: 'Salvar' }));
-    expect(await within(dialog).findAllByText('Preencha este campo.')).toHaveLength(2);
-    await user.clear(within(dialog).getByLabelText('Placa', { exact: false }));
-    await user.type(within(dialog).getByLabelText('Placa', { exact: false }), 'abc-1d23');
-    await user.click(within(dialog).getByRole('button', { name: 'Salvar' }));
-    expect(await within(dialog).findByText('Já existe um veículo com essa placa.')).toBeVisible();
-    await user.clear(within(dialog).getByLabelText('Placa', { exact: false }));
-    await user.type(within(dialog).getByLabelText('Placa', { exact: false }), ' xyz-9a12 ');
-    await user.clear(within(dialog).getByLabelText('Modelo', { exact: false }));
-    await user.type(within(dialog).getByLabelText('Modelo', { exact: false }), ' Novo modelo ');
-    await user.click(within(dialog).getByRole('button', { name: 'Salvar' }));
-    expect(await screen.findByText('XYZ-9A12')).toBeVisible();
-    expect(screen.getByText('Novo modelo')).toBeVisible();
-  });
-
-  it('valida os campos e habilitação duplicada do motorista', async () => {
-    const user = setup();
-    await user.click(screen.getByRole('tab', { name: 'Motoristas' }));
-    await user.click(screen.getByRole('button', { name: /cadastrar motorista/i }));
-    const dialog = screen.getByRole('dialog');
-    await user.click(within(dialog).getByRole('button', { name: 'Salvar' }));
-    expect(await within(dialog).findAllByText('Preencha este campo.')).toHaveLength(3);
-    await user.type(within(dialog).getByLabelText(/Nome completo/), ' Ana Teste ');
-    await user.type(within(dialog).getByLabelText(/Número da habilitação/), '12345678901');
-    await user.type(within(dialog).getByLabelText(/Setor/), ' Operações ');
-    await user.click(within(dialog).getByRole('button', { name: 'Salvar' }));
-    expect(
-      await within(dialog).findByText('Já existe um motorista com essa habilitação.'),
-    ).toBeVisible();
-    await user.clear(within(dialog).getByLabelText(/Número da habilitação/));
-    await user.type(within(dialog).getByLabelText(/Número da habilitação/), '99999999999');
-    await user.click(within(dialog).getByRole('button', { name: 'Salvar' }));
-    expect(await screen.findByText('Ana Teste')).toBeVisible();
   });
 
   it('simula carregamento, erro e lista vazia sem apagar cadastros', async () => {

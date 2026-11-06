@@ -1,32 +1,27 @@
 import { expect, test } from '@playwright/test';
 
-test('exibe a tela de motoristas e veículos', async ({ page }) => {
+test('navega entre as paginas independentes', async ({ page }) => {
   await page.goto('/');
-
-  await expect(page.getByRole('heading', { name: 'Motoristas e Veículos' })).toBeVisible();
-
-  await expect(page.getByRole('tab', { name: 'Veículos' })).toBeVisible();
-
-  await expect(page.getByRole('tab', { name: 'Motoristas' })).toBeVisible();
-
-  await expect(page.getByText('Veículos cadastrados')).toBeVisible();
-
-  await expect(page.getByRole('button', { name: /cadastrar veículo/i })).toBeVisible();
-
-  await page.getByRole('tab', { name: 'Motoristas' }).click();
-
-  await expect(page.getByText('Motoristas cadastrados')).toBeVisible();
-
-  await expect(page.getByRole('button', { name: /cadastrar motorista/i })).toBeVisible();
+  await expect(page).toHaveURL(/motoristas$/);
+  await expect(page.getByRole('heading', { name: 'Motoristas', exact: true })).toBeVisible();
+  await page.getByRole('link', { name: 'Veículos' }).click();
+  await expect(page).toHaveURL(/veiculos$/);
+  await expect(page.getByRole('heading', { name: 'Veículos', exact: true })).toBeVisible();
+  await page.goBack();
+  await expect(page.getByRole('link', { name: 'Motoristas' })).toHaveAttribute(
+    'aria-current',
+    'page',
+  );
 });
 
 for (const viewport of [
   { width: 1440, height: 900 },
   { width: 768, height: 1024 },
+  { width: 375, height: 812 },
 ]) {
   test(`fluxos e teclado em ${viewport.width}px`, async ({ page }) => {
     await page.setViewportSize(viewport);
-    await page.goto('/');
+    await page.goto('/veiculos');
     const search = page.getByRole('textbox', { name: 'Pesquisar' });
     await search.fill('Fiat');
     await page.getByRole('combobox', { name: 'Status', exact: true }).click();
@@ -60,14 +55,14 @@ for (const viewport of [
       fullPage: true,
     });
 
-    await page.getByRole('tab', { name: 'Motoristas' }).click();
+    await page.getByRole('link', { name: 'Motoristas' }).click();
     await page.getByRole('combobox', { name: 'Setor', exact: true }).click();
     await page.getByRole('option', { name: 'Operações' }).click();
     await page.getByRole('combobox', { name: 'Status', exact: true }).click();
     await page.getByRole('option', { name: 'Em rota' }).click();
     await expect(page.getByText('Nenhum resultado para os filtros selecionados.')).toBeVisible();
     await page.getByRole('button', { name: 'Limpar filtros' }).click();
-    await expect(page.getByRole('cell', { name: 'Maria Santos' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'Maria Santos', exact: true })).toBeVisible();
     for (const control of [
       search,
       page.getByRole('combobox', { name: 'Setor', exact: true }),
@@ -87,15 +82,43 @@ for (const viewport of [
       fullPage: true,
     });
 
-    await page.getByRole('button', { name: /cadastrar motorista/i }).click();
-    const form = page.getByRole('dialog');
-    await form.getByRole('button', { name: 'Salvar' }).click();
-    await expect(form.getByText('Preencha este campo.')).toHaveCount(3);
-    await expect(form.getByRole('textbox', { name: /Nome completo/ })).toBeFocused();
-    await form.getByRole('textbox', { name: /Nome completo/ }).fill('Teste E2E');
-    await form.getByRole('textbox', { name: /Número da habilitação/ }).fill('99887766554');
-    await form.getByRole('textbox', { name: /Setor/ }).fill('Operações');
-    await form.getByRole('button', { name: 'Salvar' }).click();
-    await expect(page.getByRole('cell', { name: 'Teste E2E' })).toBeVisible();
+    await page.getByRole('button', { name: 'Cadastrar novo motorista' }).click();
+    await expect(page).toHaveURL(/motoristas\/novo$/);
+    const form = page.getByRole('form', { name: 'Cadastro de motorista' });
+    await form.getByRole('button', { name: 'Cadastrar motorista' }).click();
+    await expect(form.getByRole('textbox', { name: 'Nome completo', exact: true })).toBeFocused();
+    await form.getByLabel('Nome completo', { exact: true }).fill('Teste E2E');
+    await form.getByLabel('CPF', { exact: true }).fill('111.444.777-35');
+    await form.getByLabel('Telefone', { exact: true }).fill('(11) 99999-1234');
+    await form.getByLabel('E-mail', { exact: true }).fill('e2e@example.test');
+    await form.getByLabel('Setor', { exact: true }).fill('Operacoes');
+    await form.getByLabel('Número da CNH', { exact: true }).fill('99887766554');
+    await form.getByLabel('Validade da CNH', { exact: true }).fill('2099-12-31');
+    await form.getByRole('combobox', { name: /Categoria da CNH/ }).click();
+    await page.getByRole('option', { name: 'B', exact: true }).click();
+    await expect(page.getByRole('listbox')).toHaveCount(0);
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.screenshot({
+      animations: 'disabled',
+      path: test.info().outputPath(`cadastro-${viewport.width}.png`),
+      fullPage: true,
+    });
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
+    ).toBe(true);
+    await form.getByRole('button', { name: 'Cadastrar motorista' }).click();
+    await expect(page).toHaveURL(/motoristas$/);
+    await expect(page.getByRole('cell', { name: 'Teste E2E', exact: true })).toBeVisible();
+    await page.getByRole('link', { name: 'Veículos' }).click();
+    await page.getByRole('link', { name: 'Motoristas' }).click();
+    await expect(page.getByRole('cell', { name: 'Teste E2E', exact: true })).toBeVisible();
+    await page.getByRole('button', { name: 'Detalhes do motorista Teste E2E' }).click();
+    await expect(page.getByRole('dialog', { name: 'Detalhes do motorista' })).toContainText(
+      '99887766554',
+    );
+    await page.keyboard.press('Escape');
+    await expect(
+      page.getByRole('button', { name: 'Detalhes do motorista Teste E2E' }),
+    ).toBeFocused();
   });
 }
