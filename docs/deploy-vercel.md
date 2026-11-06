@@ -39,23 +39,23 @@ significa que as funcionalidades em desenvolvimento já estejam integradas.
 | `OPENAPI_URL`           | Ferramenta de geração de contrato, não é chamada de produção do navegador                       |
 
 `VITE_API_URL` tem precedência e as barras finais são removidas. Exemplo de formato,
-que deve ser substituído pela URL efetivamente publicada:
+com a URL efetivamente publicada nesta homologação:
 
 ```dotenv
-VITE_API_URL=https://seu-backend-de-homologacao.onrender.com
+VITE_API_URL=https://fsph-fleet-api-staging.onrender.com
 ```
 
 Nenhuma variável `VITE_*` deve conter senha, JWT, chave de API ou conexão de banco.
 O script `scripts/check-deploy-env.mjs` impede o build Vercel sem uma origem HTTPS
-válida e rejeita localhost, credenciais, caminhos e parâmetros. Não há URL pública
-Render confirmada nesta entrega; nenhum endereço foi inventado como publicado.
+válida e rejeita localhost, credenciais, caminhos e parâmetros.
 
 O desenvolvimento, Vite proxy e Docker/Nginx existentes continuam usando sua
 configuração anterior. Não é necessário alterar páginas para selecionar o backend.
 
-## Projeto Vercel preparado
+## Projeto Vercel publicado em 06/11/2026
 
-Criar um projeto de homologação **novo**, separado dos projetos da equipe:
+Foi criado o projeto de homologação **novo** `fsph-fleet-web-staging`, separado
+dos projetos da equipe, no workspace Hobby `barbosas-projects-5a2b240e`:
 
 - Root Directory: raiz deste repositório, não uma pasta do backend.
 - Framework: Vite.
@@ -64,16 +64,21 @@ Criar um projeto de homologação **novo**, separado dos projetos da equipe:
 - Build: verificação de `VITE_API_URL`, typecheck e build Vite.
 - Output Directory: `dist`.
 - `vercel.json` contém fallback SPA para `/index.html` e desliga deploys Git automáticos.
-- Configurar `VITE_API_URL` no ambiente Preview antes do deploy manual.
+- `.vercelignore` exclui arquivos de ambiente, credenciais locais, logs e artefatos
+  de testes do upload para a Vercel.
+- `VITE_API_URL` foi configurada nos ambientes Production e Preview deste projeto.
 
-Depois da publicação, confirmar a URL HTTPS Vercel, adicioná-la exatamente a
-`CORS_ALLOWED_ORIGINS` do backend de homologação e verificar login e chamadas
-protegidas. Alterações de `VITE_API_URL` exigem um novo build.
+URL confirmada: <https://fsph-fleet-web-staging.vercel.app>.
+Deploy `dpl_VGWGCztb6CDEAGNYVyZQmJfUqnnE`, código no commit `1976a96`, publicado
+manualmente pela CLI autorizada pelo usuário. O destino Production pertence
+exclusivamente a esse novo projeto de homologação. O projeto preexistente
+`fsph-fleet-management-web` permaneceu intacto.
 
-Não foram encontrados token/sessão Vercel CLI/API ou acesso automatizado ao
-navegador. Nenhum projeto Vercel foi criado ou alterado e nenhuma URL pública
-de frontend foi confirmada. A configuração está preparada para publicação após
-autenticação e definição das URLs reais.
+A origem Vercel foi cadastrada exatamente em `CORS_ALLOWED_ORIGINS` do novo
+backend Render. Alterações de `VITE_API_URL` exigem um novo build.
+
+O banco Neon de homologação expira em **12/11/2026 às 16h, America/Fortaleza**.
+Sua retenção precisará ser ajustada para manter a integração após essa data.
 
 ## Testes executáveis
 
@@ -124,14 +129,20 @@ Resultados já confirmados:
 - No backend, 18 migrations foram aplicadas com sucesso no novo banco isolado;
   o smoke HTTP também confirmou persistência e limpeza de um setor temporário.
 
-Esses resultados são de homologação local com banco remoto. A integração nas
-URLs públicas Render/Vercel ainda depende da publicação e das origens confirmadas.
+Esses resultados iniciais são de homologação local com banco remoto. Na publicação,
+o frontend retornou HTTP 200 tanto na raiz quanto em uma URL SPA acessada diretamente.
+Os **3 testes Playwright passaram nas URLs públicas**, verificando a interface,
+o retorno de uma rota SPA ao início, preflight, login JWT, identidade ADMIN,
+logout e rejeição do token revogado. O smoke HTTP público do backend também
+passou com a origem Vercel definitiva, incluindo persistência e remoção de um
+setor temporário. Isso valida a infraestrutura e a autenticação disponíveis;
+as telas de negócio continuam no escopo de desenvolvimento da equipe.
 Logs locais: `.deploy-validation/baseline-*.log`, `final-*.log`, `e2e.log` e
 `e2e-staging.log`; não são incluídos no Git.
 
 ## Escopo dos arquivos
 
-Configuração: `vercel.json`, `package.json` (Node 24.x), `.env.example`, `.gitignore`,
+Configuração: `vercel.json`, `.vercelignore`, `package.json` (Node 24.x), `.env.example`, `.gitignore`,
 `scripts/check-deploy-env.mjs`, `src/shared/config/env.ts` e `src/vite-env.d.ts`.
 Testes: `src/shared/config/env.test.ts`, `src/shared/api/client.test.ts`,
 `e2e/app.spec.ts` e `e2e/staging.spec.ts`. Documentação: este arquivo e link no README.
