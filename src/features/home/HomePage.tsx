@@ -21,6 +21,14 @@ export function HomePage() {
           <Stack spacing={3}>
             <Button
               component={RouterLink}
+              to="/login"
+              variant="contained"
+              sx={{ alignSelf: 'flex-start' }}
+            >
+              Entrar no sistema
+            </Button>
+            <Button
+              component={RouterLink}
               to="/usuarios"
               variant="outlined"
               sx={{ alignSelf: 'flex-start' }}

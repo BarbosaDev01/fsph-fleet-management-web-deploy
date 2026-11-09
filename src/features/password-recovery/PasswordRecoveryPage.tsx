@@ -15,6 +15,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { z } from 'zod';
 
 import { simulatePasswordRecovery } from './mocks/password-recovery';
+import { demoResetPath } from '@/features/password-reset/mocks/password-reset';
 
 const schema = z.object({
   email: z
@@ -76,6 +77,9 @@ export function PasswordRecoveryPage() {
             </Alert>
             <Button variant="outlined" onClick={() => recovery.reset()}>
               Informar outro e-mail
+            </Button>
+            <Button component={RouterLink} to={demoResetPath} variant="contained">
+              Continuar para alteração de senha (demonstração)
             </Button>
           </Stack>
         ) : (

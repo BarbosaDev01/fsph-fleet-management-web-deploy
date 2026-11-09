@@ -34,6 +34,9 @@ it('valida o e-mail e confirma somente a simulação, permitindo outra solicita�
   await user.type(screen.getByLabelText(/^E-mail/), 'maria@orgao.gov.br');
   await user.click(screen.getByRole('button', { name: 'Solicitar recuperação (demonstração)' }));
   expect(await screen.findByRole('status')).toHaveTextContent('Simulação concluída');
+  expect(
+    screen.getByRole('link', { name: 'Continuar para alteração de senha (demonstração)' }),
+  ).toHaveAttribute('href', '/alterar-senha?token=recuperacao-demonstrativa');
   await user.click(screen.getByRole('button', { name: 'Informar outro e-mail' }));
   expect(screen.getByLabelText(/^E-mail/)).toBeEnabled();
   expect(screen.getByRole('link', { name: 'Voltar ao início' })).toHaveAttribute('href', '/');
