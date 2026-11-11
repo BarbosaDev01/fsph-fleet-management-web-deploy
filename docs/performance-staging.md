@@ -135,9 +135,12 @@ O frontend publicado precisa que `CORS_ALLOWED_ORIGINS` inclua sua origem exata.
 Um novo URL de preview não recebe autorização automaticamente. Não ampliar CORS
 com wildcard nem desligar Deployment Protection para validar um preview.
 O backend `dep-dbqalccipgvc73a0fm90`, commit `11c33eba`, está live no Render.
-A API Neon confirmou expiração da branch de banco isolada em **12/11/2026 às
-16h, America/Fortaleza**. A retenção existente não foi alterada; o ambiente
-deixará de funcionar após a exclusão programada se o responsável não a estender.
+A exclusão programada da branch de banco isolada foi removida em 11/11/2026:
+a API Neon confirmou `expires_at: null`. A expiração anterior de 12/11/2026 às
+16h, America/Fortaleza, não está mais ativa. A organização permanece no plano
+Free, sem contratação paga ou alteração de dados e migrations de produção.
+O plano não tem prazo máximo de uso, mas mantém cotas e suspensão por inatividade
+ou esgotamento de compute. Consultar [limites atuais](https://neon.com/pricing).
 O Render Free ainda pode suspender por inatividade; não foram contratados planos
 pagos nem criados pings periódicos. O primeiro acesso pode precisar aguardar o
 despertar do backend; as otimizações de build não eliminam esse cold start.
