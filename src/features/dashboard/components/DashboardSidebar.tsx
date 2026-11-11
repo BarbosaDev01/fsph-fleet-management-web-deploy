@@ -19,7 +19,7 @@ const navigation: Array<{ label: string; icon: IconName; href?: string; page?: s
   { label: 'Veículos', icon: 'vehicle' },
   { label: 'Condutores', icon: 'person' },
   { label: 'Manutenções', icon: 'maintenance' },
-  { label: 'Usuários', icon: 'users' },
+  { label: 'Usuários', icon: 'users', href: '/usuarios', page: 'users' },
 ];
 
 function NavIcon({ name }: { name: IconName }) {

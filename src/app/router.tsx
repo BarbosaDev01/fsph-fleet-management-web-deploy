@@ -6,6 +6,13 @@ import { NotFoundPage } from '@/shared/components/NotFoundPage';
 
 export const routes: RouteObject[] = [
   {
+    path: '/usuarios',
+    lazy: async () => {
+      const { UsuariosPage } = await import('@/features/usuarios/UsuariosPage');
+      return { Component: UsuariosPage };
+    },
+  },
+  {
     path: '/',
     element: <HomePage />,
   },

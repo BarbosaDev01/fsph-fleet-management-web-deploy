@@ -230,7 +230,6 @@ function Sidebar() {
           ['vehicle', 'Veículos'],
           ['person', 'Condutores'],
           ['maintenance', 'Manutenções'],
-          ['users', 'Usuários'],
         ].map(([icon, label]) => (
           <span
             aria-disabled="true"
@@ -242,6 +241,10 @@ function Sidebar() {
             {label}
           </span>
         ))}
+        <Link className="side-link" to="/usuarios">
+          <Icon name="users" />
+          Usuários
+        </Link>
       </nav>
       <div className="side-context">
         <span>ATENDENTE / SVO</span>
