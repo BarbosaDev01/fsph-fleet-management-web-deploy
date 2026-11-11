@@ -134,7 +134,11 @@ tratados como duração de deploy remoto. Logs e credenciais locais ficam em
 O frontend publicado precisa que `CORS_ALLOWED_ORIGINS` inclua sua origem exata.
 Um novo URL de preview não recebe autorização automaticamente. Não ampliar CORS
 com wildcard nem desligar Deployment Protection para validar um preview.
-O backend `dep-dbqalccipgvc73a0fm90`, commit `11c33eba`, está live no Render.
+O backend foi inicialmente publicado em `dep-dbqalccipgvc73a0fm90`, código
+`11c33eba`. Após a simplificação da senha de staging pelo ambiente, está live em
+`dep-dbqb3v6c6qcc73fqvjbg`, código `c804cb1` (mesma implementação, documentação
+atualizada). A nova senha tem 14 caracteres, sem alteração da política mínima de 12. Login novo 200, senha anterior 401, perfil ADMIN, logout e revogação JWT
+foram confirmados; o Chromium passou novamente no fluxo público completo.
 A exclusão programada da branch de banco isolada foi removida em 11/11/2026:
 a API Neon confirmou `expires_at: null`. A expiração anterior de 12/11/2026 às
 16h, America/Fortaleza, não está mais ativa. A organização permanece no plano
