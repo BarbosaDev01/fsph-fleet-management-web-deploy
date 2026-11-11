@@ -10,6 +10,35 @@ export const routes: RouteObject[] = [
     element: <HomePage />,
   },
   {
+    path: '/dashboard',
+    lazy: async () => {
+      const { DashboardPage } = await import('@/features/dashboard/DashboardPage');
+      return { Component: DashboardPage };
+    },
+  },
+  {
+    path: '/atendimento-svo',
+    lazy: async () => {
+      const { AtendimentoSvoPage } = await import('@/features/atendimento-svo/AtendimentoSvoPage');
+      return { Component: AtendimentoSvoPage };
+    },
+  },
+  {
+    path: '/solicitacoes',
+    lazy: async () => {
+      const { SolicitacoesPage } = await import('@/features/solicitacoes/SolicitacoesPage');
+      return { Component: SolicitacoesPage };
+    },
+  },
+  {
+    path: '/solicitacoes/nova',
+    lazy: async () => {
+      const { NovaSolicitacaoPage } =
+        await import('@/features/nova-solicitacao/NovaSolicitacaoPage');
+      return { Component: NovaSolicitacaoPage };
+    },
+  },
+  {
     path: '*',
     element: <NotFoundPage />,
   },
