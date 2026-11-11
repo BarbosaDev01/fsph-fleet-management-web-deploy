@@ -59,6 +59,44 @@ staging; nenhum projeto de produção da equipe é usado.
 
 ## Validação reproduzível
 
+O deploy de validação **dpl_9xgbogRTSkMvKqtmK1WokAMTGqab**, commit `21c65a7`,
+ficou Ready em **15,02 s**, contra **16,83 s** no anterior (aproximadamente 11%
+menos). O comando de build caiu de cerca de **14 s para 12 s**. Ambas as amostras
+restauraram o mesmo histórico de cache, em máquinas de 2 cores/8 GiB; foram
+executadas em dias e versões da CLI de build diferentes, portanto não isolam
+todas as variáveis. A instalação manteve cerca de 1 s dentro do pnpm; não houve
+ganho demonstrado nessa etapa.
+
+O bundle inicial publicado passou de **779,55 para 713,58 kB** e de **239,14 para
+223,71 kB gzip** (redução de 6,45% no transporte comprimido). Os chunks internos
+são carregados por rota; a advertência de bundle acima de 500 kB permanece
+visível. Não foi aumentado o limite para escondê-la. O upload caiu de 81 para
+76 arquivos.
+
+URL de validação protegida:
+<https://fsph-fleet-web-staging-ej7xjw5dt-barbosas-projects-5a2b240e.vercel.app>.
+HTTP 200 e os assets do build foram conferidos com autenticação da Vercel.
+O domínio público não foi promovido. Essa verificação de publicação não afirma
+que o login demo já esteja ativo no backend Render.
+
+O Chromium também renderizou a URL protegida sem erros de JavaScript, com o
+e-mail demo preenchido e a senha vazia. O acesso temporário de automação criado
+pela CLI foi revogado ao terminar; a proteção do deploy continua habilitada.
+
+As três amostras locais, alternando as duas receitas com typecheck frio,
+apresentaram medianas de **24,54 s antes** e **18,19 s depois**. Houve uma amostra
+inicial de 68,25 s no bootstrap npm/pnpm, mantida nos registros e refletida apenas
+como outlier na mediana; esses números Windows não são os tempos do Render ou
+da Vercel.
+
+Passaram **17 testes unitários**, lint, formatação completa e build/typecheck.
+O Playwright passou em **3 cenários**, incluindo o login demo real com API Java 21
+e PostgreSQL descartável, retorno a `/conta`, identidade ADMIN, logout e rejeição
+do JWT revogado. Dois cenários anteriores que exigem credenciais/fixtures do
+ambiente público foram ignorados por ausência dessas variáveis. O teste demo
+real não simula respostas HTTP; os outros dois cenários validam a interface
+existente e sua proteção de rotas.
+
 Com Node 24 e pnpm 11.25.0:
 
 ```text
