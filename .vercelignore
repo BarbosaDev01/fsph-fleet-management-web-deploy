@@ -11,3 +11,9 @@ test-results/
 *.log
 .idea/
 .vscode/
+docs/
+e2e/
+.github/
+openapi/
+scripts/generate-api.mjs
+scripts/snapshot-api.mjs

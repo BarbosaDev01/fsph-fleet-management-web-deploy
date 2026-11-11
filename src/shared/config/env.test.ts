@@ -5,6 +5,7 @@ describe('API deployment configuration', () => {
     vi.resetModules();
     vi.stubEnv('VITE_API_URL', undefined);
     vi.stubEnv('VITE_API_BASE_URL', undefined);
+    vi.stubEnv('VITE_APP_ENV', undefined);
   });
 
   afterEach(() => vi.unstubAllEnvs());
@@ -12,6 +13,7 @@ describe('API deployment configuration', () => {
   it('preserves the local proxy default', async () => {
     const { env } = await import('./env');
     expect(env.apiBaseUrl).toBe('/api');
+    expect(env.isStaging).toBe(false);
   });
 
   it('preserves the existing environment variable', async () => {
@@ -30,5 +32,17 @@ describe('API deployment configuration', () => {
   it('rejects an explicitly empty API URL', async () => {
     vi.stubEnv('VITE_API_URL', '  ');
     await expect(import('./env')).rejects.toThrow();
+  });
+
+  it('enables the demonstration email only for an explicit staging build', async () => {
+    vi.stubEnv('VITE_APP_ENV', 'staging');
+    const { env } = await import('./env');
+    expect(env.isStaging).toBe(true);
+  });
+
+  it.each(['production', 'development'])('disables the demonstration email in %s', async (mode) => {
+    vi.stubEnv('VITE_APP_ENV', mode);
+    const { env } = await import('./env');
+    expect(env.isStaging).toBe(false);
   });
 });

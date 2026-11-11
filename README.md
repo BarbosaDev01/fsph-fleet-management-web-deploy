@@ -100,3 +100,7 @@ As variáveis `FRONTEND_PORT` e `BACKEND_UPSTREAM` permitem alterar esses endere
 ## Qualidade
 
 A CI executa formatação, lint, typecheck, testes, build e Playwright. Dependências npm e GitHub Actions são monitoradas pelo Dependabot.
+
+## Deploy e desempenho
+
+Consulte [as medições de build, carregamento por rota e login de staging](docs/performance-staging.md).
