@@ -6,6 +6,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { authToken } from '@/shared/api/auth-token';
 import type { Dto } from '@/shared/api/types';
 import { ApiFeedback, Loading } from '@/shared/components/ApiFeedback';
+import { env } from '@/shared/config/env';
 import { authApi } from './api';
 import { useSession } from './useSession';
 
@@ -23,7 +24,9 @@ export function LoginPage() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<Dto['LoginRequest']>();
+  } = useForm<Dto['LoginRequest']>({
+    defaultValues: { email: env.isStaging ? 'demo@frota.test' : '', password: '' },
+  });
   if (session.token && session.isPending) return <Loading />;
   if (session.data && session.token) return <Navigate to={destination} replace />;
   const submit = handleSubmit(async (values) => {
@@ -48,7 +51,9 @@ export function LoginPage() {
               Gestão de Frotas
             </Typography>
             <Typography color="text.secondary">
-              Entre com seu e-mail e senha para continuar.
+              {env.isStaging
+                ? 'Homologação: use o e-mail de demonstração e a senha fornecida pela equipe.'
+                : 'Entre com seu e-mail e senha para continuar.'}
             </Typography>
             <ApiFeedback
               error={error ?? (session.token ? session.error : null)}
