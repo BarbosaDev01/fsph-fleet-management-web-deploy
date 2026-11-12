@@ -1,16 +1,17 @@
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, within, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import { AppProviders } from '@/app/providers/AppProviders';
 import { routes } from '@/app/router';
 
-function setup(path = '/veiculos/novo') {
+async function setup(path = '/demonstracoes/frota/veiculos/novo') {
   const router = createMemoryRouter(routes, { initialEntries: [path] });
   render(
     <AppProviders>
       <RouterProvider router={router} />
     </AppProviders>,
   );
+  await screen.findByRole('main');
   return { user: userEvent.setup(), router };
 }
 function setField(label: string, value: string) {
@@ -31,11 +32,15 @@ function fillRequired() {
 
 describe('Página de cadastro de veículos', { timeout: 15_000 }, () => {
   it('navega da listagem para a página e cancela sem salvar', async () => {
-    const { user, router } = setup('/veiculos');
+    const { user, router } = await setup('/demonstracoes/frota/veiculos');
     await user.click(screen.getByRole('button', { name: /Cadastrar veículo/ }));
-    expect(router.state.location.pathname).toBe('/veiculos/novo');
+    await waitFor(() =>
+      expect(router.state.location.pathname).toBe('/demonstracoes/frota/veiculos/novo'),
+    );
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'Novo veículo' })).toHaveFocus();
+    await waitFor(() =>
+      expect(screen.getByRole('heading', { name: 'Novo veículo' })).toHaveFocus(),
+    );
     for (const name of ['Identificação', 'Documentos', 'Operação', 'Carta'])
       expect(screen.getByRole('heading', { name })).toBeVisible();
     setField('Placa', 'XYZ9A12');
@@ -45,7 +50,7 @@ describe('Página de cadastro de veículos', { timeout: 15_000 }, () => {
   });
 
   it('foca o primeiro erro e apresenta duplicidade e campos inválidos no painel real', async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await user.click(screen.getByRole('button', { name: 'Cadastrar veículo' }));
     expect(screen.getByLabelText('Placa', { exact: true })).toHaveFocus();
     const panel = screen.getByRole('region', { name: 'Validações obrigatórias' });
@@ -63,7 +68,7 @@ describe('Página de cadastro de veículos', { timeout: 15_000 }, () => {
   });
 
   it('calcula saldo somente leitura e salva os dados, sem bloquear pelos exemplos', async () => {
-    const { user, router } = setup();
+    const { user, router } = await setup();
     fillRequired();
     await user.click(screen.getByRole('combobox', { name: /Categoria/ }));
     expect(screen.getAllByRole('option').map((option) => option.textContent)).toEqual([
@@ -86,7 +91,9 @@ describe('Página de cadastro de veículos', { timeout: 15_000 }, () => {
     expect(within(examples).queryByRole('alert')).not.toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Cadastrar veículo' }));
     expect(await screen.findByRole('status')).toHaveTextContent('XYZ9A12 cadastrado com sucesso');
-    expect(router.state.location.pathname).toBe('/veiculos');
+    await waitFor(() =>
+      expect(router.state.location.pathname).toBe('/demonstracoes/frota/veiculos'),
+    );
     expect(screen.getByRole('cell', { name: 'SVO' })).toBeVisible();
     await user.click(screen.getByRole('link', { name: 'Motoristas' }));
     await user.click(screen.getByRole('link', { name: 'Veículos' }));
@@ -100,3 +107,5 @@ describe('Página de cadastro de veículos', { timeout: 15_000 }, () => {
     );
   });
 });
+import '@/test/demo-session';
+vi.mock('@/shared/config/env', () => ({ env: { apiBaseUrl: '/api', isStaging: true } }));

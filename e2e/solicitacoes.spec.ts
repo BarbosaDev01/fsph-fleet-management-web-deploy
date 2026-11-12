@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 test('Solicitações abre Nova solicitação pelo botão da listagem e navega pelas telas existentes', async ({
   page,
 }) => {
-  await page.goto('/solicitacoes');
+  await page.goto('/demonstracoes/solicitacoes');
   await expect(page.getByRole('heading', { name: 'Solicitações' })).toBeVisible();
   await page.getByRole('link', { name: 'Nova solicitação' }).click();
   await expect(page).toHaveURL(/\/solicitacoes\/nova$/);
@@ -29,7 +29,7 @@ test('listagem de solicitações se adapta aos principais tamanhos de viewport',
 
   for (const viewport of viewports) {
     await page.setViewportSize(viewport);
-    await page.goto('/solicitacoes');
+    await page.goto('/demonstracoes/solicitacoes');
     await expect(page.getByRole('heading', { name: 'Solicitações' })).toBeVisible();
     const layout = await page.evaluate(() => ({
       clientWidth: document.documentElement.clientWidth,
@@ -46,3 +46,6 @@ test('listagem de solicitações se adapta aos principais tamanhos de viewport',
     }
   }
 });
+import { prepareDemoSession } from './demo-session';
+
+test.beforeEach(async ({ page }) => prepareDemoSession(page));

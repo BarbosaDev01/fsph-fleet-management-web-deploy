@@ -35,7 +35,7 @@ it('valida os campos e permite mostrar a senha', async () => {
   expect(screen.getByLabelText(/^Senha/)).toHaveAttribute('type', 'text');
   expect(screen.getByRole('link', { name: 'Esqueci minha senha' })).toHaveAttribute(
     'href',
-    '/recuperar-senha',
+    '/demonstracoes/recuperar-senha',
   );
 });
 

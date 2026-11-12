@@ -4,9 +4,12 @@ import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import { DashboardPage } from '@/features/dashboard/DashboardPage';
 
 function renderPage() {
-  const router = createMemoryRouter([{ path: '/dashboard', element: <DashboardPage /> }], {
-    initialEntries: ['/dashboard'],
-  });
+  const router = createMemoryRouter(
+    [{ path: '/demonstracoes/dashboard', element: <DashboardPage /> }],
+    {
+      initialEntries: ['/demonstracoes/dashboard'],
+    },
+  );
   return render(<RouterProvider router={router} />);
 }
 

@@ -88,7 +88,11 @@ export function LoginPage() {
             <Alert severity="success" role="status">
               Simulação concluída. Nenhuma sessão autenticada foi criada.
             </Alert>
-            <Button component={RouterLink} to="/dashboard/demo" variant="contained">
+            <Button
+              component={RouterLink}
+              to="/demonstracoes/dashboard-usuarios"
+              variant="contained"
+            >
               Abrir dashboard demonstrativo
             </Button>
             <Button variant="outlined" onClick={() => login.reset()}>
@@ -159,7 +163,7 @@ export function LoginPage() {
                 'Entrar'
               )}
             </Button>
-            <Button component={RouterLink} to="/recuperar-senha" disabled={busy}>
+            <Button component={RouterLink} to="/demonstracoes/recuperar-senha" disabled={busy}>
               Esqueci minha senha
             </Button>
           </Stack>

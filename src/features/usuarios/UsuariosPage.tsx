@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { Alert, Button, MenuItem, TextField } from '@mui/material';
 import { Link } from 'react-router-dom';
 
@@ -10,10 +10,12 @@ import '../dashboard/dashboard.css';
 import './usuarios.css';
 
 export function UsuariosPage() {
-  const { register, handleSubmit, reset, setValue, watch } = useForm<UserFormValues>({
+  const { register, handleSubmit, reset, setValue, control } = useForm<UserFormValues>({
     defaultValues: emptyUserValues,
   });
-  const profile = watch('profile');
+  const profile = useWatch({ control, name: 'profile' });
+  const sector = useWatch({ control, name: 'sector' });
+  const status = useWatch({ control, name: 'status' });
   const [showPassword, setShowPassword] = useState(false);
   const [savedUser, setSavedUser] = useState<Pick<UserFormValues, 'name' | 'email'> | null>(null);
   const [feedback, setFeedback] = useState('');
@@ -48,7 +50,7 @@ export function UsuariosPage() {
       <main className="users-main">
         <header className="users-header">
           <nav aria-label="Localização" className="users-breadcrumb">
-            <Link to="/dashboard">SVO</Link>
+            <Link to="/demonstracoes/dashboard">SVO</Link>
             <span>/</span>
             <span>Administrativo</span>
             <span>/</span>
@@ -144,13 +146,7 @@ export function UsuariosPage() {
                 <span className="users-restriction-tag">Restrição admin</span>
               </div>
               <div className="users-fields">
-                <TextField
-                  label="Setor"
-                  select
-                  value={watch('sector')}
-                  {...register('sector')}
-                  fullWidth
-                >
+                <TextField label="Setor" select value={sector} {...register('sector')} fullWidth>
                   {['SVO', 'Administrativo', 'Administrativo + SVO'].map((item) => (
                     <MenuItem key={item} value={item}>
                       {item}
@@ -160,7 +156,7 @@ export function UsuariosPage() {
                 <TextField
                   label="Status da conta"
                   select
-                  value={watch('status')}
+                  value={status}
                   {...register('status')}
                   fullWidth
                 >

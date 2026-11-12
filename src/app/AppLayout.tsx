@@ -7,6 +7,7 @@ import { useSession } from '@/features/auth/useSession';
 import { authToken } from '@/shared/api/auth-token';
 import { roleLabels } from '@/shared/api/types';
 import { ApiFeedback, Loading } from '@/shared/components/ApiFeedback';
+import { env } from '@/shared/config/env';
 
 const navigation = [
   ['/', 'Início'],
@@ -19,7 +20,7 @@ const navigation = [
   ['/permissoes', 'Permissões'],
 ] as const;
 
-export function AppLayout() {
+export function AppLayout({ showNavigation = true }: { showNavigation?: boolean }) {
   const session = useSession();
   const location = useLocation();
   const queryClient = useQueryClient();
@@ -91,37 +92,46 @@ export function AppLayout() {
           </Button>
         </Toolbar>
       </AppBar>
-      <Box
-        component="nav"
-        aria-label="Navegação principal"
-        sx={{
-          bgcolor: 'background.paper',
-          borderBottom: '1px solid',
-          borderColor: 'divider',
-          overflowX: 'auto',
-        }}
+      {showNavigation && (
+        <Box
+          component="nav"
+          aria-label="Navegação principal"
+          sx={{
+            bgcolor: 'background.paper',
+            borderBottom: '1px solid',
+            borderColor: 'divider',
+            overflowX: 'auto',
+          }}
+        >
+          <Stack direction="row" sx={{ px: { xs: 1, md: 3 }, width: 'max-content' }}>
+            {[...navigation, ...(env.isStaging ? [['/demonstracoes', 'Novas telas']] : [])].map(
+              ([to, label]) => (
+                <Button
+                  key={to}
+                  component={NavLink}
+                  to={to}
+                  end={to === '/'}
+                  sx={{
+                    py: 2,
+                    px: 2,
+                    whiteSpace: 'nowrap',
+                    borderRadius: 0,
+                    '&.active': { bgcolor: 'action.selected', boxShadow: 'inset 0 -3px #0b4f6c' },
+                  }}
+                >
+                  {label}
+                </Button>
+              ),
+            )}
+          </Stack>
+        </Box>
+      )}
+      <Container
+        component={showNavigation ? 'main' : 'div'}
+        maxWidth={showNavigation ? 'xl' : false}
+        disableGutters={!showNavigation}
+        sx={{ py: showNavigation ? 4 : 0 }}
       >
-        <Stack direction="row" sx={{ px: { xs: 1, md: 3 }, width: 'max-content' }}>
-          {navigation.map(([to, label]) => (
-            <Button
-              key={to}
-              component={NavLink}
-              to={to}
-              end={to === '/'}
-              sx={{
-                py: 2,
-                px: 2,
-                whiteSpace: 'nowrap',
-                borderRadius: 0,
-                '&.active': { bgcolor: 'action.selected', boxShadow: 'inset 0 -3px #0b4f6c' },
-              }}
-            >
-              {label}
-            </Button>
-          ))}
-        </Stack>
-      </Box>
-      <Container component="main" maxWidth="xl" sx={{ py: 4 }}>
         <Stack spacing={2}>
           <ApiFeedback error={logoutError} />
           <Outlet />

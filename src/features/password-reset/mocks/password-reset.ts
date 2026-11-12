@@ -1,5 +1,5 @@
 export const demoResetToken = 'recuperacao-demonstrativa';
-export const demoResetPath = `/alterar-senha?token=${demoResetToken}`;
+export const demoResetPath = `/demonstracoes/alterar-senha?token=${demoResetToken}`;
 
 // Demonstration only: never sends, stores or changes passwords, tokens or sessions.
 export async function loadDemoResetContext() {

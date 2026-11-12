@@ -4,22 +4,23 @@ import { AppProviders } from '@/app/providers/AppProviders';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import { routes } from '@/app/router';
 
-function setup(path = '/veiculos') {
+async function setup(path = '/demonstracoes/frota/veiculos') {
   const user = userEvent.setup();
   render(
     <AppProviders>
       <RouterProvider router={createMemoryRouter(routes, { initialEntries: [path] })} />
     </AppProviders>,
   );
+  await screen.findByRole('main');
   return user;
 }
 
 // Multiple MUI transitions and user interactions need headroom on Windows runners.
 describe('Motoristas e Veículos', { timeout: 15_000 }, () => {
   it('combina busca, setor e status e limpa todos os filtros', async () => {
-    const user = setup();
+    const user = await setup();
     await user.click(screen.getByRole('link', { name: 'Motoristas' }));
-    await user.click(screen.getByRole('combobox', { name: 'Setor' }));
+    await user.click(await screen.findByRole('combobox', { name: 'Setor' }));
     await user.click(screen.getByRole('option', { name: 'Operações' }));
     await user.click(screen.getByRole('combobox', { name: 'Status' }));
     await user.click(screen.getByRole('option', { name: 'Disponível' }));
@@ -39,7 +40,7 @@ describe('Motoristas e Veículos', { timeout: 15_000 }, () => {
   });
 
   it('mostra os detalhes do veículo selecionado e permite fechar', async () => {
-    const user = setup();
+    const user = await setup();
     for (const [plate, model] of [
       ['ABC-1D23', 'Fiat Argo'],
       ['DEF-4G56', 'Chevrolet Onix'],
@@ -54,7 +55,7 @@ describe('Motoristas e Veículos', { timeout: 15_000 }, () => {
   });
 
   it('simula carregamento, erro e lista vazia sem apagar cadastros', async () => {
-    const user = setup();
+    const user = await setup();
     async function select(name: string) {
       await user.click(screen.getByRole('combobox', { name: 'Estado demonstrativo' }));
       await user.click(screen.getByRole('option', { name }));
@@ -73,3 +74,5 @@ describe('Motoristas e Veículos', { timeout: 15_000 }, () => {
     ).not.toBeInTheDocument();
   });
 });
+import '@/test/demo-session';
+vi.mock('@/shared/config/env', () => ({ env: { apiBaseUrl: '/api', isStaging: true } }));

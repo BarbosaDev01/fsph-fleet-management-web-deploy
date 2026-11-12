@@ -4,9 +4,12 @@ import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import { SolicitacoesPage } from '@/features/solicitacoes/SolicitacoesPage';
 
 function renderPage() {
-  const router = createMemoryRouter([{ path: '/solicitacoes', element: <SolicitacoesPage /> }], {
-    initialEntries: ['/solicitacoes'],
-  });
+  const router = createMemoryRouter(
+    [{ path: '/demonstracoes/solicitacoes', element: <SolicitacoesPage /> }],
+    {
+      initialEntries: ['/demonstracoes/solicitacoes'],
+    },
+  );
   return render(<RouterProvider router={router} />);
 }
 
@@ -16,12 +19,15 @@ describe('SolicitacoesPage', () => {
     expect(screen.getByRole('heading', { name: 'Solicitações' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Nova solicitação' })).toHaveAttribute(
       'href',
-      '/solicitacoes/nova',
+      '/demonstracoes/solicitacoes/nova',
     );
-    expect(screen.getByRole('link', { name: 'Dashboard' })).toHaveAttribute('href', '/dashboard');
+    expect(screen.getByRole('link', { name: 'Dashboard' })).toHaveAttribute(
+      'href',
+      '/demonstracoes/dashboard',
+    );
     expect(screen.getByRole('link', { name: 'Atendimento SVO' })).toHaveAttribute(
       'href',
-      '/atendimento-svo',
+      '/demonstracoes/atendimento-svo',
     );
     expect(screen.getAllByRole('row')).toHaveLength(9);
   });

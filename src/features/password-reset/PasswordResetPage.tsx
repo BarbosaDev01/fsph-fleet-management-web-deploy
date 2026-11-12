@@ -72,7 +72,7 @@ export function PasswordResetPage() {
               Link ausente ou indisponível para esta demonstração. Inicie a recuperação simulada
               para abrir um link demonstrativo. A validade de links reais depende da API.
             </Alert>
-            <Button component={RouterLink} to="/recuperar-senha" variant="contained">
+            <Button component={RouterLink} to="/demonstracoes/recuperar-senha" variant="contained">
               Solicitar recuperação de senha
             </Button>
           </Stack>
@@ -139,7 +139,7 @@ function DemoPasswordReset() {
     return (
       <Stack spacing={2}>
         <Alert severity="warning">Link demonstrativo inválido ou expirado.</Alert>
-        <Button component={RouterLink} to="/recuperar-senha">
+        <Button component={RouterLink} to="/demonstracoes/recuperar-senha">
           Solicitar novo link
         </Button>
       </Stack>

@@ -89,7 +89,7 @@ export function SolicitacoesPage() {
         <header className="solicitacoes-header">
           <h1>Solicitações</h1>
           <p>06/10/2026 • 14:20 • Gestora / Administrativo + SVO</p>
-          <Link className="new-request-cta" to="/solicitacoes/nova">
+          <Link className="new-request-cta" to="/demonstracoes/solicitacoes/nova">
             <span aria-hidden="true" className="cta-progress">
               <i />
               <b>+</b>

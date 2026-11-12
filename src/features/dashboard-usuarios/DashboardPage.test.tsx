@@ -15,11 +15,12 @@ function renderPage(demo = true) {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false, gcTime: 0 } } });
   render(
     <QueryClientProvider client={client}>
-      <MemoryRouter initialEntries={['/dashboard']}>
+      <MemoryRouter initialEntries={['/demonstracoes/dashboard-usuarios']}>
         <Routes>
-          <Route path="/dashboard" element={<DashboardPage demo={demo} />} />
+          <Route path="/demonstracoes/dashboard-usuarios" element={<DashboardPage demo={demo} />} />
           <Route path="/login" element={<p>Página de login</p>} />
-          <Route path="/usuarios" element={<p>Lista de usuários</p>} />
+          <Route path="/" element={<p>Sistema real</p>} />
+          <Route path="/demonstracoes/diretorio" element={<p>Lista de usuários</p>} />
         </Routes>
       </MemoryRouter>
     </QueryClientProvider>,
@@ -82,7 +83,7 @@ it('mostra listas e histórico vazios sem fabricar registros', async () => {
   expect(screen.getByText('Sem histórico de solicitações.')).toBeInTheDocument();
 });
 
-it('abre detalhes, informa módulos pendentes e encerra a sessão ao sair', async () => {
+it('abre detalhes e volta ao sistema sem descartar a sessão autenticada', async () => {
   const user = userEvent.setup();
   authToken.set('existing-token');
   renderPage();
@@ -96,9 +97,11 @@ it('abre detalhes, informa módulos pendentes e encerra a sessão ao sair', asyn
   expect(screen.getByRole('dialog')).toHaveTextContent('ainda não está implementada');
   await user.click(screen.getByRole('button', { name: 'Fechar' }));
   await waitForElementToBeRemoved(() => screen.queryByRole('dialog'));
-  await user.click(within(screen.getByRole('main')).getByRole('button', { name: 'Sair' }));
-  expect(await screen.findByText('Página de login')).toBeInTheDocument();
-  expect(authToken.get()).toBeNull();
+  await user.click(
+    within(screen.getByRole('main')).getByRole('button', { name: 'Voltar ao sistema' }),
+  );
+  expect(await screen.findByText('Sistema real')).toBeInTheDocument();
+  expect(authToken.get()).toBe('existing-token');
 });
 
 it('redireciona a rota normal sem token e não carrega dados', async () => {

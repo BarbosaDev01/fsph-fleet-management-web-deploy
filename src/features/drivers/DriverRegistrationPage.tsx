@@ -110,7 +110,10 @@ export function DriverRegistrationPage() {
   function save(data: DriverFields) {
     const driver = createDemoDriver(data, drivers);
     setDrivers((current) => [...current, driver]);
-    navigate('/motoristas', { replace: true, state: { driverCreated: driver.name } });
+    navigate('/demonstracoes/frota/motoristas', {
+      replace: true,
+      state: { driverCreated: driver.name },
+    });
   }
 
   return (
@@ -125,10 +128,10 @@ export function DriverRegistrationPage() {
         }}
       >
         <Breadcrumbs sx={{ mb: 1, fontSize: 14 }} aria-label="Caminho da página">
-          <Link component={RouterLink} to="/motoristas" underline="hover">
+          <Link component={RouterLink} to="/demonstracoes/frota/motoristas" underline="hover">
             FSPH
           </Link>
-          <Link component={RouterLink} to="/motoristas" underline="hover">
+          <Link component={RouterLink} to="/demonstracoes/frota/motoristas" underline="hover">
             Motoristas
           </Link>
           <Typography variant="body2" color="text.primary">
@@ -393,7 +396,12 @@ export function DriverRegistrationPage() {
             </Stack>
           </Paper>
           <Stack direction="row" spacing={2} sx={{ justifyContent: 'flex-end', mt: 2 }}>
-            <Button component={RouterLink} to="/motoristas" variant="outlined" color="inherit">
+            <Button
+              component={RouterLink}
+              to="/demonstracoes/frota/motoristas"
+              variant="outlined"
+              color="inherit"
+            >
               Cancelar
             </Button>
             <Button type="submit" variant="contained" disabled={isSubmitting}>

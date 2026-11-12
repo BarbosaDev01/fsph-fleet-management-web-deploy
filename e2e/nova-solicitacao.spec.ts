@@ -13,7 +13,7 @@ const viewports = [
 test('Nova solicitação se adapta aos viewports sem overflow horizontal', async ({ page }) => {
   for (const viewport of viewports) {
     await page.setViewportSize(viewport);
-    await page.goto('/solicitacoes/nova');
+    await page.goto('/demonstracoes/solicitacoes/nova');
 
     await expect(page.getByRole('heading', { name: 'Nova solicitação' })).toBeVisible();
     await expect(page.getByLabel('Quantidade de passageiros *')).toBeVisible();
@@ -34,3 +34,6 @@ test('Nova solicitação se adapta aos viewports sem overflow horizontal', async
     }
   }
 });
+import { prepareDemoSession } from './demo-session';
+
+test.beforeEach(async ({ page }) => prepareDemoSession(page));

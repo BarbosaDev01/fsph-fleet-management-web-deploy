@@ -91,15 +91,14 @@ function DashboardContent() {
     retry: false,
   });
   function leave() {
-    authToken.clear();
-    navigate('/login', { replace: true });
+    navigate('/', { replace: true });
   }
   return (
     <Box className="fleet-dashboard">
       <Box component="aside" className="dashboard-sidebar">
         <Typography sx={{ fontSize: 28, fontWeight: 800, px: 1, mb: 2 }}>SVO</Typography>
         <Box component="nav" aria-label="Menu principal" className="dashboard-nav">
-          <Button component={RouterLink} to="/dashboard/demo" aria-current="page">
+          <Button component={RouterLink} to="/demonstracoes/dashboard-usuarios" aria-current="page">
             ▦ Dashboard
           </Button>
           {modules.map((title) => (
@@ -116,7 +115,7 @@ function DashboardContent() {
               {title}
             </Button>
           ))}
-          <Button component={RouterLink} to="/usuarios">
+          <Button component={RouterLink} to="/demonstracoes/diretorio">
             Usuários
           </Button>
         </Box>
@@ -129,7 +128,7 @@ function DashboardContent() {
             Administrativo + SVO
           </Typography>
           <Button onClick={leave} sx={{ color: 'white' }}>
-            Sair
+            Voltar ao sistema
           </Button>
         </Box>
       </Box>
@@ -165,7 +164,7 @@ function DashboardContent() {
               </Box>
             </Stack>
             <Chip variant="outlined" label="Âmbito fictício: Administrativo + SVO" />
-            <Button onClick={leave}>Sair</Button>
+            <Button onClick={leave}>Voltar ao sistema</Button>
           </Stack>
         </Box>
         <Stack className="dashboard-body" spacing={2.5}>

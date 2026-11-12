@@ -6,8 +6,8 @@ import { transports } from '@/features/atendimento-svo/data/atendimentoSvoMock';
 
 function renderPage() {
   const router = createMemoryRouter(
-    [{ path: '/atendimento-svo', element: <AtendimentoSvoPage /> }],
-    { initialEntries: ['/atendimento-svo'] },
+    [{ path: '/demonstracoes/atendimento-svo', element: <AtendimentoSvoPage /> }],
+    { initialEntries: ['/demonstracoes/atendimento-svo'] },
   );
   return render(<RouterProvider router={router} />);
 }

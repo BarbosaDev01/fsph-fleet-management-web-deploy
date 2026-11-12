@@ -29,7 +29,7 @@ beforeEach(() => {
   vi.mocked(simulatePasswordReset).mockReset().mockResolvedValue(undefined);
 });
 
-it.each(['/alterar-senha', '/alterar-senha?token=link-real'])(
+it.each(['/demonstracoes/alterar-senha', '/demonstracoes/alterar-senha?token=link-real'])(
   'bloqueia o formulário sem um link demonstrativo: %s',
   (path) => {
     renderPage(path);
@@ -38,7 +38,7 @@ it.each(['/alterar-senha', '/alterar-senha?token=link-real'])(
     expect(loadDemoResetContext).not.toHaveBeenCalled();
     expect(screen.getByRole('link', { name: 'Solicitar recuperação de senha' })).toHaveAttribute(
       'href',
-      '/recuperar-senha',
+      '/demonstracoes/recuperar-senha',
     );
   },
 );
@@ -91,7 +91,7 @@ it('trata link demonstrativo inválido ou expirado', async () => {
   expect(screen.queryByLabelText(/^Nova Senha/)).not.toBeInTheDocument();
   expect(screen.getByRole('link', { name: 'Solicitar novo link' })).toHaveAttribute(
     'href',
-    '/recuperar-senha',
+    '/demonstracoes/recuperar-senha',
   );
 });
 

@@ -4,13 +4,14 @@ import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import { AppProviders } from '@/app/providers/AppProviders';
 import { routes } from '@/app/router';
 
-function setup(path = '/motoristas/novo') {
+async function setup(path = '/demonstracoes/frota/motoristas/novo') {
   const router = createMemoryRouter(routes, { initialEntries: [path] });
   render(
     <AppProviders>
       <RouterProvider router={router} />
     </AppProviders>,
   );
+  await screen.findByRole('main');
   return { user: userEvent.setup(), router };
 }
 
@@ -30,20 +31,26 @@ function fillFields() {
 
 describe('Página de cadastro de motorista', { timeout: 15_000 }, () => {
   it('abre pela listagem e cancela sem criar registros', async () => {
-    const { user, router } = setup('/motoristas');
+    const { user, router } = await setup('/demonstracoes/frota/motoristas');
     await user.click(screen.getByRole('button', { name: 'Cadastrar novo motorista' }));
-    expect(router.state.location.pathname).toBe('/motoristas/novo');
-    expect(screen.getByRole('heading', { name: 'Novo motorista' })).toHaveFocus();
+    await waitFor(() =>
+      expect(router.state.location.pathname).toBe('/demonstracoes/frota/motoristas/novo'),
+    );
+    await waitFor(() =>
+      expect(screen.getByRole('heading', { name: 'Novo motorista' })).toHaveFocus(),
+    );
     for (const name of ['Dados pessoais', 'CNH e conta', 'Equipe e plantão'])
       expect(screen.getByRole('heading', { name })).toBeVisible();
     await user.type(screen.getByLabelText('Nome completo', { exact: true }), 'Não salvar');
     await user.click(screen.getByRole('link', { name: 'Cancelar' }));
-    expect(router.state.location.pathname).toBe('/motoristas');
+    await waitFor(() =>
+      expect(router.state.location.pathname).toBe('/demonstracoes/frota/motoristas'),
+    );
     expect(screen.queryByText('Não salvar')).not.toBeInTheDocument();
   });
 
   it('exibe erros nos campos e no painel e foca o primeiro campo inválido', async () => {
-    const { user } = setup();
+    const { user } = await setup();
     await user.click(screen.getByRole('button', { name: 'Cadastrar motorista' }));
     expect(await screen.findByRole('textbox', { name: 'Nome completo' })).toHaveFocus();
     const panel = screen.getByRole('complementary', { name: 'Validações do cadastro' });
@@ -56,12 +63,14 @@ describe('Página de cadastro de motorista', { timeout: 15_000 }, () => {
   });
 
   it('salva o cadastro, retorna à listagem e preserva os novos dados nos detalhes', async () => {
-    const { user, router } = setup();
+    const { user, router } = await setup();
     fillFields();
     await user.click(screen.getByRole('combobox', { name: /Categoria da CNH/ }));
     await user.click(screen.getByRole('option', { name: 'B' }));
     await user.click(screen.getByRole('button', { name: 'Cadastrar motorista' }));
-    await waitFor(() => expect(router.state.location.pathname).toBe('/motoristas'));
+    await waitFor(() =>
+      expect(router.state.location.pathname).toBe('/demonstracoes/frota/motoristas'),
+    );
     expect(await screen.findByRole('status')).toHaveTextContent('Ana Teste cadastrado com sucesso');
     await user.click(screen.getByRole('link', { name: 'Veículos' }));
     await user.click(screen.getByRole('link', { name: 'Motoristas' }));
@@ -70,3 +79,5 @@ describe('Página de cadastro de motorista', { timeout: 15_000 }, () => {
     expect(within(screen.getByRole('dialog')).getByText('E-mail: ana@example.test')).toBeVisible();
   });
 });
+import '@/test/demo-session';
+vi.mock('@/shared/config/env', () => ({ env: { apiBaseUrl: '/api', isStaging: true } }));

@@ -101,7 +101,11 @@ export function SolicitationsSidebar() {
             <span>{item.label}</span>
           </span>
         ))}
-        <Link aria-current="page" className="nova-nav-item active" to="/solicitacoes/nova">
+        <Link
+          aria-current="page"
+          className="nova-nav-item active"
+          to="/demonstracoes/solicitacoes/nova"
+        >
           <NavIcon name="requests" />
           <span>Solicitações</span>
         </Link>

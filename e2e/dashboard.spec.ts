@@ -13,7 +13,7 @@ const viewports = [
 test('dashboard se adapta aos viewports e mantém os filtros acessíveis', async ({ page }) => {
   for (const viewport of viewports) {
     await page.setViewportSize(viewport);
-    await page.goto('/dashboard');
+    await page.goto('/demonstracoes/dashboard');
     await expect(page.getByRole('heading', { name: 'Visão geral da frota' })).toBeVisible();
     await expect(page.getByRole('combobox', { name: 'Filtrar por setor' })).toBeVisible();
     await expect(page.getByRole('combobox', { name: 'Filtrar por período' })).toBeVisible();
@@ -31,3 +31,6 @@ test('dashboard se adapta aos viewports e mantém os filtros acessíveis', async
     }
   }
 });
+import { prepareDemoSession } from './demo-session';
+
+test.beforeEach(async ({ page }) => prepareDemoSession(page));

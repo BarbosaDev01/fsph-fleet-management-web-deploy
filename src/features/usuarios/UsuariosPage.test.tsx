@@ -2,15 +2,25 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 
 import { routes } from '@/app/router';
+import { AppProviders } from '@/app/providers/AppProviders';
+import '@/test/demo-session';
+
+vi.mock('@/shared/config/env', () => ({ env: { apiBaseUrl: '/api', isStaging: true } }));
 
 async function renderPage() {
-  const router = createMemoryRouter(routes, { initialEntries: ['/usuarios'] });
-  render(<RouterProvider router={router} />);
+  const router = createMemoryRouter(routes, {
+    initialEntries: ['/demonstracoes/cadastro-usuarios'],
+  });
+  render(
+    <AppProviders>
+      <RouterProvider router={router} />
+    </AppProviders>,
+  );
   await screen.findByRole('heading', { name: 'Credenciamento do colaborador' });
   return router;
 }
 
-describe('UsuariosPage', () => {
+describe('UsuariosPage', { timeout: 15_000 }, () => {
   it('gera senha, prepara o cadastro local e permite cancelar', async () => {
     await renderPage();
     fireEvent.change(screen.getByLabelText('Nome completo'), { target: { value: 'Paula Mendes' } });
@@ -55,6 +65,6 @@ describe('UsuariosPage', () => {
     await screen.findByRole('heading', { name: 'Atendimento SVO' });
     fireEvent.click(screen.getByRole('link', { name: 'Usuários' }));
     await screen.findByRole('heading', { name: 'Credenciamento do colaborador' });
-    expect(router.state.location.pathname).toBe('/usuarios');
+    expect(router.state.location.pathname).toBe('/demonstracoes/cadastro-usuarios');
   });
 });

@@ -180,7 +180,10 @@ export function VehicleRegistrationPage() {
   function save(data: VehicleFields) {
     const vehicle = createDemoVehicle(data, vehicles);
     setVehicles((current) => [...current, vehicle]);
-    navigate('/veiculos', { replace: true, state: { vehicleCreated: vehicle.plate } });
+    navigate('/demonstracoes/frota/veiculos', {
+      replace: true,
+      state: { vehicleCreated: vehicle.plate },
+    });
   }
 
   function focusField(key: keyof VehicleFields) {
@@ -199,10 +202,10 @@ export function VehicleRegistrationPage() {
         }}
       >
         <Breadcrumbs sx={{ mb: 1, fontSize: 14 }} aria-label="Caminho da página">
-          <Link component={RouterLink} to="/veiculos" underline="hover">
+          <Link component={RouterLink} to="/demonstracoes/frota/veiculos" underline="hover">
             FSPH
           </Link>
-          <Link component={RouterLink} to="/veiculos" underline="hover">
+          <Link component={RouterLink} to="/demonstracoes/frota/veiculos" underline="hover">
             Veículos
           </Link>
           <Typography variant="body2" color="text.primary">
@@ -576,7 +579,12 @@ export function VehicleRegistrationPage() {
             </Stack>
           </Paper>
           <Stack direction="row" spacing={2} sx={{ justifyContent: 'flex-end', mt: 2 }}>
-            <Button component={RouterLink} to="/veiculos" variant="outlined" color="inherit">
+            <Button
+              component={RouterLink}
+              to="/demonstracoes/frota/veiculos"
+              variant="outlined"
+              color="inherit"
+            >
               Cancelar
             </Button>
             <Button type="submit" variant="contained" disabled={isSubmitting}>

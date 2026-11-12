@@ -18,7 +18,7 @@ async function fillPersonal(page: Page) {
 test('erros de formato, duplicidade e vencimento impedem cadastro; cancelar descarta os dados', async ({
   page,
 }) => {
-  await page.goto('/motoristas/novo');
+  await page.goto('/demonstracoes/frota/motoristas/novo');
   await fillPersonal(page);
   await page.getByLabel('CPF', { exact: true }).fill('123');
   await page.getByLabel('Telefone', { exact: true }).fill('123');
@@ -50,7 +50,7 @@ test('erros de formato, duplicidade e vencimento impedem cadastro; cancelar desc
 test('valida horários e conflito local e salva plantão completo e disponibilidade', async ({
   page,
 }) => {
-  await page.goto('/motoristas/novo');
+  await page.goto('/demonstracoes/frota/motoristas/novo');
   await fillPersonal(page);
   await page.getByLabel('Conta vinculada', { exact: true }).fill('Conta demonstrativa');
   await page.getByLabel('Equipe', { exact: true }).fill('Equipe de teste');
@@ -86,3 +86,6 @@ test('valida horários e conflito local e salva plantão completo e disponibilid
   await expect(details).toContainText('Veículo: DEF-4G56');
   await expect(details).toContainText('Conta vinculada (simulação): Conta demonstrativa');
 });
+import { prepareDemoSession } from './demo-session';
+
+test.beforeEach(async ({ page }) => prepareDemoSession(page));

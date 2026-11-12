@@ -53,8 +53,8 @@ export function FleetLayout() {
           >
             {(
               [
-                ['/motoristas', 'Motoristas'],
-                ['/veiculos', 'Veículos'],
+                ['/demonstracoes/frota/motoristas', 'Motoristas'],
+                ['/demonstracoes/frota/veiculos', 'Veículos'],
               ] as const
             ).map(([path, label]) => (
               <Button

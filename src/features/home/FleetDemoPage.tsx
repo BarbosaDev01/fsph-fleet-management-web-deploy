@@ -162,7 +162,13 @@ export function FleetDemoPage({ tab }: { tab: 'vehicles' | 'drivers' }) {
 
               <Button
                 variant="contained"
-                onClick={() => navigate(tab === 'drivers' ? '/motoristas/novo' : '/veiculos/novo')}
+                onClick={() =>
+                  navigate(
+                    tab === 'drivers'
+                      ? '/demonstracoes/frota/motoristas/novo'
+                      : '/demonstracoes/frota/veiculos/novo',
+                  )
+                }
               >
                 {tab === 'vehicles' ? '+ Cadastrar veículo' : 'Cadastrar novo motorista'}
               </Button>

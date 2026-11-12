@@ -10,8 +10,8 @@ import {
 
 function renderPage() {
   const router = createMemoryRouter(
-    [{ path: '/solicitacoes/nova', element: <NovaSolicitacaoPage /> }],
-    { initialEntries: ['/solicitacoes/nova'] },
+    [{ path: '/demonstracoes/solicitacoes/nova', element: <NovaSolicitacaoPage /> }],
+    { initialEntries: ['/demonstracoes/solicitacoes/nova'] },
   );
   return render(<RouterProvider router={router} />);
 }

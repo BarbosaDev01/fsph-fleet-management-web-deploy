@@ -11,15 +11,25 @@ type IconName =
   | 'users';
 
 const navigation: Array<{ label: string; icon: IconName; href?: string; page?: string }> = [
-  { label: 'Dashboard', icon: 'dashboard', href: '/dashboard', page: 'dashboard' },
-  { label: 'Atendimento SVO', icon: 'atendimento', href: '/atendimento-svo', page: 'atendimento' },
-  { label: 'Solicitações', icon: 'requests', href: '/solicitacoes', page: 'requests' },
+  { label: 'Dashboard', icon: 'dashboard', href: '/demonstracoes/dashboard', page: 'dashboard' },
+  {
+    label: 'Atendimento SVO',
+    icon: 'atendimento',
+    href: '/demonstracoes/atendimento-svo',
+    page: 'atendimento',
+  },
+  {
+    label: 'Solicitações',
+    icon: 'requests',
+    href: '/demonstracoes/solicitacoes',
+    page: 'requests',
+  },
   { label: 'Ordens', icon: 'routes' },
   { label: 'Rotas', icon: 'routes' },
   { label: 'Veículos', icon: 'vehicle' },
   { label: 'Condutores', icon: 'person' },
   { label: 'Manutenções', icon: 'maintenance' },
-  { label: 'Usuários', icon: 'users', href: '/usuarios', page: 'users' },
+  { label: 'Usuários', icon: 'users', href: '/demonstracoes/cadastro-usuarios', page: 'users' },
 ];
 
 function NavIcon({ name }: { name: IconName }) {

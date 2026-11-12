@@ -25,7 +25,7 @@ for (const viewport of [
 ]) {
   test(`cadastro de veículo, responsividade e teclado em ${viewport.width}px`, async ({ page }) => {
     await page.setViewportSize(viewport);
-    await page.goto('/veiculos');
+    await page.goto('/demonstracoes/frota/veiculos');
     const create = page.getByRole('button', { name: /Cadastrar veículo/ });
     await create.focus();
     await page.keyboard.press('Enter');
@@ -90,7 +90,7 @@ for (const viewport of [
 }
 
 test('cancelar o cadastro de veículo descarta os dados', async ({ page }) => {
-  await page.goto('/veiculos/novo');
+  await page.goto('/demonstracoes/frota/veiculos/novo');
   await page.getByLabel('Placa', { exact: true }).fill('XYZ9A12');
   await page.getByRole('link', { name: 'Cancelar', exact: true }).click();
   await expect(page).toHaveURL(/veiculos$/);
@@ -100,7 +100,7 @@ test('cancelar o cadastro de veículo descarta os dados', async ({ page }) => {
 });
 
 test('erros reais bloqueiam cadastro e o resumo permite focar o campo', async ({ page }) => {
-  await page.goto('/veiculos/novo');
+  await page.goto('/demonstracoes/frota/veiculos/novo');
   await fillVehicle(page);
   for (const [label, value] of Object.entries({
     Placa: 'abc1d23',
@@ -147,3 +147,6 @@ test('erros reais bloqueiam cadastro e o resumo permite focar o campo', async ({
     await expect(panel.getByRole('link', { name })).toBeVisible();
   await expect(page).toHaveURL(/veiculos\/novo$/);
 });
+import { prepareDemoSession } from './demo-session';
+
+test.beforeEach(async ({ page }) => prepareDemoSession(page));

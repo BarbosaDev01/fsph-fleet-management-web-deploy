@@ -212,15 +212,19 @@ function Sidebar() {
         <div>Serviço de Verificação de Óbito</div>
       </div>
       <nav aria-label="Navegação institucional" className="side-nav">
-        <Link className="side-link" to="/dashboard">
+        <Link className="side-link" to="/demonstracoes/dashboard">
           <Icon name="dashboard" />
           Dashboard
         </Link>
-        <Link aria-current="page" className="side-link side-link-active" to="/atendimento-svo">
+        <Link
+          aria-current="page"
+          className="side-link side-link-active"
+          to="/demonstracoes/atendimento-svo"
+        >
           <Icon name="clipboard" />
           Atendimento SVO
         </Link>
-        <Link className="side-link" to="/solicitacoes">
+        <Link className="side-link" to="/demonstracoes/solicitacoes">
           <Icon name="inbox" />
           Solicitações
         </Link>
@@ -241,7 +245,7 @@ function Sidebar() {
             {label}
           </span>
         ))}
-        <Link className="side-link" to="/usuarios">
+        <Link className="side-link" to="/demonstracoes/cadastro-usuarios">
           <Icon name="users" />
           Usuários
         </Link>

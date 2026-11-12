@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 test('navega entre as paginas independentes', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/demonstracoes/frota');
   await expect(page).toHaveURL(/motoristas$/);
   await expect(page.getByRole('heading', { name: 'Motoristas', exact: true })).toBeVisible();
   await page.getByRole('link', { name: 'Veículos' }).click();
@@ -21,7 +21,7 @@ for (const viewport of [
 ]) {
   test(`fluxos e teclado em ${viewport.width}px`, async ({ page }) => {
     await page.setViewportSize(viewport);
-    await page.goto('/veiculos');
+    await page.goto('/demonstracoes/frota/veiculos');
     const search = page.getByRole('textbox', { name: 'Pesquisar' });
     await search.fill('Fiat');
     await page.getByRole('combobox', { name: 'Status', exact: true }).click();
@@ -122,3 +122,6 @@ for (const viewport of [
     ).toBeFocused();
   });
 }
+import { prepareDemoSession } from './demo-session';
+
+test.beforeEach(async ({ page }) => prepareDemoSession(page));

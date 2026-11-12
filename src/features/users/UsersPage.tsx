@@ -150,7 +150,7 @@ export function UsersPage() {
           </Box>
           <Button
             component={RouterLink}
-            to="/cadastro"
+            to="/demonstracoes/cadastro"
             sx={{ color: 'white', justifyContent: 'flex-start' }}
           >
             Cadastro de usuário
