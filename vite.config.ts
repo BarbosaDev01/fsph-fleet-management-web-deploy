@@ -28,6 +28,7 @@ export default defineConfig(({ mode }) => {
       strictPort: true,
     },
     test: {
+      maxWorkers: 1,
       environment: 'jsdom',
       globals: true,
       setupFiles: ['./src/test/setup.ts'],
