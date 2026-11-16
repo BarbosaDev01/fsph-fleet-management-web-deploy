@@ -184,9 +184,12 @@ identificadores de exemplo. As capturas abaixo usam somente fixtures, sem sessã
 
 ## Publicação para revisão
 
-Somente a nova branch do fork será publicada, sem force push. O PR aponta para a `main`
+Somente a nova branch do fork foi publicada, sem force push. O PR aponta para a `main`
 do próprio fork e permanece em rascunho por causa das pendências acima. Não há merge final,
 deploy ou alteração de branches de deploy, backend, banco, produção ou fontes oficiais.
 
 - [Branch consolidada](https://github.com/BarbosaDev01/fsph-fleet-management-web-deploy/tree/staging/integracao-frontend-consolidada)
-- Pull Request: a registrar após criação no fork.
+- [Pull Request #4 em rascunho](https://github.com/BarbosaDev01/fsph-fleet-management-web-deploy/pull/4)
+
+Merge de código validado: `439cb1ac9db0eb28de874ea863810c3e5c0b2400`, com pais
+`a4699624421686f1b85526d17c09ff88251aebb8` e `c670688e1d61b2ae43296bd4de38e10ec8f3e22c`.
