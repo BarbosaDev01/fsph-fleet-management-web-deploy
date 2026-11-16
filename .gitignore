@@ -3,6 +3,8 @@ node_modules/
 .deploy-validation/
 .vercel/
 dist/
+dist-production-e2e/
+dist-fuel-demo/
 coverage/
 playwright-report/
 test-results/

@@ -29,7 +29,7 @@ export function HomePage() {
                 [
                   '/demonstracoes',
                   'Novas telas',
-                  'Explore as interfaces das três branches, com dados demonstrativos identificados.',
+                  'Explore as interfaces da equipe, com dados demonstrativos identificados.',
                 ],
               ]
             : []),

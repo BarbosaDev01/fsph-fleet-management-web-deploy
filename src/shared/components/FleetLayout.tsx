@@ -28,7 +28,7 @@ export function FleetLayout() {
         <Box
           component="aside"
           sx={{
-            bgcolor: '#101828',
+            bgcolor: 'primary.dark',
             color: 'white',
             width: { md: 244 },
             flexShrink: 0,

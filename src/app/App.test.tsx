@@ -37,14 +37,18 @@ function renderPage(path: string, authenticated = true) {
 }
 
 describe('App', () => {
-  it.each(['/demonstracoes/frota/veiculos', '/demonstracoes/dashboard', '/demonstracoes/login'])(
-    'exige autenticacao real antes de abrir %s',
-    async (path) => {
-      renderPage(path, false);
-      expect(await screen.findByRole('button', { name: 'Entrar' })).toBeInTheDocument();
-      expect(authToken.get()).toBeNull();
-    },
-  );
+  it.each([
+    '/demonstracoes/frota/veiculos',
+    '/demonstracoes/dashboard',
+    '/demonstracoes/login',
+    '/demonstracoes/cartoes-combustivel',
+    '/demonstracoes/cartoes-combustivel/novo',
+    '/demonstracoes/cartoes-combustivel/demo-1/editar',
+  ])('exige autenticacao real antes de abrir %s', async (path) => {
+    renderPage(path, false);
+    expect(await screen.findByRole('button', { name: 'Entrar' })).toBeInTheDocument();
+    expect(authToken.get()).toBeNull();
+  });
   it('carrega o usuário autenticado e os módulos', async () => {
     renderPage('/');
     expect(await screen.findByRole('heading', { name: /gestão de frotas/i })).toBeInTheDocument();

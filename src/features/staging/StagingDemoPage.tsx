@@ -2,6 +2,7 @@ import { Button, Paper, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 const pages = [
+  ['cartoes-combustivel', 'Cartões de combustível demonstrativos'],
   ['frota/motoristas', 'Motoristas e cadastro demonstrativo'],
   ['frota/veiculos', 'Veículos e cadastro demonstrativo'],
   ['dashboard', 'Dashboard SVO'],
@@ -24,7 +25,7 @@ export function StagingDemoPage() {
         Novas telas integradas
       </Typography>
       <Typography>
-        As três branches da equipe estão disponíveis sem substituir a autenticação JWT ou os
+        As quatro branches da equipe estão disponíveis sem substituir a autenticação JWT ou os
         cadastros reais. As interfaces demonstrativas permanecem separadas e identificadas.
       </Typography>
       <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 2 }}>

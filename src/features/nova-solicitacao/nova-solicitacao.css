@@ -1,21 +1,15 @@
 .nova-app-shell {
-  --nova-navy: #10192c;
+  --nova-navy: var(--fsph-sidebar, #10192c);
   --nova-navy-card: #202b3e;
-  --nova-ink: #17243a;
+  --nova-ink: var(--fsph-text, #17243a);
   --nova-muted: #657287;
   --nova-border: #d7dee8;
-  --nova-blue: #234398;
+  --nova-blue: var(--fsph-primary, #234398);
   display: flex;
   min-height: 100vh;
   color: var(--nova-ink);
-  background: #f4f7f9;
-  font-family:
-    Inter,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    sans-serif;
+  background: var(--fsph-background, #f4f7f9);
+  font-family: var(--fsph-font, Arial, sans-serif);
   font-size: 14px;
   line-height: 1.4;
 }
@@ -247,7 +241,7 @@
   padding: 0 9px 0 2px;
   border: 1px solid #d3dbe6;
   border-radius: 5px;
-  background: #f8f9fb;
+  background: var(--fsph-background, #f8f9fb);
 }
 .route-option-selected.MuiFormControlLabel-root {
   border-color: #bdd0ff;

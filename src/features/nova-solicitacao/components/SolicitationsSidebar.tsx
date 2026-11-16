@@ -75,12 +75,8 @@ function NavIcon({ name }: { name: NavName }) {
 }
 
 const unavailableItems: Array<{ name: Exclude<NavName, 'requests' | 'logout'>; label: string }> = [
-  { name: 'dashboard', label: 'Dashboard' },
   { name: 'routes', label: 'Rotas' },
-  { name: 'vehicles', label: 'Veículos' },
-  { name: 'drivers', label: 'Condutores' },
   { name: 'maintenance', label: 'Manutenções' },
-  { name: 'users', label: 'Usuários' },
 ];
 
 export function SolicitationsSidebar() {
@@ -90,26 +86,27 @@ export function SolicitationsSidebar() {
         SVO
       </Link>
       <nav aria-label="Navegação principal" className="nova-side-nav">
-        {unavailableItems.slice(0, 1).map((item) => (
-          <span
-            aria-disabled="true"
-            className="nova-nav-item unavailable"
-            key={item.name}
-            title="Indisponível neste protótipo"
-          >
-            <NavIcon name={item.name} />
-            <span>{item.label}</span>
-          </span>
-        ))}
-        <Link
-          aria-current="page"
-          className="nova-nav-item active"
-          to="/demonstracoes/solicitacoes/nova"
-        >
+        <Link className="nova-nav-item" to="/demonstracoes/dashboard">
+          <NavIcon name="dashboard" />
+          <span>Dashboard</span>
+        </Link>
+        <Link aria-current="page" className="nova-nav-item active" to="/demonstracoes/solicitacoes">
           <NavIcon name="requests" />
           <span>Solicitações</span>
         </Link>
-        {unavailableItems.slice(1).map((item) => (
+        {(
+          [
+            ['vehicles', 'Veículos', '/demonstracoes/frota/veiculos'],
+            ['drivers', 'Condutores', '/demonstracoes/frota/motoristas'],
+            ['users', 'Usuários', '/demonstracoes/cadastro-usuarios'],
+          ] as const
+        ).map(([name, label, href]) => (
+          <Link className="nova-nav-item" key={name} to={href}>
+            <NavIcon name={name} />
+            <span>{label}</span>
+          </Link>
+        ))}
+        {unavailableItems.map((item) => (
           <span
             aria-disabled="true"
             className="nova-nav-item unavailable"

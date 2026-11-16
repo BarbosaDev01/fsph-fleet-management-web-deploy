@@ -26,8 +26,8 @@ const navigation: Array<{ label: string; icon: IconName; href?: string; page?: s
   },
   { label: 'Ordens', icon: 'routes' },
   { label: 'Rotas', icon: 'routes' },
-  { label: 'Veículos', icon: 'vehicle' },
-  { label: 'Condutores', icon: 'person' },
+  { label: 'Veículos', icon: 'vehicle', href: '/demonstracoes/frota/veiculos' },
+  { label: 'Condutores', icon: 'person', href: '/demonstracoes/frota/motoristas' },
   { label: 'Manutenções', icon: 'maintenance' },
   { label: 'Usuários', icon: 'users', href: '/demonstracoes/cadastro-usuarios', page: 'users' },
 ];

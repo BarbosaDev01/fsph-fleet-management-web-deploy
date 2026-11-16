@@ -9,6 +9,8 @@ export default tseslint.config(
   {
     ignores: [
       'dist',
+      'dist-production-e2e',
+      'dist-fuel-demo',
       'coverage',
       'playwright-report',
       'test-results',

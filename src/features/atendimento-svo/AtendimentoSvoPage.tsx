@@ -231,8 +231,6 @@ function Sidebar() {
         {[
           ['routes', 'Ordens'],
           ['routes', 'Rotas'],
-          ['vehicle', 'Veículos'],
-          ['person', 'Condutores'],
           ['maintenance', 'Manutenções'],
         ].map(([icon, label]) => (
           <span
@@ -245,6 +243,14 @@ function Sidebar() {
             {label}
           </span>
         ))}
+        <Link className="side-link" to="/demonstracoes/frota/veiculos">
+          <Icon name="vehicle" />
+          Veículos
+        </Link>
+        <Link className="side-link" to="/demonstracoes/frota/motoristas">
+          <Icon name="person" />
+          Condutores
+        </Link>
         <Link className="side-link" to="/demonstracoes/cadastro-usuarios">
           <Icon name="users" />
           Usuários

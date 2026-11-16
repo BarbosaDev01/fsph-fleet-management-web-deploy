@@ -1,6 +1,6 @@
 .users-shell {
-  color: #172033;
-  background: #f8f9fb;
+  color: var(--fsph-text, #172033);
+  background: var(--fsph-background, #f8f9fb);
   font-size: 14px;
 }
 .users-main {
@@ -16,14 +16,14 @@
   flex-wrap: wrap;
   gap: 18px;
   align-items: center;
-  color: #2864ed;
+  color: var(--fsph-primary, #2864ed);
 }
 .users-breadcrumb a {
   color: inherit;
   text-decoration: none;
 }
 .users-breadcrumb strong {
-  color: #172033;
+  color: var(--fsph-text, #172033);
 }
 .users-breadcrumb > span:nth-child(even) {
   color: #97a2b3;
@@ -88,7 +88,7 @@
   background: #fff4c6;
 }
 .users-restriction-tag {
-  color: #2864ed;
+  color: var(--fsph-primary, #2864ed);
   background: #dbe9ff;
 }
 .users-fields {
@@ -141,7 +141,7 @@
   padding: 14px 16px;
   border: 1px solid #dfe4eb;
   border-radius: 8px;
-  background: #f8f9fb;
+  background: var(--fsph-background, #f8f9fb);
 }
 .users-profile-heading {
   display: grid;
@@ -156,7 +156,7 @@
 .users-destination {
   padding: 4px 10px;
   border-radius: 30px;
-  color: #2864ed;
+  color: var(--fsph-primary, #2864ed);
   background: #dbe9ff;
   font-weight: 700;
 }
@@ -168,7 +168,7 @@
   color: #536176;
 }
 .users-profile-card li::marker {
-  color: #2864ed;
+  color: var(--fsph-primary, #2864ed);
 }
 .users-profile-card.green .users-destination {
   color: #009b72;

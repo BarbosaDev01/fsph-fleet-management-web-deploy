@@ -93,7 +93,19 @@ it('abre detalhes e volta ao sistema sem descartar a sessão autenticada', async
   expect(screen.getByRole('dialog')).toHaveTextContent('Veículo em manutenção');
   await user.click(screen.getByRole('button', { name: 'Fechar' }));
   await waitForElementToBeRemoved(() => screen.queryByRole('dialog'));
-  await user.click(screen.getByRole('button', { name: 'Veículos' }));
+  expect(screen.getByRole('link', { name: 'Veículos' })).toHaveAttribute(
+    'href',
+    '/demonstracoes/frota/veiculos',
+  );
+  expect(screen.getByRole('link', { name: 'Condutores' })).toHaveAttribute(
+    'href',
+    '/demonstracoes/frota/motoristas',
+  );
+  expect(screen.getByRole('link', { name: 'Solicitações' })).toHaveAttribute(
+    'href',
+    '/demonstracoes/solicitacoes',
+  );
+  await user.click(screen.getByRole('button', { name: 'Rotas' }));
   expect(screen.getByRole('dialog')).toHaveTextContent('ainda não está implementada');
   await user.click(screen.getByRole('button', { name: 'Fechar' }));
   await waitForElementToBeRemoved(() => screen.queryByRole('dialog'));

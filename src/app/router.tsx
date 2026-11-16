@@ -18,6 +18,45 @@ export const routes: RouteObject[] = [
         element: <StagingDemoLayout />,
         children: [
           {
+            path: 'cartoes-combustivel',
+            lazy: async () => ({
+              Component: (await import('@/features/fuel-cards/FuelCardsRoute')).FuelCardsRoute,
+            }),
+            children: [
+              {
+                path: 'inicio',
+                element: <Navigate to="/demonstracoes/cartoes-combustivel" replace />,
+              },
+              {
+                index: true,
+                lazy: async () => ({
+                  Component: (await import('@/features/fuel-cards/FuelCardsPage')).FuelCardsPage,
+                }),
+              },
+              {
+                path: 'novo',
+                lazy: async () => ({
+                  Component: (await import('@/features/fuel-cards/FuelCardCreatePage'))
+                    .FuelCardCreatePage,
+                }),
+              },
+              {
+                path: ':id/editar',
+                lazy: async () => ({
+                  Component: (await import('@/features/fuel-cards/FuelCardEditPage'))
+                    .FuelCardEditPage,
+                }),
+              },
+              {
+                path: ':id',
+                lazy: async () => ({
+                  Component: (await import('@/features/fuel-cards/FuelCardDetailsPage'))
+                    .FuelCardDetailsPage,
+                }),
+              },
+            ],
+          },
+          {
             index: true,
             lazy: async () => ({
               Component: (await import('@/features/staging/StagingDemoPage')).StagingDemoPage,

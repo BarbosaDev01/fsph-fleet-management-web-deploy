@@ -1,15 +1,9 @@
 .solicitacoes-shell {
   display: flex;
   min-height: 100vh;
-  color: #17243a;
-  background: #f4f7f9;
-  font-family:
-    Inter,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    sans-serif;
+  color: var(--fsph-text, #17243a);
+  background: var(--fsph-background, #f4f7f9);
+  font-family: var(--fsph-font, Arial, sans-serif);
 }
 .solicitacoes-shell * {
   box-sizing: border-box;
@@ -46,7 +40,7 @@
   margin-top: 1px;
   border-radius: 5px;
   color: #fff;
-  background: #234398;
+  background: var(--fsph-primary, #234398);
   font-size: 10px;
   text-decoration: none;
 }
@@ -114,9 +108,9 @@
   text-decoration: none;
 }
 .request-tab.active {
-  border-color: #234398;
+  border-color: var(--fsph-primary, #234398);
   color: white;
-  background: #234398;
+  background: var(--fsph-primary, #234398);
   font-weight: 650;
 }
 .request-tab.unavailable:disabled {
@@ -172,7 +166,7 @@
   appearance: none;
   padding: 0 29px 0 10px;
   border: 0;
-  outline-color: #2864ed;
+  outline-color: var(--fsph-primary, #2864ed);
   border-radius: inherit;
   color: #48566b;
   background: transparent;

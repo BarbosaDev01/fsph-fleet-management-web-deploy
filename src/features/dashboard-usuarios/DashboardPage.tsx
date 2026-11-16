@@ -49,7 +49,23 @@ const dayFormat = new Intl.DateTimeFormat('en-CA', {
   timeZone: 'America/Fortaleza',
 });
 const currency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
-const modules = ['Solicitações', 'Rotas', 'Ordens', 'Veículos', 'Condutores', 'Manutenções'];
+const modules = [
+  'Solicitações',
+  'Rotas',
+  'Ordens',
+  'Veículos',
+  'Condutores',
+  'Manutenções',
+  'Atendimento SVO',
+  'Cartões',
+];
+const moduleLinks: Record<string, string> = {
+  Solicitações: '/demonstracoes/solicitacoes',
+  Veículos: '/demonstracoes/frota/veiculos',
+  Condutores: '/demonstracoes/frota/motoristas',
+  'Atendimento SVO': '/demonstracoes/atendimento-svo',
+  Cartões: '/demonstracoes/cartoes-combustivel',
+};
 
 function Card({
   title,
@@ -101,20 +117,26 @@ function DashboardContent() {
           <Button component={RouterLink} to="/demonstracoes/dashboard-usuarios" aria-current="page">
             ▦ Dashboard
           </Button>
-          {modules.map((title) => (
-            <Button
-              key={title}
-              onClick={() =>
-                setDetail({
-                  title,
-                  description:
-                    'Esta funcionalidade ainda não está implementada neste projeto. Nenhuma operação foi executada.',
-                })
-              }
-            >
-              {title}
-            </Button>
-          ))}
+          {modules.map((title) =>
+            moduleLinks[title] ? (
+              <Button key={title} component={RouterLink} to={moduleLinks[title]}>
+                {title}
+              </Button>
+            ) : (
+              <Button
+                key={title}
+                onClick={() =>
+                  setDetail({
+                    title,
+                    description:
+                      'Esta funcionalidade ainda não está implementada neste projeto. Nenhuma operação foi executada.',
+                  })
+                }
+              >
+                {title}
+              </Button>
+            ),
+          )}
           <Button component={RouterLink} to="/demonstracoes/diretorio">
             Usuários
           </Button>
