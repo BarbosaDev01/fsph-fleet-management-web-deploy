@@ -36,6 +36,42 @@ test('demo autentica pela interface, acessa rota protegida e revoga o JWT', asyn
   );
   expect(identity).toEqual({ status: 200, email: 'demo@frota.test', role: 'ADMIN' });
 
+  const vehicles = page.waitForResponse(
+    (response) =>
+      response.request().method() === 'GET' &&
+      new URL(response.url()).pathname === '/api/v1/vehicles',
+  );
+  await page.goto('/veiculos');
+  const vehiclesResponse = await vehicles;
+  expect(vehiclesResponse.status()).toBe(200);
+  expect(Array.isArray(await vehiclesResponse.json())).toBe(true);
+  await expect(page.getByRole('heading', { name: 'Veículos', exact: true })).toBeVisible();
+
+  await page.goto('/demonstracoes');
+  await expect(page.getByRole('heading', { name: 'Novas telas integradas' })).toBeVisible();
+  for (const path of [
+    'frota/motoristas',
+    'frota/veiculos',
+    'dashboard',
+    'dashboard-usuarios',
+    'atendimento-svo',
+    'solicitacoes',
+    'solicitacoes/nova',
+    'cadastro-usuarios',
+    'diretorio',
+    'login',
+    'cadastro',
+    'recuperar-senha',
+    'alterar-senha',
+  ]) {
+    await page.goto(`/demonstracoes/${path}`);
+    await expect(
+      page.getByText(/Demonstração de interface: estas telas usam dados simulados/),
+    ).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Página não encontrada' })).toHaveCount(0);
+  }
+
   const logout = page.waitForResponse(`${api}/api/v1/auth/logout`);
   await page.getByRole('button', { name: 'Sair', exact: true }).click();
   expect((await logout).status()).toBe(204);

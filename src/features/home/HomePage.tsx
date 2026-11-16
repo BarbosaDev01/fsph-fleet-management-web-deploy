@@ -2,6 +2,7 @@ import { Button, Paper, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { PageHeading } from '@/shared/components/PageHeading';
 import { useSession } from '@/features/auth/useSession';
+import { env } from '@/shared/config/env';
 
 const modules = [
   ['/transportes', 'Transportes', 'Solicite transportes e acompanhe o atendimento.'],
@@ -21,7 +22,18 @@ export function HomePage() {
         description={`Olá, ${session.data?.name ?? ''}. Acesse os módulos para gerenciar a frota.`}
       />
       <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 3 }}>
-        {modules.map(([to, title, description]) => (
+        {[
+          ...modules,
+          ...(env.isStaging
+            ? [
+                [
+                  '/demonstracoes',
+                  'Novas telas',
+                  'Explore as interfaces das três branches, com dados demonstrativos identificados.',
+                ],
+              ]
+            : []),
+        ].map(([to, title, description]) => (
           <Paper key={to} variant="outlined" sx={{ p: 3, flex: '1 1 280px' }}>
             <Stack spacing={2}>
               <Typography component="h2" variant="h6">

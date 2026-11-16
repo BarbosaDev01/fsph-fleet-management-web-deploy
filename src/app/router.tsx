@@ -1,18 +1,147 @@
 import type { RouteObject } from 'react-router-dom';
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 
 import { HomePage } from '@/features/home/HomePage';
 import { AppLayout } from '@/app/AppLayout';
 import { LoginPage } from '@/features/auth/LoginPage';
 import { NotFoundPage } from '@/shared/components/NotFoundPage';
+import { Loading } from '@/shared/components/ApiFeedback';
+import { StagingDemoLayout } from '@/features/staging/StagingDemoLayout';
 
 export const routes: RouteObject[] = [
+  {
+    path: '/demonstracoes',
+    hydrateFallbackElement: <Loading />,
+    element: <AppLayout showNavigation={false} />,
+    children: [
+      {
+        element: <StagingDemoLayout />,
+        children: [
+          {
+            index: true,
+            lazy: async () => ({
+              Component: (await import('@/features/staging/StagingDemoPage')).StagingDemoPage,
+            }),
+          },
+          {
+            path: 'frota',
+            lazy: async () => ({
+              Component: (await import('@/shared/components/FleetLayout')).FleetLayout,
+            }),
+            children: [
+              { index: true, element: <Navigate to="/demonstracoes/frota/motoristas" replace /> },
+              {
+                path: 'motoristas',
+                lazy: async () => ({
+                  Component: (await import('@/features/drivers/DriversPage')).DriversPage,
+                }),
+              },
+              {
+                path: 'motoristas/novo',
+                lazy: async () => ({
+                  Component: (await import('@/features/drivers/DriverRegistrationPage'))
+                    .DriverRegistrationPage,
+                }),
+              },
+              {
+                path: 'veiculos',
+                lazy: async () => ({
+                  Component: (await import('@/features/vehicles/VehiclesPage')).VehiclesPage,
+                }),
+              },
+              {
+                path: 'veiculos/novo',
+                lazy: async () => ({
+                  Component: (await import('@/features/vehicles/VehicleRegistrationPage'))
+                    .VehicleRegistrationPage,
+                }),
+              },
+            ],
+          },
+          {
+            path: 'dashboard',
+            lazy: async () => ({
+              Component: (await import('@/features/dashboard/DashboardPage')).DashboardPage,
+            }),
+          },
+          {
+            path: 'atendimento-svo',
+            lazy: async () => ({
+              Component: (await import('@/features/atendimento-svo/AtendimentoSvoPage'))
+                .AtendimentoSvoPage,
+            }),
+          },
+          {
+            path: 'solicitacoes',
+            lazy: async () => ({
+              Component: (await import('@/features/solicitacoes/SolicitacoesPage'))
+                .SolicitacoesPage,
+            }),
+          },
+          {
+            path: 'solicitacoes/nova',
+            lazy: async () => ({
+              Component: (await import('@/features/nova-solicitacao/NovaSolicitacaoPage'))
+                .NovaSolicitacaoPage,
+            }),
+          },
+          {
+            path: 'cadastro-usuarios',
+            lazy: async () => ({
+              Component: (await import('@/features/usuarios/UsuariosPage')).UsuariosPage,
+            }),
+          },
+          {
+            path: 'dashboard-usuarios',
+            lazy: async () => {
+              const { DashboardPage } = await import('@/features/dashboard-usuarios/DashboardPage');
+              return { Component: () => <DashboardPage demo /> };
+            },
+          },
+          {
+            path: 'diretorio',
+            lazy: async () => ({
+              Component: (await import('@/features/users/UsersPage')).UsersPage,
+            }),
+          },
+          {
+            path: 'login',
+            lazy: async () => ({
+              Component: (await import('@/features/login/LoginPage')).LoginPage,
+            }),
+          },
+          {
+            path: 'cadastro',
+            lazy: async () => ({
+              Component: (await import('@/features/registration/RegistrationPage'))
+                .RegistrationPage,
+            }),
+          },
+          {
+            path: 'recuperar-senha',
+            lazy: async () => ({
+              Component: (await import('@/features/password-recovery/PasswordRecoveryPage'))
+                .PasswordRecoveryPage,
+            }),
+          },
+          {
+            path: 'alterar-senha',
+            lazy: async () => ({
+              Component: (await import('@/features/password-reset/PasswordResetPage'))
+                .PasswordResetPage,
+            }),
+          },
+        ],
+      },
+    ],
+  },
   {
     path: '/login',
     element: <LoginPage />,
   },
   {
     path: '/',
+    hydrateFallbackElement: <Loading />,
     element: <AppLayout />,
     children: [
       { index: true, element: <HomePage /> },

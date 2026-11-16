@@ -51,11 +51,12 @@ O backend correspondente exige `SPRING_PROFILES_ACTIVE=staging`,
 `STAGING_DEMO_PASSWORD`. O e-mail reservado também é rejeitado na autenticação
 fora do staging autorizado, inclusive para JWTs previamente emitidos.
 
-Não promover o frontend de demonstração antes de ativar e validar seu backend.
-Um deploy Vercel com destino `production` e `--skip-domain`, neste projeto de
-homologação, permite medir o build sem alterar o domínio público anterior.
-O destino da Vercel é diferente do ambiente funcional: este projeto hospeda
-staging; nenhum projeto de produção da equipe é usado.
+O backend foi ativado e validado antes da promoção do frontend. O build foi
+inicialmente publicado com destino `production` e `--skip-domain`, neste projeto
+isolado de homologação. Após validar a API, o mesmo artefato foi promovido para o
+domínio público de staging. `VITE_APP_ENV=staging` também foi persistido nos
+ambientes production e preview somente desse projeto. O destino da Vercel é
+diferente do ambiente funcional: nenhum projeto de produção da equipe é usado.
 
 ## Validação reproduzível
 
@@ -73,15 +74,22 @@ são carregados por rota; a advertência de bundle acima de 500 kB permanece
 visível. Não foi aumentado o limite para escondê-la. O upload caiu de 81 para
 76 arquivos.
 
-URL de validação protegida:
-<https://fsph-fleet-web-staging-ej7xjw5dt-barbosas-projects-5a2b240e.vercel.app>.
-HTTP 200 e os assets do build foram conferidos com autenticação da Vercel.
-O domínio público não foi promovido. Essa verificação de publicação não afirma
-que o login demo já esteja ativo no backend Render.
+Em 11/11/2026, esse mesmo deploy foi promovido para o endereço público
+<https://fsph-fleet-web-staging.vercel.app/login>. O alias foi conferido apontando
+para `dpl_9xgbogRTSkMvKqtmK1WokAMTGqab`, Ready, e respondeu HTTP 200 sem
+autenticação Vercel. O código publicado é `21c65a7`; os commits posteriores
+contêm apenas documentação.
 
-O Chromium também renderizou a URL protegida sem erros de JavaScript, com o
-e-mail demo preenchido e a senha vazia. O acesso temporário de automação criado
-pela CLI foi revogado ao terminar; a proteção do deploy continua habilitada.
+O Chromium também renderizou a URL gerada protegida sem erros de JavaScript,
+com o e-mail demo preenchido e a senha vazia. O acesso temporário de automação
+criado pela CLI foi revogado ao terminar; a proteção do deploy continua habilitada.
+
+Após a promoção, **1 teste Playwright passou no endereço público**, sem mocks:
+formulário → backend Render → PostgreSQL de staging, retorno a `/conta`,
+identidade `demo@frota.test`/ADMIN, logout 204, token revogado rejeitado com 401 e
+redirecionamento da rota protegida para login. A senha foi injetada somente no
+processo, sem traces, vídeos ou screenshots. O smoke da API também confirmou
+health 200, preflight 200 com CORS exato, acesso anônimo 401 e login 200.
 
 As três amostras locais, alternando as duas receitas com typecheck frio,
 apresentaram medianas de **24,54 s antes** e **18,19 s depois**. Houve uma amostra
@@ -126,10 +134,24 @@ tratados como duração de deploy remoto. Logs e credenciais locais ficam em
 O frontend publicado precisa que `CORS_ALLOWED_ORIGINS` inclua sua origem exata.
 Um novo URL de preview não recebe autorização automaticamente. Não ampliar CORS
 com wildcard nem desligar Deployment Protection para validar um preview.
-O rollout do backend aguarda confirmação do workspace Render. A retenção do banco
-anterior está documentada para **12/11/2026 às 16h, America/Fortaleza** e precisa
-ser confirmada. O domínio público anterior permanece apontado ao deploy anterior
-até a validação dos dois serviços.
+O backend foi inicialmente publicado em `dep-dbqalccipgvc73a0fm90`, código
+`11c33eba`. Após a simplificação da senha de staging pelo ambiente, está live em
+`dep-dbqb3v6c6qcc73fqvjbg`, código `c804cb1` (mesma implementação, documentação
+atualizada). A nova senha tem 14 caracteres, sem alteração da política mínima de 12. Login novo 200, senha anterior 401, perfil ADMIN, logout e revogação JWT
+foram confirmados; o Chromium passou novamente no fluxo público completo.
+A exclusão programada da branch de banco isolada foi removida em 11/11/2026:
+a API Neon confirmou `expires_at: null`. A expiração anterior de 12/11/2026 às
+16h, America/Fortaleza, não está mais ativa. A organização permanece no plano
+Free, sem contratação paga ou alteração de dados e migrations de produção.
+O plano não tem prazo máximo de uso, mas mantém cotas e suspensão por inatividade
+ou esgotamento de compute. Consultar [limites atuais](https://neon.com/pricing).
+O Render Free ainda pode suspender por inatividade; não foram contratados planos
+pagos nem criados pings periódicos. O primeiro acesso pode precisar aguardar o
+despertar do backend; as otimizações de build não eliminam esse cold start.
+
+Revisões separadas, sem merge automático:
+[frontend](https://github.com/BarbosaDev01/fsph-fleet-management-web-deploy/pull/1) e
+[backend](https://github.com/cardosojse/fsph-fleet-management/pull/13).
 
 ## Referências verificadas
 

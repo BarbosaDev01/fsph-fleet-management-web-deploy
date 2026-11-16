@@ -2,6 +2,7 @@
 .vercel/
 .deploy-validation/
 node_modules/
+.pnpm-store/
 dist/
 coverage/
 playwright-report/
