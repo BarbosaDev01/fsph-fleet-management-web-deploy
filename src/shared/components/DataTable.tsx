@@ -21,7 +21,13 @@ export function DataTable<T extends { id: string }>({
   actions?: (row: T) => ReactNode;
 }) {
   return (
-    <TableContainer component={Paper} variant="outlined">
+    <TableContainer
+      component={Paper}
+      variant="outlined"
+      role="region"
+      tabIndex={0}
+      aria-label="Tabela de registros. Role horizontalmente para consultar todas as colunas."
+    >
       <Table>
         <TableHead>
           <TableRow>

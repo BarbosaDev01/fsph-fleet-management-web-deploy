@@ -51,7 +51,7 @@ export function FuelCardsLayout() {
         {ready ? (
           <Outlet />
         ) : (
-          <Container component="main" maxWidth="lg" sx={{ py: 5 }}>
+          <Container component="section" maxWidth="lg" sx={{ py: 5 }}>
             <Stack spacing={3}>
               {pathname !== '/demonstracoes/cartoes-combustivel' && (
                 <Button

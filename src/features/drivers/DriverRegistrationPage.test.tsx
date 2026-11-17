@@ -2,7 +2,7 @@ import { fireEvent, render, screen, within, waitFor } from '@testing-library/rea
 import userEvent from '@testing-library/user-event';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import { AppProviders } from '@/app/providers/AppProviders';
-import { routes } from '@/app/router';
+import { prototypeRoutes as routes } from '@/test/prototype-routes';
 
 async function setup(path = '/demonstracoes/frota/motoristas/novo') {
   const router = createMemoryRouter(routes, { initialEntries: [path] });

@@ -2,7 +2,7 @@ import { render, screen, within, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { AppProviders } from '@/app/providers/AppProviders';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
-import { routes } from '@/app/router';
+import { prototypeRoutes as routes } from '@/test/prototype-routes';
 
 async function setup(path = '/demonstracoes/frota/veiculos') {
   const user = userEvent.setup();

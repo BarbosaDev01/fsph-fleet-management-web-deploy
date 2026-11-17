@@ -59,7 +59,7 @@ export function FuelCardsPage({ state: providedState }: FuelCardsPageProps) {
   }
 
   return (
-    <Container component="main" maxWidth="lg" sx={{ py: { xs: 3, md: 4 } }}>
+    <Container component="section" maxWidth="lg" sx={{ py: { xs: 3, md: 4 } }}>
       <Stack spacing={3}>
         <FuelCardsHeader
           eyebrow="Frota / Combustível"

@@ -3,8 +3,20 @@ import { Link } from 'react-router-dom';
 import { PageHeading } from '@/shared/components/PageHeading';
 import { useSession } from '@/features/auth/useSession';
 import { env } from '@/shared/config/env';
+import { useAccess } from '@/features/auth/access';
 
 const modules = [
+  ['/dashboard', 'Painel da frota', 'Consulte indicadores calculados a partir da API.'],
+  [
+    '/solicitacoes',
+    'Solicitações de viagem',
+    'Registre demandas e acompanhe aprovação e agendamento.',
+  ],
+  [
+    '/atendimento-svo',
+    'Atendimento e agendamento',
+    'Analise solicitações e consulte a disponibilidade de alocação.',
+  ],
   ['/transportes', 'Transportes', 'Solicite transportes e acompanhe o atendimento.'],
   ['/viagens', 'Viagens', 'Planeje saídas, organize paradas e registre a execução.'],
   ['/veiculos', 'Veículos', 'Consulte a frota, a quilometragem e os documentos.'],
@@ -15,6 +27,7 @@ const modules = [
 
 export function HomePage() {
   const session = useSession();
+  const { canVisit } = useAccess();
   return (
     <div>
       <PageHeading
@@ -28,24 +41,26 @@ export function HomePage() {
             ? [
                 [
                   '/demonstracoes',
-                  'Novas telas',
-                  'Explore as interfaces da equipe, com dados demonstrativos identificados.',
+                  'Protótipos pendentes',
+                  'Consulte as interfaces que ainda dependem de integração.',
                 ],
               ]
             : []),
-        ].map(([to, title, description]) => (
-          <Paper key={to} variant="outlined" sx={{ p: 3, flex: '1 1 280px' }}>
-            <Stack spacing={2}>
-              <Typography component="h2" variant="h6">
-                {title}
-              </Typography>
-              <Typography color="text.secondary">{description}</Typography>
-              <Button component={Link} to={to} sx={{ alignSelf: 'flex-start' }}>
-                Acessar {title.toLowerCase()}
-              </Button>
-            </Stack>
-          </Paper>
-        ))}
+        ]
+          .filter(([to]) => canVisit(to!))
+          .map(([to, title, description]) => (
+            <Paper key={to} variant="outlined" sx={{ p: 3, flex: '1 1 280px' }}>
+              <Stack spacing={2}>
+                <Typography component="h2" variant="h6">
+                  {title}
+                </Typography>
+                <Typography color="text.secondary">{description}</Typography>
+                <Button component={Link} to={to} sx={{ alignSelf: 'flex-start' }}>
+                  Acessar {title.toLowerCase()}
+                </Button>
+              </Stack>
+            </Paper>
+          ))}
       </Stack>
     </div>
   );

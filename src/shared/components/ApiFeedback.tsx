@@ -7,7 +7,7 @@ export function ApiFeedback({ error, retry }: { error: unknown; retry?: () => vo
     <Alert
       severity="error"
       action={
-        retry ? (
+        retry && !(error instanceof ApiError && error.status === 403) ? (
           <Button color="inherit" onClick={retry}>
             Tentar novamente
           </Button>
