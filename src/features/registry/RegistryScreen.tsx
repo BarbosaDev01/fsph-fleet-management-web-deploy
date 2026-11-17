@@ -1,11 +1,15 @@
 import { useState, type ReactNode } from 'react';
-import { Alert, Button, Chip, Stack, TextField } from '@mui/material';
+import { Alert, Button, Chip, Stack } from '@mui/material';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { ApiFeedback, Loading } from '@/shared/components/ApiFeedback';
 import { DataTable, type Column } from '@/shared/components/DataTable';
 import { FormDialog, type FormSpec } from '@/shared/components/FormDialog';
 import { PageHeading } from '@/shared/components/PageHeading';
 import { invalidateData } from '@/shared/api/invalidate';
+import { useAccess } from '@/features/auth/access';
+import type { Permission } from '@/shared/api/types';
+import { FilterBar, type SelectFilter } from '@/shared/components/FilterBar';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export type { FormSpec } from '@/shared/components/FormDialog';
 export function ActiveChip({ active }: { active: boolean }) {
@@ -28,6 +32,9 @@ export function RegistryScreen<T extends { id: string }>({
   edit,
   actions,
   filter,
+  createDisabled = false,
+  editDisabled = false,
+  filters = [],
 }: {
   name: string;
   title: string;
@@ -38,29 +45,61 @@ export function RegistryScreen<T extends { id: string }>({
   edit?: (row: T) => FormSpec;
   actions?: (row: T, open: (form: FormSpec) => void) => ReactNode;
   filter?: (row: T, search: string) => boolean;
+  createDisabled?: boolean;
+  editDisabled?: boolean;
+  filters?: (SelectFilter & { value: (row: T) => string })[];
 }) {
+  const { can } = useAccess();
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const writes: Record<string, Permission> = {
+    sectors: 'SECTORS_WRITE',
+    users: 'USERS_WRITE',
+    vehicles: 'VEHICLES_WRITE',
+    drivers: 'DRIVERS_WRITE',
+  };
+  const writePermission = name.startsWith('documents-')
+    ? 'VEHICLES_WRITE'
+    : name.startsWith('licenses-')
+      ? 'DRIVERS_WRITE'
+      : writes[name];
+  const writable = Boolean(writePermission && can(writePermission));
   const [form, setForm] = useState<FormSpec | null>(null);
+  const creatingByRoute = pathname.endsWith('/novo');
+  const activeForm = writable
+    ? (form ?? (creatingByRoute && !createDisabled ? create : null))
+    : null;
+  const closeForm = () => {
+    setForm(null);
+    if (creatingByRoute) void navigate(pathname.slice(0, -5), { replace: true });
+  };
   const [search, setSearch] = useState('');
+  const [selected, setSelected] = useState<Record<string, string>>({});
   const [saved, setSaved] = useState(false);
   const client = useQueryClient();
   const query = useQuery({ queryKey: ['registry', name], queryFn: ({ signal }) => list(signal) });
   const rows = (query.data ?? []).filter(
-    (row) => !filter || filter(row, search.toLocaleLowerCase('pt-BR')),
+    (row) =>
+      (!filter || filter(row, search.toLocaleLowerCase('pt-BR'))) &&
+      filters.every((entry) => !selected[entry.name] || entry.value(row) === selected[entry.name]),
   );
   return (
     <Stack spacing={2}>
       <PageHeading
         title={title}
         action={
-          <Button
-            variant="contained"
-            onClick={() => {
-              setSaved(false);
-              setForm(create);
-            }}
-          >
-            {createLabel}
-          </Button>
+          writable && (
+            <Button
+              variant="contained"
+              disabled={createDisabled}
+              onClick={() => {
+                setSaved(false);
+                setForm(create);
+              }}
+            >
+              {createLabel}
+            </Button>
+          )
         }
       />
       {saved && (
@@ -69,11 +108,17 @@ export function RegistryScreen<T extends { id: string }>({
         </Alert>
       )}
       {filter && (
-        <TextField
-          label={`Buscar em ${title.toLowerCase()}`}
-          value={search}
-          onChange={(event) => setSearch(event.target.value)}
-          sx={{ maxWidth: 400 }}
+        <FilterBar
+          searchLabel={`Buscar em ${title.toLowerCase()}`}
+          search={search}
+          onSearch={setSearch}
+          filters={filters}
+          values={selected}
+          onChange={(name, value) => setSelected((current) => ({ ...current, [name]: value }))}
+          onClear={() => {
+            setSearch('');
+            setSelected({});
+          }}
         />
       )}
       <ApiFeedback
@@ -95,25 +140,27 @@ export function RegistryScreen<T extends { id: string }>({
                 spacing={1}
                 sx={{ justifyContent: 'flex-end', flexWrap: 'wrap' }}
               >
-                {edit && (
-                  <Button size="small" onClick={() => setForm(edit(row))}>
+                {writable && edit && (
+                  <Button size="small" disabled={editDisabled} onClick={() => setForm(edit(row))}>
                     Editar
                   </Button>
                 )}
-                {actions?.(row, setForm)}
+                {actions?.(row, (spec) => {
+                  if (writable) setForm(spec);
+                })}
               </Stack>
             )}
           />
         )
       )}
-      {form && (
+      {activeForm && (
         <FormDialog
-          title={form.title}
-          fields={form.fields}
-          defaults={form.defaults}
-          onClose={() => setForm(null)}
+          title={activeForm.title}
+          fields={activeForm.fields}
+          defaults={activeForm.defaults}
+          onClose={closeForm}
           onSubmit={async (values) => {
-            await form.submit(values);
+            await activeForm.submit(values);
             await invalidateData(client);
             setSaved(true);
           }}

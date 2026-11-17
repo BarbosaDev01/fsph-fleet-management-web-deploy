@@ -97,6 +97,7 @@ export function FormDialog({
                       field.type === 'date' || field.type === 'datetime-local' ? true : undefined,
                   },
                   htmlInput: {
+                    'aria-required': field.required,
                     min: field.min,
                     step: field.type === 'number' ? 1 : undefined,
                     maxLength: field.maxLength,

@@ -10,7 +10,7 @@ export function FuelCardEditPage() {
   const card =
     data?.state.status === 'ready' ? data.state.cards.find((item) => item.id === id) : undefined;
   return (
-    <Container component="main" maxWidth="md" sx={{ py: 4 }}>
+    <Container component="section" maxWidth="md" sx={{ py: 4 }}>
       <Stack spacing={3}>
         <Button
           component={Link}

@@ -8,6 +8,7 @@ import { AppProviders } from '@/app/providers/AppProviders';
 import { routes } from '@/app/router';
 import { queryClient } from '@/app/providers/queryClient';
 import { authToken } from '@/shared/api/auth-token';
+import { permissions } from '@/shared/api/types';
 
 const base = `${window.location.origin}/api/v1`;
 const me = {
@@ -16,6 +17,7 @@ const me = {
   name: 'Maria',
   email: 'maria@fsph.test',
   role: 'ADMIN',
+  permissions,
 };
 const server = setupServer(http.get(`${base}/auth/me`, () => HttpResponse.json(me)));
 beforeAll(() => server.listen({ onUnhandledFrame: 'error' }));
@@ -53,6 +55,7 @@ describe('App', () => {
     renderPage('/');
     expect(await screen.findByRole('heading', { name: /gestão de frotas/i })).toBeInTheDocument();
     expect(screen.getByText(/Olá, Maria/)).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Abrir menu de navegação' }));
     expect(screen.getByRole('navigation', { name: 'Navegação principal' })).toBeInTheDocument();
   });
 
@@ -152,5 +155,18 @@ describe('App', () => {
     expect(logout).toHaveBeenCalledOnce();
     expect(authToken.get()).toBeNull();
     expect(queryClient.getQueryData(['session', 'test-token'])).toBeUndefined();
+  });
+
+  it('informa falha no logout e conserva a sessão até confirmar a revogação', async () => {
+    server.use(
+      http.post(`${base}/auth/logout`, () =>
+        HttpResponse.json({ detail: 'Logout temporariamente indisponível' }, { status: 503 }),
+      ),
+    );
+    renderPage('/');
+    await userEvent.click(await screen.findByRole('button', { name: 'Sair' }));
+    expect(await screen.findByText('Logout temporariamente indisponível')).toBeVisible();
+    expect(authToken.get()).toBe('test-token');
+    expect(screen.queryByRole('button', { name: 'Entrar' })).not.toBeInTheDocument();
   });
 });

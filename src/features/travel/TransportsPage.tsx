@@ -10,6 +10,7 @@ import type { FormSpec } from '@/features/registry/RegistryScreen';
 import type { Dto } from '@/shared/api/types';
 import { dateTime, statusLabels } from '@/shared/format';
 import { transportsApi } from './api';
+import { useAccess } from '@/features/auth/access';
 
 const statuses: Dto['TransportStatus'][] = ['PENDING', 'ASSIGNED', 'COMPLETED', 'CANCELLED'];
 const createForm: FormSpec = {
@@ -35,6 +36,7 @@ const createForm: FormSpec = {
 };
 
 export function TransportsPage() {
+  const { can } = useAccess();
   const [page, setPage] = useState(0);
   const [status, setStatus] = useState<Dto['TransportStatus'] | ''>('');
   const [sectorId, setSectorId] = useState('');
@@ -51,9 +53,11 @@ export function TransportsPage() {
         title="Transportes"
         description="Solicitações de transporte e acompanhamento dos atendimentos."
         action={
-          <Button variant="contained" onClick={() => setForm(createForm)}>
-            Solicitar transporte
-          </Button>
+          can('TRANSPORTS_REQUEST') && (
+            <Button variant="contained" onClick={() => setForm(createForm)}>
+              Solicitar transporte
+            </Button>
+          )
         }
       />
       <Stack
@@ -141,6 +145,7 @@ export function TransportsPage() {
 }
 
 export function TransportDetailPage() {
+  const { canAny } = useAccess();
   const { id = '' } = useParams();
   const [form, setForm] = useState<FormSpec | null>(null);
   const query = useQuery({
@@ -169,22 +174,23 @@ export function TransportDetailPage() {
           <Typography>Destino: {transport.destination}</Typography>
           <Typography>Ocorrência: {dateTime(transport.occurredAt)}</Typography>
           <Typography sx={{ overflowWrap: 'anywhere' }}>Identificador: {transport.id}</Typography>
-          {['PENDING', 'ASSIGNED'].includes(transport.status) && (
-            <Button
-              color="error"
-              variant="outlined"
-              sx={{ alignSelf: 'flex-start' }}
-              onClick={() =>
-                setForm({
-                  title: 'Cancelar esta solicitação de transporte?',
-                  fields: [],
-                  submit: () => transportsApi.cancel(id),
-                })
-              }
-            >
-              Cancelar solicitação
-            </Button>
-          )}
+          {canAny(['TRANSPORTS_REQUEST', 'TRANSPORTS_MANAGE']) &&
+            ['PENDING', 'ASSIGNED'].includes(transport.status) && (
+              <Button
+                color="error"
+                variant="outlined"
+                sx={{ alignSelf: 'flex-start' }}
+                onClick={() =>
+                  setForm({
+                    title: 'Cancelar esta solicitação de transporte?',
+                    fields: [],
+                    submit: () => transportsApi.cancel(id),
+                  })
+                }
+              >
+                Cancelar solicitação
+              </Button>
+            )}
         </>
       )}
       <ActionForm form={form} onClose={() => setForm(null)} />

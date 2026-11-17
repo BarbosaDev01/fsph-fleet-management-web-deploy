@@ -65,7 +65,7 @@ describe('AtendimentoSvoPage', () => {
     expect(transports.find((transport) => transport.id === 'tr-0404')?.status).toBe('PENDING');
     expect(screen.getByText('Solicitação aprovada')).toBeInTheDocument();
     expect(
-      screen.getByText('Aprovação registrada. Nenhuma ordem ou rota foi criada.'),
+      screen.getByText('Aprovação simulada apenas em memória. Nenhuma ordem ou rota foi criada.'),
     ).toBeInTheDocument();
     selectRequest('SVO-2026-0406');
     selectRequest('SVO-2026-0404');

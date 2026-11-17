@@ -5,7 +5,7 @@ import { FuelCardsHeader } from '@/features/fuel-cards/components/FuelCardsHeade
 
 export function FuelCardCreatePage() {
   return (
-    <Container component="main" maxWidth="lg" sx={{ py: { xs: 3, md: 4 } }}>
+    <Container component="section" maxWidth="lg" sx={{ py: { xs: 3, md: 4 } }}>
       <Stack spacing={3}>
         <Button
           component={Link}

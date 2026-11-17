@@ -4,7 +4,6 @@ import { useQuery } from '@tanstack/react-query';
 import {
   roles,
   roleLabels,
-  permissions,
   permissionLabels,
   type UserRole,
   type Permission,
@@ -13,8 +12,19 @@ import { ApiFeedback, Loading } from '@/shared/components/ApiFeedback';
 import { PageHeading } from '@/shared/components/PageHeading';
 import { ActionForm } from '@/shared/components/ActionForm';
 import { permissionsApi } from './api';
+import { useAccess } from '@/features/auth/access';
 
-function RolePermissions({ role, initial }: { role: UserRole; initial: Permission[] }) {
+function RolePermissions({
+  role,
+  initial,
+  catalog,
+}: {
+  role: UserRole;
+  initial: string[];
+  catalog: string[];
+}) {
+  const { can } = useAccess();
+  const writable = can('PERMISSIONS_WRITE') && role !== 'ADMIN';
   const [selected, setSelected] = useState(initial);
   const [confirm, setConfirm] = useState(false);
   return (
@@ -27,15 +37,15 @@ function RolePermissions({ role, initial }: { role: UserRole; initial: Permissio
           <Alert severity="info">As permissões do administrador são fixas.</Alert>
         )}
         <Stack direction="row" sx={{ flexWrap: 'wrap' }}>
-          {permissions.map((permission) => (
+          {[...new Set([...catalog, ...initial])].map((permission) => (
             <FormControlLabel
               key={permission}
               sx={{ minWidth: 260 }}
-              label={permissionLabels[permission]}
+              label={permissionLabels[permission as Permission] ?? permission}
               control={
                 <Checkbox
                   checked={selected.includes(permission)}
-                  disabled={role === 'ADMIN'}
+                  disabled={!writable}
                   onChange={(_, checked) =>
                     setSelected((current) =>
                       checked
@@ -48,7 +58,7 @@ function RolePermissions({ role, initial }: { role: UserRole; initial: Permissio
             />
           ))}
         </Stack>
-        {role !== 'ADMIN' && (
+        {writable && (
           <Button
             sx={{ alignSelf: 'flex-start' }}
             variant="outlined"
@@ -100,6 +110,7 @@ export function PermissionsPage() {
             key={`${role}-${JSON.stringify(query.data?.[role])}`}
             role={role}
             initial={query.data?.[role] ?? []}
+            catalog={query.data?.ADMIN ?? []}
           />
         ))
       )}

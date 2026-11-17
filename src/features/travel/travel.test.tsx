@@ -7,6 +7,7 @@ import { routes } from '@/app/router';
 import { AppProviders } from '@/app/providers/AppProviders';
 import { queryClient } from '@/app/providers/queryClient';
 import { authToken } from '@/shared/api/auth-token';
+import { permissions } from '@/shared/api/types';
 
 const base = `${window.location.origin}/api/v1`;
 const server = setupServer(
@@ -17,6 +18,7 @@ const server = setupServer(
       name: 'Admin',
       email: 'admin@fsph.test',
       role: 'ADMIN',
+      permissions,
     }),
   ),
 );

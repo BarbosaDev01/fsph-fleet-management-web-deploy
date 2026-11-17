@@ -13,7 +13,6 @@ import {
   Tabs,
   TextField,
 } from '@mui/material';
-import { Link } from 'react-router-dom';
 
 import {
   dutyTeams,
@@ -203,86 +202,6 @@ function StatusBadge({ status }: { status: string }) {
   return <span className={`status-badge status-${className}`}>{status}</span>;
 }
 
-function Sidebar() {
-  return (
-    <aside className="svo-sidebar">
-      <div className="svo-brand">
-        <div className="brand-title">SVO</div>
-        <div>Frota administrativa</div>
-        <div>Serviço de Verificação de Óbito</div>
-      </div>
-      <nav aria-label="Navegação institucional" className="side-nav">
-        <Link className="side-link" to="/demonstracoes/dashboard">
-          <Icon name="dashboard" />
-          Dashboard
-        </Link>
-        <Link
-          aria-current="page"
-          className="side-link side-link-active"
-          to="/demonstracoes/atendimento-svo"
-        >
-          <Icon name="clipboard" />
-          Atendimento SVO
-        </Link>
-        <Link className="side-link" to="/demonstracoes/solicitacoes">
-          <Icon name="inbox" />
-          Solicitações
-        </Link>
-        {[
-          ['routes', 'Ordens'],
-          ['routes', 'Rotas'],
-          ['maintenance', 'Manutenções'],
-        ].map(([icon, label]) => (
-          <span
-            aria-disabled="true"
-            className="side-link unavailable"
-            key={label}
-            title="Indisponível neste protótipo"
-          >
-            <Icon name={icon as IconName} />
-            {label}
-          </span>
-        ))}
-        <Link className="side-link" to="/demonstracoes/frota/veiculos">
-          <Icon name="vehicle" />
-          Veículos
-        </Link>
-        <Link className="side-link" to="/demonstracoes/frota/motoristas">
-          <Icon name="person" />
-          Condutores
-        </Link>
-        <Link className="side-link" to="/demonstracoes/cadastro-usuarios">
-          <Icon name="users" />
-          Usuários
-        </Link>
-      </nav>
-      <div className="side-context">
-        <span>ATENDENTE / SVO</span>
-        <p>
-          Análise e aprovação SVO.
-          <br />
-          Alocação de equipes e veículos pela Logística.
-        </p>
-      </div>
-      <div className="side-user">
-        <div className="user-avatar">CO</div>
-        <div>
-          <strong>Clara Operações</strong>
-          <span>Atendente • Setor SVO</span>
-        </div>
-      </div>
-      <span
-        aria-disabled="true"
-        className="side-logout unavailable"
-        title="Indisponível neste protótipo"
-      >
-        <Icon name="logout" />
-        Sair
-      </span>
-    </aside>
-  );
-}
-
 function SummaryItem({ number, title, detail }: { number: number; title: string; detail: string }) {
   return (
     <div className="summary-item">
@@ -318,13 +237,6 @@ function PageHeader({
             Triagem demonstrativa • 06/10/2026 • Dados locais desta sessão
           </p>
         </div>
-        <div className="account-context">
-          <span className="account-badge">
-            <Icon name="lock" size={12} />
-            Setor: SVO • fixo pela conta
-          </span>
-          <span>Administrativo indisponível para este perfil</span>
-        </div>
       </header>
       <section aria-label="Resumo da operação" className="summary-grid">
         <SummaryItem
@@ -339,7 +251,7 @@ function PageHeader({
         />
         <SummaryItem
           number={routes.filter((route) => route.status === 'IN_PROGRESS').length}
-          title="Rotas ativas no sistema"
+          title="Rotas dos exemplos"
           detail="Registros de rota do mock operacional"
         />
       </section>
@@ -918,14 +830,13 @@ export function AtendimentoSvoPage() {
         action: 'Solicitação aprovada',
         time: formatDateTime(),
       });
-      setToast('Aprovação registrada. Nenhuma ordem ou rota foi criada.');
+      setToast('Aprovação simulada apenas em memória. Nenhuma ordem ou rota foi criada.');
     }
     setDialog(null);
   }
   return (
     <div className="svo-app-shell">
-      <Sidebar />
-      <main className="svo-main">
+      <section className="svo-main">
         <PageHeader pendingCount={pending} approvedCount={approved} />
         <Queue
           requests={state.requests}
@@ -997,7 +908,7 @@ export function AtendimentoSvoPage() {
             {toast}
           </Alert>
         </Snackbar>
-      </main>
+      </section>
     </div>
   );
 }

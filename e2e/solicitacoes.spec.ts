@@ -1,51 +1,28 @@
-import { expect, test } from '@playwright/test';
+﻿import { expect, test } from '@playwright/test';
+import { openNavigation, prepareDemoSession } from './demo-session';
+test.beforeEach(async ({ page }) => prepareDemoSession(page));
 
-test('Solicitações abre Nova solicitação pelo botão da listagem e navega pelas telas existentes', async ({
-  page,
-}) => {
+test('UI: aliases incorporados navegam entre módulos reais', async ({ page }) => {
   await page.goto('/demonstracoes/solicitacoes');
-  await expect(page.getByRole('heading', { name: 'Solicitações' })).toBeVisible();
-  await page.getByRole('link', { name: 'Nova solicitação' }).click();
-  await expect(page).toHaveURL(/\/solicitacoes\/nova$/);
-  await expect(page.getByRole('heading', { name: 'Nova solicitação' })).toBeVisible();
-  await page.getByRole('link', { name: 'Dashboard' }).click();
-  await expect(page).toHaveURL(/\/dashboard$/);
-  await page.getByRole('link', { name: 'Atendimento SVO' }).click();
+  await expect(page.getByRole('heading', { name: 'Solicitações de viagem' })).toBeVisible();
+  await page.getByRole('link', { name: 'Nova solicitação', exact: true }).click();
+  await expect(page.getByRole('dialog', { name: 'Nova solicitação de viagem' })).toBeVisible();
+  await page.getByRole('button', { name: 'Cancelar', exact: true }).click();
+  const nav = await openNavigation(page);
+  await nav.getByRole('link', { name: 'Atendimento e agendamento' }).click();
   await expect(page).toHaveURL(/\/atendimento-svo$/);
-  await page.getByRole('link', { name: 'Solicitações' }).click();
-  await expect(page).toHaveURL(/\/solicitacoes$/);
+  await expect(page.getByRole('heading', { name: 'Atendimento e agendamento' })).toBeVisible();
 });
 
-test('listagem de solicitações se adapta aos principais tamanhos de viewport', async ({ page }) => {
-  const viewports = [
-    { width: 1920, height: 1080 },
-    { width: 1440, height: 900 },
-    { width: 1366, height: 768 },
-    { width: 1024, height: 768 },
-    { width: 768, height: 1024 },
-    { width: 390, height: 844 },
-    { width: 360, height: 800 },
-  ];
-
-  for (const viewport of viewports) {
-    await page.setViewportSize(viewport);
-    await page.goto('/demonstracoes/solicitacoes');
-    await expect(page.getByRole('heading', { name: 'Solicitações' })).toBeVisible();
-    const layout = await page.evaluate(() => ({
-      clientWidth: document.documentElement.clientWidth,
-      scrollWidth: document.documentElement.scrollWidth,
-      sidebar: document.querySelector('.dashboard-sidebar')?.getBoundingClientRect(),
-      main: document.querySelector('.solicitacoes-main')?.getBoundingClientRect(),
-    }));
-    expect(layout.scrollWidth).toBeLessThanOrEqual(layout.clientWidth);
-    if (viewport.width <= 820) {
-      expect(layout.sidebar!.width).toBeCloseTo(layout.clientWidth, 0);
-      expect(layout.sidebar!.bottom).toBeLessThanOrEqual(layout.main!.top + 1);
-    } else {
-      expect(layout.sidebar!.right).toBeLessThanOrEqual(layout.main!.left + 1);
-    }
+test('UI: listagem responsiva distingue filtros e vazio', async ({ page }) => {
+  for (const width of [1440, 768, 390]) {
+    await page.setViewportSize({ width, height: 1000 });
+    await page.goto('/solicitacoes');
+    await expect(page.getByRole('cell', { name: 'Hospital', exact: true })).toBeVisible();
+    await page.getByLabel('Buscar solicitação').fill('inexistente');
+    await expect(page.getByText('Nenhum registro encontrado.')).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+      true,
+    );
   }
 });
-import { prepareDemoSession } from './demo-session';
-
-test.beforeEach(async ({ page }) => prepareDemoSession(page));

@@ -1,8 +1,10 @@
 export function dateTime(value: string | null | undefined): string {
   return value
-    ? new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'short' }).format(
-        new Date(value),
-      )
+    ? new Intl.DateTimeFormat('pt-BR', {
+        dateStyle: 'short',
+        timeStyle: 'short',
+        timeZone: 'America/Fortaleza',
+      }).format(new Date(value))
     : '—';
 }
 export function localDate(value: string | null | undefined): string {

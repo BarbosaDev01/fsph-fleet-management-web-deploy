@@ -10,8 +10,10 @@ import { PageHeading } from '@/shared/components/PageHeading';
 import { dateTime, dateTimeInput, statusLabels } from '@/shared/format';
 import { routesApi } from './api';
 import { scheduleBody, scheduleFields } from './schedule';
+import { useAccess } from '@/features/auth/access';
 
 export function RouteDetailPage() {
+  const { can, canAny } = useAccess();
   const { id = '' } = useParams();
   const [form, setForm] = useState<FormSpec | null>(null);
   const query = useQuery({
@@ -58,58 +60,64 @@ export function RouteDetailPage() {
               <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 1 }}>
                 {route.status === 'PLANNED' && (
                   <>
-                    <Button
-                      variant="outlined"
-                      onClick={() =>
-                        setForm({
-                          title: 'Reagendar viagem',
-                          fields: scheduleFields,
-                          defaults: {
-                            plannedStartAt: dateTimeInput(route.plannedStartAt),
-                            plannedDurationMinutes: String(route.plannedDurationMinutes),
-                          },
-                          submit: (values) => routesApi.schedule(id, scheduleBody(values)),
-                        })
-                      }
-                    >
-                      Reagendar
-                    </Button>
-                    <Button
-                      variant="contained"
-                      onClick={() =>
-                        setForm({
-                          title: 'Iniciar viagem',
-                          fields: [
-                            {
-                              name: 'startMileage',
-                              label: 'Quilometragem inicial (km)',
-                              type: 'number',
-                              min: 0,
-                              required: true,
+                    {can('ROUTES_MANAGE') && (
+                      <Button
+                        variant="outlined"
+                        onClick={() =>
+                          setForm({
+                            title: 'Reagendar viagem',
+                            fields: scheduleFields,
+                            defaults: {
+                              plannedStartAt: dateTimeInput(route.plannedStartAt),
+                              plannedDurationMinutes: String(route.plannedDurationMinutes),
                             },
-                          ],
-                          submit: (values) =>
-                            routesApi.start(id, { startMileage: Number(values.startMileage) }),
-                        })
-                      }
-                    >
-                      Iniciar viagem
-                    </Button>
-                    <Button
-                      color="error"
-                      onClick={() =>
-                        setForm({
-                          title: 'Cancelar esta viagem?',
-                          fields: [],
-                          submit: () => routesApi.cancel(id),
-                        })
-                      }
-                    >
-                      Cancelar viagem
-                    </Button>
+                            submit: (values) => routesApi.schedule(id, scheduleBody(values)),
+                          })
+                        }
+                      >
+                        Reagendar
+                      </Button>
+                    )}
+                    {can('ROUTES_EXECUTE') && (
+                      <Button
+                        variant="contained"
+                        onClick={() =>
+                          setForm({
+                            title: 'Iniciar viagem',
+                            fields: [
+                              {
+                                name: 'startMileage',
+                                label: 'Quilometragem inicial (km)',
+                                type: 'number',
+                                min: 0,
+                                required: true,
+                              },
+                            ],
+                            submit: (values) =>
+                              routesApi.start(id, { startMileage: Number(values.startMileage) }),
+                          })
+                        }
+                      >
+                        Iniciar viagem
+                      </Button>
+                    )}
+                    {can('ROUTES_MANAGE') && (
+                      <Button
+                        color="error"
+                        onClick={() =>
+                          setForm({
+                            title: 'Cancelar esta viagem?',
+                            fields: [],
+                            submit: () => routesApi.cancel(id),
+                          })
+                        }
+                      >
+                        Cancelar viagem
+                      </Button>
+                    )}
                   </>
                 )}
-                {route.status === 'IN_PROGRESS' && (
+                {route.status === 'IN_PROGRESS' && can('ROUTES_EXECUTE') && (
                   <Button
                     variant="contained"
                     onClick={() =>
@@ -138,7 +146,8 @@ export function RouteDetailPage() {
           <PageHeading
             title="Paradas"
             action={
-              route.status === 'PLANNED' && (
+              route.status === 'PLANNED' &&
+              can('ROUTES_MANAGE') && (
                 <Button
                   variant="outlined"
                   onClick={() =>
@@ -199,21 +208,24 @@ export function RouteDetailPage() {
                 ]}
                 actions={(stop) => (
                   <Stack direction="row" sx={{ justifyContent: 'flex-end', gap: 1 }}>
-                    {stop.status === 'PENDING' && route.status === 'IN_PROGRESS' && (
-                      <Button
-                        size="small"
-                        onClick={() =>
-                          setForm({
-                            title: `Concluir a parada ${stop.stopSequence}?`,
-                            fields: [],
-                            submit: () => routesApi.completeStop(id, stop.id),
-                          })
-                        }
-                      >
-                        Concluir
-                      </Button>
-                    )}
+                    {can('ROUTES_EXECUTE') &&
+                      stop.status === 'PENDING' &&
+                      route.status === 'IN_PROGRESS' && (
+                        <Button
+                          size="small"
+                          onClick={() =>
+                            setForm({
+                              title: `Concluir a parada ${stop.stopSequence}?`,
+                              fields: [],
+                              submit: () => routesApi.completeStop(id, stop.id),
+                            })
+                          }
+                        >
+                          Concluir
+                        </Button>
+                      )}
                     {stop.status === 'PENDING' &&
+                      canAny(['ROUTES_MANAGE', 'ROUTES_EXECUTE']) &&
                       ['PLANNED', 'IN_PROGRESS'].includes(route.status) && (
                         <Button
                           size="small"

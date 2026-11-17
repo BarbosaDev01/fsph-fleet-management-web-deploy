@@ -1,3 +1,4 @@
+import { permissions } from '../src/shared/api/types';
 import { expect, test } from '@playwright/test';
 
 test('exige login para acessar as telas', async ({ page }) => {
@@ -34,7 +35,14 @@ test('autentica, lista veículos e registra documento', async ({ page }) => {
     expect(request.headers().authorization).toBe('Bearer e2e-token');
     if (path.endsWith('/auth/me'))
       return route.fulfill({
-        json: { id: 'u1', sectorId: 's1', name: 'Admin', email: 'admin@fsph.test', role: 'ADMIN' },
+        json: {
+          id: 'u1',
+          sectorId: 's1',
+          name: 'Admin',
+          email: 'admin@fsph.test',
+          role: 'ADMIN',
+          permissions,
+        },
       });
     if (path.endsWith('/sectors')) return route.fulfill({ json: [] });
     if (path.endsWith('/vehicles/v1/documents')) {

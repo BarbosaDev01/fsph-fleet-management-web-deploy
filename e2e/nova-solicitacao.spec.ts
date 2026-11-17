@@ -1,39 +1,23 @@
-import { expect, test } from '@playwright/test';
+﻿import { expect, test } from '@playwright/test';
+import { prepareDemoSession } from './demo-session';
+test.beforeEach(async ({ page }) => prepareDemoSession(page));
 
-const viewports = [
-  { width: 1920, height: 1080 },
-  { width: 1440, height: 900 },
-  { width: 1366, height: 768 },
-  { width: 1024, height: 768 },
-  { width: 768, height: 1024 },
-  { width: 390, height: 844 },
-  { width: 360, height: 800 },
-];
-
-test('Nova solicitação se adapta aos viewports sem overflow horizontal', async ({ page }) => {
-  for (const viewport of viewports) {
-    await page.setViewportSize(viewport);
+test('UI: formulário canônico responsivo com retorno e finalidade', async ({ page }) => {
+  for (const width of [1920, 1440, 1366, 1024, 768, 390, 360]) {
+    await page.setViewportSize({ width, height: 1000 });
     await page.goto('/demonstracoes/solicitacoes/nova');
-
-    await expect(page.getByRole('heading', { name: 'Nova solicitação' })).toBeVisible();
-    await expect(page.getByLabel('Quantidade de passageiros *')).toBeVisible();
-    const dimensions = await page.evaluate(() => ({
-      clientWidth: document.documentElement.clientWidth,
-      scrollWidth: document.documentElement.scrollWidth,
-      sidebar: document.querySelector('.dashboard-sidebar')?.getBoundingClientRect(),
-      main: document.querySelector('.nova-main')?.getBoundingClientRect(),
-    }));
-
-    expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.clientWidth);
-    expect(dimensions.sidebar).toBeTruthy();
-    expect(dimensions.main).toBeTruthy();
-    if (viewport.width > 820) {
-      expect(dimensions.sidebar!.right).toBeLessThanOrEqual(dimensions.main!.left + 1);
-    } else {
-      expect(dimensions.sidebar!.bottom).toBeLessThanOrEqual(dimensions.main!.top + 1);
-    }
+    await expect(page).toHaveURL(/\/solicitacoes\/nova$/);
+    const dialog = page.getByRole('dialog', { name: 'Nova solicitação de viagem' });
+    await expect(dialog.getByLabel('Retorno previsto')).toBeVisible();
+    await expect(dialog.getByLabel('Finalidade')).toBeVisible();
+    await expect(dialog.getByLabel('Número de passageiros')).toHaveAttribute(
+      'aria-required',
+      'true',
+    );
+    await expect(page.getByRole('radio', { name: /rota/ })).toHaveCount(0);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+      true,
+    );
+    await dialog.getByRole('button', { name: 'Cancelar' }).click();
   }
 });
-import { prepareDemoSession } from './demo-session';
-
-test.beforeEach(async ({ page }) => prepareDemoSession(page));

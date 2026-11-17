@@ -20,7 +20,9 @@ for (const path of [
     await expect(page.getByRole('table')).toHaveCount(0);
     await expect(page.getByRole('article')).toHaveCount(0);
     await expect(page.getByText('•••• 1042', { exact: true })).toHaveCount(0);
-    await expect(page.getByRole('navigation')).toHaveCount(0);
+    await expect(page.getByRole('navigation')).toHaveCount(
+      path.startsWith('/demonstracoes') ? 1 : 0,
+    );
     await expect(page.getByRole('button', { name: /Salvar|Vincular|Confirmar/ })).toHaveCount(0);
     expect(requests).toEqual([]);
   });

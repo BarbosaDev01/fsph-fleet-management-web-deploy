@@ -1,36 +1,25 @@
-import { expect, test } from '@playwright/test';
+﻿import { expect, test } from '@playwright/test';
+import { openNavigation, prepareDemoSession } from './demo-session';
+test.beforeEach(async ({ page }) => prepareDemoSession(page));
 
-const viewports = [
-  { width: 1920, height: 1080 },
-  { width: 1440, height: 900 },
-  { width: 1366, height: 768 },
-  { width: 1024, height: 768 },
-  { width: 768, height: 1024 },
-  { width: 390, height: 844 },
-  { width: 360, height: 800 },
-];
-
-test('dashboard se adapta aos viewports e mantém os filtros acessíveis', async ({ page }) => {
-  for (const viewport of viewports) {
-    await page.setViewportSize(viewport);
+test('UI: painel com fontes de API e navegação única em todos os tamanhos', async ({ page }) => {
+  for (const width of [1920, 1440, 1366, 1024, 768, 390, 360]) {
+    await page.setViewportSize({ width, height: 1000 });
     await page.goto('/demonstracoes/dashboard');
-    await expect(page.getByRole('heading', { name: 'Visão geral da frota' })).toBeVisible();
-    await expect(page.getByRole('combobox', { name: 'Filtrar por setor' })).toBeVisible();
-    await expect(page.getByRole('combobox', { name: 'Filtrar por período' })).toBeVisible();
-    const dimensions = await page.evaluate(() => ({
-      clientWidth: document.documentElement.clientWidth,
-      scrollWidth: document.documentElement.scrollWidth,
-      sidebar: document.querySelector('.dashboard-sidebar')?.getBoundingClientRect(),
-      main: document.querySelector('.dashboard-main')?.getBoundingClientRect(),
-    }));
-    expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.clientWidth);
-    if (viewport.width > 820) {
-      expect(dimensions.sidebar!.right).toBeLessThanOrEqual(dimensions.main!.left + 1);
-    } else {
-      expect(dimensions.sidebar!.bottom).toBeLessThanOrEqual(dimensions.main!.top + 1);
-    }
+    await expect(page).toHaveURL(/\/dashboard$/);
+    await expect(page.getByRole('heading', { name: 'Painel da frota' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Veículos ativos' })).toBeVisible();
+    await expect(page.getByText(/Indicadores históricos de consumo/)).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+      true,
+    );
+    const nav = await openNavigation(page);
+    await expect(nav).toHaveCount(1);
+    await expect(nav.getByRole('link', { name: 'Painel da frota' })).toHaveAttribute(
+      'aria-current',
+      'page',
+    );
+    await nav.getByRole('link', { name: 'Painel da frota' }).click();
+    await expect(page.getByText('Ana Coordenadora')).toHaveCount(0);
   }
 });
-import { prepareDemoSession } from './demo-session';
-
-test.beforeEach(async ({ page }) => prepareDemoSession(page));

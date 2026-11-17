@@ -1,6 +1,5 @@
-import type { RouteObject } from 'react-router-dom';
+﻿import type { RouteObject } from 'react-router-dom';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
-
 import { HomePage } from '@/features/home/HomePage';
 import { AppLayout } from '@/app/AppLayout';
 import { LoginPage } from '@/features/auth/LoginPage';
@@ -8,15 +7,189 @@ import { NotFoundPage } from '@/shared/components/NotFoundPage';
 import { Loading } from '@/shared/components/ApiFeedback';
 import { StagingDemoLayout } from '@/features/staging/StagingDemoLayout';
 
+const incorporated = [
+  ['frota', '/motoristas'],
+  ['frota/motoristas', '/motoristas'],
+  ['frota/motoristas/novo', '/motoristas/novo'],
+  ['frota/veiculos', '/veiculos'],
+  ['frota/veiculos/novo', '/veiculos/novo'],
+  ['dashboard', '/dashboard'],
+  ['dashboard-usuarios', '/dashboard'],
+  ['solicitacoes', '/solicitacoes'],
+  ['solicitacoes/nova', '/solicitacoes/nova'],
+  ['cadastro-usuarios', '/usuarios/novo'],
+  ['diretorio', '/usuarios'],
+  ['cadastro', '/usuarios/novo'],
+  ['login', '/conta'],
+  ['alterar-senha', '/conta'],
+] as const;
+
 export const routes: RouteObject[] = [
+  { path: '/login', element: <LoginPage /> },
   {
-    path: '/demonstracoes',
+    path: '/',
     hydrateFallbackElement: <Loading />,
-    element: <AppLayout showNavigation={false} />,
+    element: <AppLayout />,
     children: [
+      { index: true, element: <HomePage /> },
       {
+        path: 'conta',
+        lazy: async () => ({
+          Component: (await import('@/features/auth/AccountPage')).AccountPage,
+        }),
+      },
+      {
+        path: 'dashboard',
+        lazy: async () => ({
+          Component: (await import('@/features/overview/OverviewPage')).OverviewPage,
+        }),
+      },
+      {
+        path: 'solicitacoes',
+        lazy: async () => ({
+          Component: (await import('@/features/requests/RequestsPage')).RequestsPage,
+        }),
+      },
+      {
+        path: 'solicitacoes/nova',
+        lazy: async () => ({
+          Component: (await import('@/features/requests/RequestsPage')).RequestsPage,
+        }),
+      },
+      {
+        path: 'solicitacoes/:id',
+        lazy: async () => ({
+          Component: (await import('@/features/requests/RequestDetailPage')).RequestDetailPage,
+        }),
+      },
+      {
+        path: 'atendimento-svo',
+        lazy: async () => {
+          const { RequestsPage } = await import('@/features/requests/RequestsPage');
+          return { Component: () => <RequestsPage management /> };
+        },
+      },
+      {
+        path: 'setores',
+        lazy: async () => ({
+          Component: (await import('@/features/registry/RegistryPages')).SectorsPage,
+        }),
+      },
+      {
+        path: 'usuarios',
+        lazy: async () => ({
+          Component: (await import('@/features/registry/RegistryPages')).UsersPage,
+        }),
+      },
+      {
+        path: 'usuarios/novo',
+        lazy: async () => ({
+          Component: (await import('@/features/registry/RegistryPages')).UsersPage,
+        }),
+      },
+      {
+        path: 'veiculos',
+        lazy: async () => ({
+          Component: (await import('@/features/registry/RegistryPages')).VehiclesPage,
+        }),
+      },
+      {
+        path: 'veiculos/novo',
+        lazy: async () => ({
+          Component: (await import('@/features/registry/RegistryPages')).VehiclesPage,
+        }),
+      },
+      {
+        path: 'veiculos/:id',
+        lazy: async () => ({
+          Component: (await import('@/features/registry/RegistryDetailPages')).VehicleDetailPage,
+        }),
+      },
+      {
+        path: 'veiculos/:id/documentos',
+        lazy: async () => ({
+          Component: (await import('@/features/registry/DocumentsPage')).VehicleDocumentsPage,
+        }),
+      },
+      {
+        path: 'motoristas',
+        lazy: async () => ({
+          Component: (await import('@/features/registry/RegistryPages')).DriversPage,
+        }),
+      },
+      {
+        path: 'motoristas/novo',
+        lazy: async () => ({
+          Component: (await import('@/features/registry/RegistryPages')).DriversPage,
+        }),
+      },
+      {
+        path: 'motoristas/:id',
+        lazy: async () => ({
+          Component: (await import('@/features/registry/RegistryDetailPages')).DriverDetailPage,
+        }),
+      },
+      {
+        path: 'motoristas/:id/cnhs',
+        lazy: async () => ({
+          Component: (await import('@/features/registry/DocumentsPage')).DriverLicensesPage,
+        }),
+      },
+      {
+        path: 'transportes',
+        lazy: async () => ({
+          Component: (await import('@/features/travel/TransportsPage')).TransportsPage,
+        }),
+      },
+      {
+        path: 'transportes/:id',
+        lazy: async () => ({
+          Component: (await import('@/features/travel/TransportsPage')).TransportDetailPage,
+        }),
+      },
+      {
+        path: 'viagens',
+        lazy: async () => ({
+          Component: (await import('@/features/travel/RoutesPage')).RoutesPage,
+        }),
+      },
+      {
+        path: 'viagens/:id',
+        lazy: async () => ({
+          Component: (await import('@/features/travel/RouteDetailPage')).RouteDetailPage,
+        }),
+      },
+      {
+        path: 'permissoes',
+        lazy: async () => ({
+          Component: (await import('@/features/permissions/PermissionsPage')).PermissionsPage,
+        }),
+      },
+      {
+        path: 'demonstracoes',
         element: <StagingDemoLayout />,
         children: [
+          {
+            index: true,
+            lazy: async () => ({
+              Component: (await import('@/features/staging/StagingDemoPage')).StagingDemoPage,
+            }),
+          },
+          ...incorporated.map(([path, to]) => ({ path, element: <Navigate to={to} replace /> })),
+          {
+            path: 'atendimento-svo',
+            lazy: async () => ({
+              Component: (await import('@/features/atendimento-svo/AtendimentoSvoPage'))
+                .AtendimentoSvoPage,
+            }),
+          },
+          {
+            path: 'recuperar-senha',
+            lazy: async () => ({
+              Component: (await import('@/features/staging/UnavailableRecoveryPage'))
+                .UnavailableRecoveryPage,
+            }),
+          },
           {
             path: 'cartoes-combustivel',
             lazy: async () => ({
@@ -56,212 +229,10 @@ export const routes: RouteObject[] = [
               },
             ],
           },
-          {
-            index: true,
-            lazy: async () => ({
-              Component: (await import('@/features/staging/StagingDemoPage')).StagingDemoPage,
-            }),
-          },
-          {
-            path: 'frota',
-            lazy: async () => ({
-              Component: (await import('@/shared/components/FleetLayout')).FleetLayout,
-            }),
-            children: [
-              { index: true, element: <Navigate to="/demonstracoes/frota/motoristas" replace /> },
-              {
-                path: 'motoristas',
-                lazy: async () => ({
-                  Component: (await import('@/features/drivers/DriversPage')).DriversPage,
-                }),
-              },
-              {
-                path: 'motoristas/novo',
-                lazy: async () => ({
-                  Component: (await import('@/features/drivers/DriverRegistrationPage'))
-                    .DriverRegistrationPage,
-                }),
-              },
-              {
-                path: 'veiculos',
-                lazy: async () => ({
-                  Component: (await import('@/features/vehicles/VehiclesPage')).VehiclesPage,
-                }),
-              },
-              {
-                path: 'veiculos/novo',
-                lazy: async () => ({
-                  Component: (await import('@/features/vehicles/VehicleRegistrationPage'))
-                    .VehicleRegistrationPage,
-                }),
-              },
-            ],
-          },
-          {
-            path: 'dashboard',
-            lazy: async () => ({
-              Component: (await import('@/features/dashboard/DashboardPage')).DashboardPage,
-            }),
-          },
-          {
-            path: 'atendimento-svo',
-            lazy: async () => ({
-              Component: (await import('@/features/atendimento-svo/AtendimentoSvoPage'))
-                .AtendimentoSvoPage,
-            }),
-          },
-          {
-            path: 'solicitacoes',
-            lazy: async () => ({
-              Component: (await import('@/features/solicitacoes/SolicitacoesPage'))
-                .SolicitacoesPage,
-            }),
-          },
-          {
-            path: 'solicitacoes/nova',
-            lazy: async () => ({
-              Component: (await import('@/features/nova-solicitacao/NovaSolicitacaoPage'))
-                .NovaSolicitacaoPage,
-            }),
-          },
-          {
-            path: 'cadastro-usuarios',
-            lazy: async () => ({
-              Component: (await import('@/features/usuarios/UsuariosPage')).UsuariosPage,
-            }),
-          },
-          {
-            path: 'dashboard-usuarios',
-            lazy: async () => {
-              const { DashboardPage } = await import('@/features/dashboard-usuarios/DashboardPage');
-              return { Component: () => <DashboardPage demo /> };
-            },
-          },
-          {
-            path: 'diretorio',
-            lazy: async () => ({
-              Component: (await import('@/features/users/UsersPage')).UsersPage,
-            }),
-          },
-          {
-            path: 'login',
-            lazy: async () => ({
-              Component: (await import('@/features/login/LoginPage')).LoginPage,
-            }),
-          },
-          {
-            path: 'cadastro',
-            lazy: async () => ({
-              Component: (await import('@/features/registration/RegistrationPage'))
-                .RegistrationPage,
-            }),
-          },
-          {
-            path: 'recuperar-senha',
-            lazy: async () => ({
-              Component: (await import('@/features/password-recovery/PasswordRecoveryPage'))
-                .PasswordRecoveryPage,
-            }),
-          },
-          {
-            path: 'alterar-senha',
-            lazy: async () => ({
-              Component: (await import('@/features/password-reset/PasswordResetPage'))
-                .PasswordResetPage,
-            }),
-          },
         ],
       },
     ],
   },
-  {
-    path: '/login',
-    element: <LoginPage />,
-  },
-  {
-    path: '/',
-    hydrateFallbackElement: <Loading />,
-    element: <AppLayout />,
-    children: [
-      { index: true, element: <HomePage /> },
-      {
-        path: 'conta',
-        lazy: async () => ({
-          Component: (await import('@/features/auth/AccountPage')).AccountPage,
-        }),
-      },
-      {
-        path: 'setores',
-        lazy: async () => ({
-          Component: (await import('@/features/registry/RegistryPages')).SectorsPage,
-        }),
-      },
-      {
-        path: 'usuarios',
-        lazy: async () => ({
-          Component: (await import('@/features/registry/RegistryPages')).UsersPage,
-        }),
-      },
-      {
-        path: 'veiculos',
-        lazy: async () => ({
-          Component: (await import('@/features/registry/RegistryPages')).VehiclesPage,
-        }),
-      },
-      {
-        path: 'veiculos/:id/documentos',
-        lazy: async () => ({
-          Component: (await import('@/features/registry/DocumentsPage')).VehicleDocumentsPage,
-        }),
-      },
-      {
-        path: 'motoristas',
-        lazy: async () => ({
-          Component: (await import('@/features/registry/RegistryPages')).DriversPage,
-        }),
-      },
-      {
-        path: 'motoristas/:id/cnhs',
-        lazy: async () => ({
-          Component: (await import('@/features/registry/DocumentsPage')).DriverLicensesPage,
-        }),
-      },
-      {
-        path: 'transportes',
-        lazy: async () => ({
-          Component: (await import('@/features/travel/TransportsPage')).TransportsPage,
-        }),
-      },
-      {
-        path: 'transportes/:id',
-        lazy: async () => ({
-          Component: (await import('@/features/travel/TransportsPage')).TransportDetailPage,
-        }),
-      },
-      {
-        path: 'viagens',
-        lazy: async () => ({
-          Component: (await import('@/features/travel/RoutesPage')).RoutesPage,
-        }),
-      },
-      {
-        path: 'viagens/:id',
-        lazy: async () => ({
-          Component: (await import('@/features/travel/RouteDetailPage')).RouteDetailPage,
-        }),
-      },
-      {
-        path: 'permissoes',
-        lazy: async () => ({
-          Component: (await import('@/features/permissions/PermissionsPage')).PermissionsPage,
-        }),
-      },
-    ],
-  },
-  {
-    path: '*',
-    element: <NotFoundPage />,
-  },
+  { path: '*', element: <NotFoundPage /> },
 ];
-
 export const router = createBrowserRouter(routes);

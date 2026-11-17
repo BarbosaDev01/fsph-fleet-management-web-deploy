@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 
-import { routes } from '@/app/router';
+import { prototypeRoutes as routes } from '@/test/prototype-routes';
 import { AppProviders } from '@/app/providers/AppProviders';
 import '@/test/demo-session';
 
@@ -63,8 +63,7 @@ describe('UsuariosPage', { timeout: 15_000 }, () => {
     await screen.findByRole('heading', { name: 'Dados da solicitação' });
     fireEvent.click(screen.getByRole('link', { name: 'Atendimento SVO' }));
     await screen.findByRole('heading', { name: 'Atendimento SVO' });
-    fireEvent.click(screen.getByRole('link', { name: 'Usuários' }));
-    await screen.findByRole('heading', { name: 'Credenciamento do colaborador' });
-    expect(router.state.location.pathname).toBe('/demonstracoes/cadastro-usuarios');
+    expect(screen.queryByText('Clara Operações')).not.toBeInTheDocument();
+    expect(router.state.location.pathname).toBe('/demonstracoes/atendimento-svo');
   });
 });

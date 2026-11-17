@@ -3,6 +3,7 @@ import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import { authToken } from '@/shared/api/auth-token';
 import { queryClient } from '@/app/providers/queryClient';
+import { permissions } from '@/shared/api/types';
 
 const server = setupServer(
   http.get(`${window.location.origin}/api/v1/auth/me`, () =>
@@ -12,6 +13,7 @@ const server = setupServer(
       email: 'unit@example.test',
       sectorId: null,
       role: 'ADMIN',
+      permissions,
     }),
   ),
 );

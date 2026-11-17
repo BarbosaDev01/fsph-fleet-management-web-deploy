@@ -1,4 +1,4 @@
-import { Alert, Button, Stack } from '@mui/material';
+﻿import { Alert, Button, Stack } from '@mui/material';
 import { Link, Outlet } from 'react-router-dom';
 import { env } from '@/shared/config/env';
 import { NotFoundPage } from '@/shared/components/NotFoundPage';
@@ -6,23 +6,14 @@ import { NotFoundPage } from '@/shared/components/NotFoundPage';
 export function StagingDemoLayout() {
   if (!env.isStaging) return <NotFoundPage />;
   return (
-    <Stack spacing={2} sx={{ minWidth: 0 }}>
+    <Stack spacing={3} sx={{ minWidth: 0 }}>
       <Alert severity="warning">
-        Demonstração de interface: estas telas usam dados simulados. Cadastros e alterações aqui não
-        são gravados no banco. O login e os módulos fora de /demonstracoes continuam usando a API
-        real.
+        Protótipos pendentes: dados simulados e alterações apenas em memória. Nenhuma operação nesta
+        área é persistida na instituição.
       </Alert>
-      <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 1, px: { xs: 1, md: 3 } }}>
-        <Button component={Link} to="/">
-          Voltar ao sistema real
-        </Button>
-        <Button component={Link} to="/demonstracoes">
-          Todas as novas telas
-        </Button>
-        <Button component={Link} to="/demonstracoes/cartoes-combustivel">
-          Abrir cartões
-        </Button>
-      </Stack>
+      <Button component={Link} to="/demonstracoes" sx={{ alignSelf: 'flex-start' }}>
+        Todos os protótipos pendentes
+      </Button>
       <Outlet />
     </Stack>
   );

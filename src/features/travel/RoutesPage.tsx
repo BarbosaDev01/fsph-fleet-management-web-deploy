@@ -12,10 +12,12 @@ import { PageHeading } from '@/shared/components/PageHeading';
 import { dateTime, statusLabels } from '@/shared/format';
 import { routesApi } from './api';
 import { scheduleBody, scheduleFields } from './schedule';
+import { useAccess } from '@/features/auth/access';
 
 const statuses: Dto['RouteStatus'][] = ['PLANNED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'];
 
 export function RoutesPage() {
+  const { can } = useAccess();
   const [page, setPage] = useState(0);
   const [status, setStatus] = useState<Dto['RouteStatus'] | ''>('');
   const [vehicleId, setVehicleId] = useState('');
@@ -37,10 +39,12 @@ export function RoutesPage() {
   const vehicles = useQuery({
     queryKey: ['registry', 'vehicles'],
     queryFn: ({ signal }) => vehiclesApi.list(signal),
+    enabled: can('ROUTES_MANAGE') && can('VEHICLES_READ'),
   });
   const drivers = useQuery({
     queryKey: ['registry', 'drivers'],
     queryFn: ({ signal }) => driversApi.list(signal),
+    enabled: can('ROUTES_MANAGE') && can('DRIVERS_READ'),
   });
   const vehicleOptions = vehicles.data
     ?.filter((item) => item.active)
@@ -55,15 +59,13 @@ export function RoutesPage() {
         name: 'vehicleId',
         label: 'Veículo',
         required: true,
-        options: vehicleOptions,
-        helper: vehicleOptions ? undefined : 'Informe o identificador do veículo.',
+        options: vehicleOptions ?? [],
       },
       {
         name: 'driverId',
         label: 'Motorista',
         required: true,
-        options: driverOptions,
-        helper: driverOptions ? undefined : 'Informe o identificador do motorista.',
+        options: driverOptions ?? [],
       },
       ...scheduleFields,
     ],
@@ -80,11 +82,23 @@ export function RoutesPage() {
         title="Viagens"
         description="Planejamento, agenda e execução das viagens da frota."
         action={
-          <Button variant="contained" onClick={() => setForm(createForm)}>
-            Planejar viagem
-          </Button>
+          can('ROUTES_MANAGE') && (
+            <Button
+              variant="contained"
+              disabled={
+                !vehicles.isSuccess ||
+                !drivers.isSuccess ||
+                !vehicleOptions?.length ||
+                !driverOptions?.length
+              }
+              onClick={() => setForm(createForm)}
+            >
+              Planejar viagem
+            </Button>
+          )
         }
       />
+      <ApiFeedback error={vehicles.error ?? drivers.error} />
       <Stack
         component="form"
         direction={{ xs: 'column', sm: 'row' }}
