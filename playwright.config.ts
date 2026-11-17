@@ -29,13 +29,13 @@ export default defineConfig({
   webServer: [
     {
       env: { VITE_APP_ENV: 'staging', VITE_FUEL_CARDS_DEMO: 'true' },
-      command: `${node} ${vite} build && ${node} ${vite} preview --host 127.0.0.1`,
+      command: `${node} ${vite} build --outDir .deploy-validation/ui-staging && ${node} ${vite} preview --outDir .deploy-validation/ui-staging --host 127.0.0.1`,
       url: 'http://127.0.0.1:4173',
       reuseExistingServer: false,
     },
     {
       env: { VITE_APP_ENV: 'production', VITE_FUEL_CARDS_DEMO: 'true' },
-      command: `${node} ${vite} build --outDir dist-production-e2e && ${node} ${vite} preview --outDir dist-production-e2e --host 127.0.0.1 --port 4174`,
+      command: `${node} ${vite} build --outDir .deploy-validation/ui-production && ${node} ${vite} preview --outDir .deploy-validation/ui-production --host 127.0.0.1 --port 4174`,
       url: 'http://127.0.0.1:4174',
       reuseExistingServer: false,
     },
