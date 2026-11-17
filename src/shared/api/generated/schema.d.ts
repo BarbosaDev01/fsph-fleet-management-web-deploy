@@ -532,6 +532,198 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/trip-requests/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["findById"];
+        put: operations["updatePending"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/trips": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["history"];
+        put?: never;
+        post: operations["start"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/trip-requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listAll"];
+        put?: never;
+        post: operations["create_2"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/trips/{tripId}/completion": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["complete_1"];
+        trace?: never;
+    };
+    "/api/v1/trip-requests/{id}/schedule": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["schedule"];
+        trace?: never;
+    };
+    "/api/v1/trip-requests/{id}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["reject"];
+        trace?: never;
+    };
+    "/api/v1/trip-requests/{id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["cancelPending"];
+        trace?: never;
+    };
+    "/api/v1/trip-requests/{id}/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["approve"];
+        trace?: never;
+    };
+    "/api/v1/trip-requests/{id}/availability": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["analyzeAvailability"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/trip-requests/mine": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listMine"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/trip-requests/eligible-vehicles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listEligibleVehicles"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/trip-requests/calendar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getFleetCalendar"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -629,7 +821,7 @@ export interface components {
             expiresOn: string;
         };
         ReplacePermissionsRequest: {
-            permissions: components["schemas"]["Permission"][];
+            permissions: string[];
         };
         StartRouteRequest: {
             startMileage: number;
@@ -672,10 +864,11 @@ export interface components {
             /** Format: uuid */
             id: string;
             /** Format: uuid */
-            sectorId: string;
+            sectorId: string | null;
             name: string;
             email: string;
             role: components["schemas"]["UserRole"];
+            permissions: string[];
         };
         DriverLicenseResponse: {
             /** Format: uuid */
@@ -820,6 +1013,236 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
+        };
+        TripRequestResponse: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            requesterId: string;
+            requesterName?: string | null;
+            /** Format: uuid */
+            requesterSectorId?: string | null;
+            requesterSectorName?: string | null;
+            /** Format: date-time */
+            departureAt: string;
+            /** Format: date-time */
+            expectedReturnAt: string;
+            origin: string;
+            destination: string;
+            purpose: string;
+            /** Format: int32 */
+            passengerCount: number;
+            /** Format: uuid */
+            requestedVehicleId?: string | null;
+            requestedVehiclePlate?: string | null;
+            requestedVehicleModel?: string | null;
+            /** @enum {string} */
+            status: "PENDING" | "APPROVED" | "REJECTED" | "SCHEDULED" | "CANCELED";
+            /** Format: uuid */
+            assignedVehicleId?: string | null;
+            assignedVehiclePlate?: string | null;
+            assignedVehicleModel?: string | null;
+            /** Format: uuid */
+            assignedDriverId?: string | null;
+            assignedDriverName?: string | null;
+            /** Format: uuid */
+            decidedByUserId?: string | null;
+            decidedByName?: string | null;
+            /** Format: date-time */
+            decidedAt?: string | null;
+            rejectionReason?: string | null;
+            decisionNotes?: string | null;
+            /** Format: uuid */
+            scheduledByUserId?: string | null;
+            scheduledByName?: string | null;
+            /** Format: date-time */
+            scheduledAt?: string | null;
+            /** Format: date-time */
+            canceledAt?: string | null;
+            /** Format: date-time */
+            createdAt?: string | null;
+            /** Format: date-time */
+            updatedAt?: string | null;
+        };
+        UpdateTripRequest: {
+            /** Format: date-time */
+            departureAt: string;
+            /** Format: date-time */
+            expectedReturnAt: string;
+            origin: string;
+            destination: string;
+            purpose: string;
+            /** Format: int32 */
+            passengerCount: number;
+            /** Format: uuid */
+            requestedVehicleId?: string;
+        };
+        TripHistoryResponse: {
+            content: components["schemas"]["TripResponse"][];
+            /** Format: int32 */
+            page: number;
+            /** Format: int32 */
+            size: number;
+            /** Format: int64 */
+            totalElements: number;
+            /** Format: int32 */
+            totalPages: number;
+        };
+        TripResponse: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            vehicleId: string;
+            /** Format: uuid */
+            driverId: string;
+            /** Format: date-time */
+            startedAt: string;
+            /** Format: date-time */
+            endedAt?: string | null;
+            /** Format: int64 */
+            initialOdometerKm: number;
+            /** Format: int64 */
+            finalOdometerKm?: number | null;
+            /** @enum {string} */
+            status: "OPEN" | "COMPLETED";
+        };
+        StartTripRequest: {
+            /** Format: uuid */
+            vehicleId: string;
+            /** Format: int64 */
+            initialOdometerKm: number;
+        };
+        CreateTripRequest: {
+            /** Format: date-time */
+            departureAt: string;
+            /** Format: date-time */
+            expectedReturnAt: string;
+            origin: string;
+            destination: string;
+            purpose: string;
+            /** Format: int32 */
+            passengerCount: number;
+            /** Format: uuid */
+            requestedVehicleId?: string;
+        };
+        CompleteTripRequest: {
+            /** Format: int64 */
+            finalOdometerKm: number;
+        };
+        ScheduleTripRequest: {
+            /** Format: uuid */
+            vehicleId: string;
+            /** Format: uuid */
+            driverId: string;
+        };
+        RejectTripRequest: {
+            rejectionReason: string;
+        };
+        ApproveTripRequest: {
+            /** Format: uuid */
+            vehicleId?: string;
+            decisionNotes?: string;
+        };
+        TripRequestAvailabilityResponse: {
+            /** Format: uuid */
+            tripRequestId: string;
+            /** Format: date-time */
+            departureAt: string;
+            /** Format: date-time */
+            expectedReturnAt: string;
+            /** Format: int32 */
+            passengerCount: number;
+            /** Format: uuid */
+            requestedVehicleId?: string | null;
+            requestedVehicleAvailable: boolean;
+            availableVehicles: components["schemas"]["EligibleVehicleResponse"][];
+            availableDrivers: components["schemas"]["AvailableDriverResponse"][];
+        };
+        EligibleVehicleResponse: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            sectorId?: string | null;
+            sectorName?: string | null;
+            plate: string;
+            model: string;
+            /** Format: int32 */
+            totalCapacity: number;
+            /** Format: int32 */
+            availablePassengerSeats: number;
+            usageType: string;
+            /** Format: int64 */
+            currentOdometerKm: number;
+        };
+        AvailableDriverResponse: {
+            /** Format: uuid */
+            driverId: string;
+            /** Format: uuid */
+            userId: string;
+            name: string;
+            email: string;
+            /** Format: uuid */
+            sectorId?: string | null;
+            sectorName?: string | null;
+            licenseNumber?: string | null;
+            licenseCategory?: string | null;
+            /** Format: date */
+            licenseExpiresOn?: string | null;
+        };
+        FleetCalendarResponse: {
+            /** Format: date-time */
+            from?: string;
+            /** Format: date-time */
+            to?: string;
+            /** Format: int32 */
+            totalActiveVehicles?: number;
+            /** Format: int32 */
+            vehiclesInMaintenance?: number;
+            /** Format: int32 */
+            vehiclesWithReservations?: number;
+            /** Format: int32 */
+            vehiclesCompletelyFree?: number;
+            reservations?: components["schemas"]["FleetCalendarReservationResponse"][];
+            vehicles?: components["schemas"]["VehicleCalendarAvailabilityResponse"][];
+        };
+        FleetCalendarReservationResponse: {
+            /** Format: uuid */
+            tripRequestId?: string;
+            /** @enum {string} */
+            status?: "PENDING" | "APPROVED" | "REJECTED" | "SCHEDULED" | "CANCELED";
+            /** Format: date-time */
+            departureAt?: string;
+            /** Format: date-time */
+            expectedReturnAt?: string;
+            origin?: string;
+            destination?: string;
+            purpose?: string;
+            /** Format: int32 */
+            passengerCount?: number;
+            /** Format: uuid */
+            requesterId?: string;
+            requesterName?: string;
+            /** Format: uuid */
+            vehicleId?: string;
+            vehiclePlate?: string;
+            vehicleModel?: string;
+            /** Format: uuid */
+            driverId?: string;
+            driverName?: string;
+        };
+        VehicleCalendarAvailabilityResponse: {
+            /** Format: uuid */
+            vehicleId?: string;
+            plate?: string;
+            model?: string;
+            /** Format: int32 */
+            totalCapacity?: number;
+            /** Format: int32 */
+            availablePassengerSeats?: number;
+            active?: boolean;
+            inMaintenance?: boolean;
+            completelyFreeInPeriod?: boolean;
+            reservations?: components["schemas"]["FleetCalendarReservationResponse"][];
         };
     };
     responses: never;
@@ -1175,7 +1598,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        [key: string]: components["schemas"]["Permission"][];
+                        [key: string]: string[];
                     };
                 };
             };
@@ -1209,7 +1632,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Permission"][];
+                    "application/json": string[];
                 };
             };
             /** @description Problem Detail */
@@ -1246,7 +1669,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Permission"][];
+                    "application/json": string[];
                 };
             };
             /** @description Problem Detail */
@@ -2532,6 +2955,368 @@ export interface operations {
                     "application/problem+json": {
                         [key: string]: unknown;
                     };
+                };
+            };
+        };
+    };
+    findById: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["TripRequestResponse"];
+                };
+            };
+        };
+    };
+    updatePending: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateTripRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["TripRequestResponse"];
+                };
+            };
+        };
+    };
+    history: {
+        parameters: {
+            query?: {
+                vehicleId?: string;
+                driverId?: string;
+                startedFrom?: string;
+                startedTo?: string;
+                page?: number;
+                size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["TripHistoryResponse"];
+                };
+            };
+        };
+    };
+    start: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StartTripRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["TripResponse"];
+                };
+            };
+        };
+    };
+    listAll: {
+        parameters: {
+            query?: {
+                status?: "PENDING" | "APPROVED" | "REJECTED" | "SCHEDULED" | "CANCELED";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["TripRequestResponse"][];
+                };
+            };
+        };
+    };
+    create_2: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateTripRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["TripRequestResponse"];
+                };
+            };
+        };
+    };
+    complete_1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                tripId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CompleteTripRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["TripResponse"];
+                };
+            };
+        };
+    };
+    schedule: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ScheduleTripRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["TripRequestResponse"];
+                };
+            };
+        };
+    };
+    reject: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RejectTripRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["TripRequestResponse"];
+                };
+            };
+        };
+    };
+    cancelPending: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["TripRequestResponse"];
+                };
+            };
+        };
+    };
+    approve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["ApproveTripRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["TripRequestResponse"];
+                };
+            };
+        };
+    };
+    analyzeAvailability: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["TripRequestAvailabilityResponse"];
+                };
+            };
+        };
+    };
+    listMine: {
+        parameters: {
+            query?: {
+                status?: "PENDING" | "APPROVED" | "REJECTED" | "SCHEDULED" | "CANCELED";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["TripRequestResponse"][];
+                };
+            };
+        };
+    };
+    listEligibleVehicles: {
+        parameters: {
+            query: {
+                passengers: number;
+                departureAt?: string;
+                expectedReturnAt?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["EligibleVehicleResponse"][];
+                };
+            };
+        };
+    };
+    getFleetCalendar: {
+        parameters: {
+            query: {
+                from: string;
+                to: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["FleetCalendarResponse"];
                 };
             };
         };
