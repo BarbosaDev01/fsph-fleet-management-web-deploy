@@ -110,6 +110,7 @@ Ao terminar, os processos desse runner são encerrados e os artefatos ficam em
 
 O teste percorre administrador → cadastro → sete seleções de perfil → POST e GET persistido →
 logout/revogação → login → início/menu → ação permitida → rota/API restrita, sempre na mesma aba.
+Na troca de contas, o teste mantém a aplicação montada, sem recarregar a página, para verificar a limpeza do cache e dos menus. Também consulta setores e usuários por ID para conferir as autorizações desses recursos.
 Também cria dados próprios, alheios e de outro setor; testa viagens atribuídas e paradas,
 execução completa pelo motorista, aprovação/agendamento pelo gestor, restrição de autoria do ADMIN,
 cadastro com WRITE sem READ, dependência de SECTORS_READ e a combinação MANAGE+EXECUTE sem DRIVERS_READ.
@@ -129,7 +130,7 @@ As tarefas definidas continuam funcionando; nenhuma atribuição SVO foi presumi
 
 ## Evidências e limites da verificação
 
-- **Execução real local:** o runner completo terminou com 1 cenário aprovado, contendo todos os passos dos sete perfis e das matrizes personalizadas. Spring Boot e PostgreSQL reais; nenhum mock de API nesse percurso. O processo de teste restaurou as matrizes temporárias e encerrou seus serviços.
+- **Execução real local:** o runner completo terminou com 1 cenário aprovado, contendo todos os passos dos sete perfis e das matrizes personalizadas. A execução final, incluindo troca de contas sem recarregar a aplicação, passou em aproximadamente 1,3 minuto. Spring Boot e PostgreSQL reais; nenhum mock de API nesse percurso. O processo de teste restaurou as matrizes temporárias e encerrou seus serviços.
 - **Qualidade do frontend:** typecheck, lint, formatação, build e `git diff --check` aprovados. Uma suíte completa passou com 210 testes em 30 arquivos. A repetição junto dos demais testes teve 208 aprovações e dois timeouts (validação de setor em `App.test.tsx` e fluxo demonstrativo de cartões). A reexecução isolada desses dois arquivos passou com 31 testes, sem mudar asserções ou limites de tempo.
 - **Regressão de navegador com fixtures:** 36 cenários aprovados e 6 condicionais ignorados. Os condicionais dependem de ambientes externos ou do runner local específico; este último foi executado separadamente. A regressão inclui o layout institucional em 390, 768 e 1440 px.
 - **Backend:** build e `RouteResponseTests` aprovados. A nova asserção em `TransportRouteIntegrationTests` foi conferida no código e compilada; essa classe não foi executada, pois sua configuração exige Testcontainers e o Docker local está indisponível. A atribuição, as listas, os IDs e a execução foram exercitados pela API real no cenário local.

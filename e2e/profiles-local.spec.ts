@@ -15,7 +15,8 @@ const output = '.deploy-validation/perfis-local';
 
 type RecordId = { id: string };
 async function signIn(page: Page, email: string) {
-  await page.goto('/login');
+  // Keep the mounted app when switching accounts so logout/login must clear its cache.
+  if (new URL(page.url()).pathname !== '/login') await page.goto('/login');
   await page.getByLabel('E-mail', { exact: true }).fill(email);
   await page.getByLabel('Senha', { exact: true }).fill(password);
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
@@ -25,6 +26,7 @@ async function signIn(page: Page, email: string) {
 async function signOut(page: Page) {
   await page.getByRole('button', { name: 'Sair', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Entrar', exact: true })).toBeVisible();
+  await expect(page).toHaveURL('/login');
 }
 async function tokenFor(request: APIRequestContext, email: string) {
   const response = await request.post(`${api}/api/v1/auth/login`, { data: { email, password } });
@@ -136,6 +138,12 @@ test('cadastro dos sete perfis, troca de conta e escopos reais da API', async ({
       await page.goto(permitted);
       await expect(page.locator('main h1')).toBeVisible();
       expect((await request.get(`${api}/api/v1${endpoint}`, { headers })).status()).toBe(200);
+      expect((await request.get(`${api}/api/v1/sectors/${sector.id}`, { headers })).status()).toBe(
+        200,
+      );
+      expect((await request.get(`${api}/api/v1/users/${created.id}`, { headers })).status()).toBe(
+        role === 'ADMIN' ? 200 : 403,
+      );
       if (role === 'EMPLOYEE') {
         await expect(
           page.getByRole('link', { name: 'Nova solicitação', exact: true }),
