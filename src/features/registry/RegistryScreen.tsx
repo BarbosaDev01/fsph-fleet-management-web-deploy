@@ -35,6 +35,8 @@ export function RegistryScreen<T extends { id: string }>({
   createDisabled = false,
   editDisabled = false,
   filters = [],
+  createPath,
+  description,
 }: {
   name: string;
   title: string;
@@ -48,6 +50,8 @@ export function RegistryScreen<T extends { id: string }>({
   createDisabled?: boolean;
   editDisabled?: boolean;
   filters?: (SelectFilter & { value: (row: T) => string })[];
+  createPath?: string;
+  description?: string;
 }) {
   const { can } = useAccess();
   const { pathname } = useLocation();
@@ -77,7 +81,12 @@ export function RegistryScreen<T extends { id: string }>({
   const [selected, setSelected] = useState<Record<string, string>>({});
   const [saved, setSaved] = useState(false);
   const client = useQueryClient();
-  const query = useQuery({ queryKey: ['registry', name], queryFn: ({ signal }) => list(signal) });
+  const readable = name !== 'users' || can('USERS_READ');
+  const query = useQuery({
+    queryKey: ['registry', name],
+    queryFn: ({ signal }) => list(signal),
+    enabled: readable,
+  });
   const rows = (query.data ?? []).filter(
     (row) =>
       (!filter || filter(row, search.toLocaleLowerCase('pt-BR'))) &&
@@ -87,6 +96,7 @@ export function RegistryScreen<T extends { id: string }>({
     <Stack spacing={2}>
       <PageHeading
         title={title}
+        description={description}
         action={
           writable && (
             <Button
@@ -94,7 +104,8 @@ export function RegistryScreen<T extends { id: string }>({
               disabled={createDisabled}
               onClick={() => {
                 setSaved(false);
-                setForm(create);
+                if (createPath) void navigate(createPath);
+                else setForm(create);
               }}
             >
               {createLabel}
@@ -107,7 +118,13 @@ export function RegistryScreen<T extends { id: string }>({
           Operação concluída.
         </Alert>
       )}
-      {filter && (
+      {!readable && (
+        <Alert severity="info">
+          Sua conta pode cadastrar usuários. A consulta da lista exige permissão para consultar
+          usuários.
+        </Alert>
+      )}
+      {readable && filter && (
         <FilterBar
           searchLabel={`Buscar em ${title.toLowerCase()}`}
           search={search}
@@ -127,32 +144,33 @@ export function RegistryScreen<T extends { id: string }>({
           void query.refetch();
         }}
       />
-      {query.isPending ? (
-        <Loading />
-      ) : (
-        !query.error && (
-          <DataTable
-            rows={rows}
-            columns={columns}
-            actions={(row) => (
-              <Stack
-                direction="row"
-                spacing={1}
-                sx={{ justifyContent: 'flex-end', flexWrap: 'wrap' }}
-              >
-                {writable && edit && (
-                  <Button size="small" disabled={editDisabled} onClick={() => setForm(edit(row))}>
-                    Editar
-                  </Button>
-                )}
-                {actions?.(row, (spec) => {
-                  if (writable) setForm(spec);
-                })}
-              </Stack>
-            )}
-          />
-        )
-      )}
+      {readable &&
+        (query.isPending ? (
+          <Loading />
+        ) : (
+          !query.error && (
+            <DataTable
+              rows={rows}
+              columns={columns}
+              actions={(row) => (
+                <Stack
+                  direction="row"
+                  spacing={1}
+                  sx={{ justifyContent: 'flex-end', flexWrap: 'wrap' }}
+                >
+                  {writable && edit && (
+                    <Button size="small" disabled={editDisabled} onClick={() => setForm(edit(row))}>
+                      Editar
+                    </Button>
+                  )}
+                  {actions?.(row, (spec) => {
+                    if (writable) setForm(spec);
+                  })}
+                </Stack>
+              )}
+            />
+          )
+        ))}
       {activeForm && (
         <FormDialog
           title={activeForm.title}

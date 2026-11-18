@@ -28,6 +28,7 @@ O frontend será servido em `http://localhost:5173`. As chamadas iniciadas em `/
 - `pnpm format:check`: valida formatação;
 - `pnpm test`: testes unitários e de componentes;
 - `pnpm test:e2e`: testes Playwright;
+- `pnpm test:e2e:profiles`: cadastro dos sete perfis e autorização com Spring Boot/PostgreSQL locais isolados (Windows; [preparação e resultados](docs/perfis-cadastro-acessos.md));
 - `pnpm api:generate`: gera os tipos TypeScript a partir do OpenAPI da API.
 
 Para gerar o contrato com outra URL:
@@ -62,7 +63,9 @@ O extrator offline suporta os padrões atuais de records e controllers; não sub
 
 Inicie o backend conforme o README de `gestao-frotas` e use as credenciais cadastradas nele. Nenhum dado de demonstração é usado no aplicativo. Um `401` encerra a sessão local; erros `403`, conflitos e violações de validação são apresentados na tela. As consultas são atualizadas após alterações.
 
-`/auth/me` retorna o perfil, mas não as permissões efetivas. Como a matriz pode ser personalizada, a interface não presume permissões por perfil: o backend autoriza cada operação e a tela informa quando o acesso é restrito. Se a consulta auxiliar de setores, usuários ou frota for restrita, os formulários permitem informar o identificador necessário.
+`/auth/me` retorna identidade, perfil e permissões efetivas. O menu, as rotas e os botões usam essas permissões, pois a matriz pode ser personalizada; a API mantém a autorização de cada ação e do escopo dos registros. Os formulários que dependem de consultas auxiliares informam a restrição quando não podem carregar as opções.
+
+Para cadastrar uma conta, acesse **Usuários → Novo usuário** (`/usuarios/novo`). O cadastro exige `USERS_WRITE` e a seleção de setor exige `SECTORS_READ`; `USERS_READ` controla a consulta da lista. Consulte [o fluxo por perfil, escopos e evidências locais](docs/perfis-cadastro-acessos.md).
 
 Os três filtros `GET /api/v1/drivers/find/{status|role|sector}` estão ambíguos no backend e o parâmetro `active` não corresponde a `{status}`. Eles foram excluídos do snapshot e do cliente; a tela usa `GET /api/v1/drivers` com busca local. Isso precisa ser corrigido no backend antes de integrar esses endpoints. Os demais endpoints dos controllers possuem serviços tipados.
 

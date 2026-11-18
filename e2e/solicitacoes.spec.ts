@@ -9,9 +9,11 @@ test('UI: aliases incorporados navegam entre módulos reais', async ({ page }) =
   await expect(page.getByRole('dialog', { name: 'Nova solicitação de viagem' })).toBeVisible();
   await page.getByRole('button', { name: 'Cancelar', exact: true }).click();
   const nav = await openNavigation(page);
-  await nav.getByRole('link', { name: 'Atendimento e agendamento' }).click();
+  await nav.getByRole('link', { name: 'Análise e agendamento' }).click();
   await expect(page).toHaveURL(/\/atendimento-svo$/);
-  await expect(page.getByRole('heading', { name: 'Atendimento e agendamento' })).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: 'Análise e agendamento de viagens' }),
+  ).toBeVisible();
 });
 
 test('UI: listagem responsiva distingue filtros e vazio', async ({ page }) => {

@@ -163,3 +163,63 @@ it('preserva permissões desconhecidas na substituição do perfil', async () =>
   await userEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Salvar' }));
   await waitFor(() => expect(replaced).toEqual({ permissions: ['FUTURE_READ', 'USERS_READ'] }));
 });
+
+it('abre o cadastro pela rota e salva perfil e setor sem exigir leitura de usuários', async () => {
+  granted = ['USERS_WRITE', 'SECTORS_READ'];
+  const list = vi.fn(() => HttpResponse.json([]));
+  const create = vi.fn();
+  server.use(
+    http.get(`${base}/users`, list),
+    http.post(`${base}/users`, async ({ request }) => {
+      create(await request.json());
+      return HttpResponse.json({ id: 'created-user' }, { status: 201 });
+    }),
+  );
+  const router = mount('/usuarios');
+  const button = await screen.findByRole('button', { name: 'Novo usuário' });
+  await waitFor(() => expect(button).toBeEnabled());
+  await userEvent.click(button);
+  expect(router.state.location.pathname).toBe('/usuarios/novo');
+  await screen.findByRole('dialog', { name: 'Novo usuário' });
+  fireEvent.change(screen.getByLabelText('Nome'), { target: { value: 'Nova pessoa' } });
+  fireEvent.change(screen.getByLabelText('E-mail'), { target: { value: 'nova@fsph.test' } });
+  fireEvent.change(screen.getByLabelText('Senha'), { target: { value: 'SenhaLocal-2026!' } });
+  await userEvent.click(screen.getByRole('combobox', { name: 'Setor' }));
+  await userEvent.click(screen.getByRole('option', { name: 'Administrativo' }));
+  await userEvent.click(screen.getByRole('combobox', { name: 'Perfil' }));
+  expect(screen.getAllByRole('option')).toHaveLength(7);
+  await userEvent.click(screen.getByRole('option', { name: 'Gestor SVO' }));
+  await userEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Salvar' }));
+  await waitFor(() =>
+    expect(create).toHaveBeenCalledWith({
+      name: 'Nova pessoa',
+      email: 'nova@fsph.test',
+      password: 'SenhaLocal-2026!',
+      sectorId: 's1',
+      role: 'GESTOR_SVO',
+    }),
+  );
+  await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+  expect(router.state.location.pathname).toBe('/usuarios');
+  expect(list).not.toHaveBeenCalled();
+});
+
+it('explica a dependência de setores e não abre um cadastro incompleto', async () => {
+  granted = ['USERS_WRITE'];
+  const sectors = vi.fn(() => HttpResponse.json([]));
+  server.use(http.get(`${base}/sectors`, sectors));
+  mount('/usuarios/novo');
+  expect(
+    await screen.findByText(/sua conta também precisa de permissão para consultar/),
+  ).toBeVisible();
+  expect(screen.getByRole('button', { name: 'Novo usuário' })).toBeDisabled();
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  expect(sectors).not.toHaveBeenCalled();
+});
+
+it('nega cadastro por acesso direto para uma conta que só consulta usuários', async () => {
+  granted = ['USERS_READ'];
+  mount('/usuarios/novo');
+  expect(await screen.findByText(/Acesso restrito/)).toBeVisible();
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+});

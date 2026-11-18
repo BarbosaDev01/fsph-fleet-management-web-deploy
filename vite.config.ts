@@ -8,6 +8,7 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react()],
+    optimizeDeps: { entries: ['index.html'] },
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
@@ -16,6 +17,9 @@ export default defineConfig(({ mode }) => {
     server: {
       port: 5173,
       strictPort: true,
+      watch: {
+        ignored: ['**/.deploy-validation/**', '**/test-results/**', '**/playwright-report/**'],
+      },
       proxy: {
         '/api': {
           target: env.VITE_API_PROXY_TARGET || 'http://localhost:8081',

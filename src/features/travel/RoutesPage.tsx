@@ -17,7 +17,8 @@ import { useAccess } from '@/features/auth/access';
 const statuses: Dto['RouteStatus'][] = ['PLANNED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'];
 
 export function RoutesPage() {
-  const { can } = useAccess();
+  const { can, user } = useAccess();
+  const managing = can('ROUTES_MANAGE');
   const [page, setPage] = useState(0);
   const [status, setStatus] = useState<Dto['RouteStatus'] | ''>('');
   const [vehicleId, setVehicleId] = useState('');
@@ -33,7 +34,7 @@ export function RoutesPage() {
     driverId: driverId || undefined,
   };
   const query = useQuery({
-    queryKey: ['travel', 'routes', filters],
+    queryKey: ['travel', 'routes', user?.id, filters],
     queryFn: ({ signal }) => routesApi.list(filters, signal),
   });
   const vehicles = useQuery({
@@ -79,8 +80,12 @@ export function RoutesPage() {
   return (
     <Stack spacing={2}>
       <PageHeading
-        title="Viagens"
-        description="Planejamento, agenda e execução das viagens da frota."
+        title={managing ? 'Viagens' : 'Minhas viagens'}
+        description={
+          managing
+            ? 'Planeje as viagens da frota e defina veículo e condutor para cada saída.'
+            : 'Somente viagens atribuídas a você. Confira o veículo de cada saída e registre a execução nos detalhes da viagem.'
+        }
         action={
           can('ROUTES_MANAGE') && (
             <Button
@@ -132,11 +137,13 @@ export function RoutesPage() {
           value={vehicleInput}
           onChange={(event) => setVehicleInput(event.target.value)}
         />
-        <TextField
-          label="ID do motorista"
-          value={driverInput}
-          onChange={(event) => setDriverInput(event.target.value)}
-        />
+        {managing && (
+          <TextField
+            label="ID do motorista"
+            value={driverInput}
+            onChange={(event) => setDriverInput(event.target.value)}
+          />
+        )}
         <Button type="submit" variant="outlined">
           Filtrar
         </Button>

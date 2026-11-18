@@ -11,9 +11,10 @@ import { dateTime, dateTimeInput, statusLabels } from '@/shared/format';
 import { routesApi } from './api';
 import { scheduleBody, scheduleFields } from './schedule';
 import { useAccess } from '@/features/auth/access';
+import { driversApi } from '@/features/registry/api';
 
 export function RouteDetailPage() {
-  const { can, canAny } = useAccess();
+  const { can, user } = useAccess();
   const { id = '' } = useParams();
   const [form, setForm] = useState<FormSpec | null>(null);
   const query = useQuery({
@@ -25,6 +26,20 @@ export function RouteDetailPage() {
     queryFn: ({ signal }) => routesApi.stops(id, signal),
   });
   const route = query.data;
+  // Without ROUTES_MANAGE the API returns only this user's assigned routes.
+  // A manager with execution permission also needs to own the assignment (except ADMIN).
+  const verifyAssignment =
+    can('ROUTES_EXECUTE') && can('ROUTES_MANAGE') && user?.role !== 'ADMIN' && !route?.driverUserId;
+  const driver = useQuery({
+    queryKey: ['registry', 'driver', route?.driverId],
+    queryFn: () => driversApi.find(route!.driverId),
+    enabled: verifyAssignment && can('DRIVERS_READ') && Boolean(route),
+  });
+  const assignedUserId = route?.driverUserId ?? driver.data?.userId;
+  const executable =
+    can('ROUTES_EXECUTE') &&
+    (user?.role === 'ADMIN' ||
+      (assignedUserId ? assignedUserId === user?.id : !can('ROUTES_MANAGE')));
   return (
     <Stack spacing={2}>
       <Button component={Link} to="/viagens" sx={{ alignSelf: 'flex-start' }}>
@@ -78,7 +93,7 @@ export function RouteDetailPage() {
                         Reagendar
                       </Button>
                     )}
-                    {can('ROUTES_EXECUTE') && (
+                    {executable && (
                       <Button
                         variant="contained"
                         onClick={() =>
@@ -117,7 +132,7 @@ export function RouteDetailPage() {
                     )}
                   </>
                 )}
-                {route.status === 'IN_PROGRESS' && can('ROUTES_EXECUTE') && (
+                {route.status === 'IN_PROGRESS' && executable && (
                   <Button
                     variant="contained"
                     onClick={() =>
@@ -208,25 +223,23 @@ export function RouteDetailPage() {
                 ]}
                 actions={(stop) => (
                   <Stack direction="row" sx={{ justifyContent: 'flex-end', gap: 1 }}>
-                    {can('ROUTES_EXECUTE') &&
-                      stop.status === 'PENDING' &&
-                      route.status === 'IN_PROGRESS' && (
-                        <Button
-                          size="small"
-                          onClick={() =>
-                            setForm({
-                              title: `Concluir a parada ${stop.stopSequence}?`,
-                              fields: [],
-                              submit: () => routesApi.completeStop(id, stop.id),
-                            })
-                          }
-                        >
-                          Concluir
-                        </Button>
-                      )}
+                    {executable && stop.status === 'PENDING' && route.status === 'IN_PROGRESS' && (
+                      <Button
+                        size="small"
+                        onClick={() =>
+                          setForm({
+                            title: `Concluir a parada ${stop.stopSequence}?`,
+                            fields: [],
+                            submit: () => routesApi.completeStop(id, stop.id),
+                          })
+                        }
+                      >
+                        Concluir
+                      </Button>
+                    )}
                     {stop.status === 'PENDING' &&
-                      canAny(['ROUTES_MANAGE', 'ROUTES_EXECUTE']) &&
-                      ['PLANNED', 'IN_PROGRESS'].includes(route.status) && (
+                      ((route.status === 'PLANNED' && can('ROUTES_MANAGE')) ||
+                        (route.status === 'IN_PROGRESS' && executable)) && (
                         <Button
                           size="small"
                           color="error"

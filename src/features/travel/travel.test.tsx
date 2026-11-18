@@ -37,6 +37,81 @@ function renderPage(path: string) {
   );
 }
 
+it.each([true, false])(
+  'mostra execução somente ao condutor atribuído quando também possui gestão (própria: %s)',
+  async (owned) => {
+    server.use(
+      http.get(`${base}/auth/me`, () =>
+        HttpResponse.json({
+          id: 'driver-user',
+          role: 'MOTORISTA',
+          name: 'Condutor',
+          email: 'driver@fsph.test',
+          permissions: ['ROUTES_READ', 'ROUTES_MANAGE', 'ROUTES_EXECUTE'],
+        }),
+      ),
+      http.get(`${base}/routes/r1`, () =>
+        HttpResponse.json({
+          id: 'r1',
+          driverId: 'registry-driver-id',
+          driverUserId: owned ? 'driver-user' : 'another-user',
+          driverName: 'Condutor atribuído',
+          vehiclePlate: 'ABC1D23',
+          status: 'PLANNED',
+          plannedStartAt: '2030-01-01T12:00:00Z',
+        }),
+      ),
+      http.get(`${base}/routes/r1/stops`, () => HttpResponse.json([])),
+    );
+    renderPage('/viagens/r1');
+    await screen.findByText('ABC1D23 · Condutor atribuído');
+    if (owned) expect(screen.getByRole('button', { name: 'Iniciar viagem' })).toBeVisible();
+    else expect(screen.queryByRole('button', { name: 'Iniciar viagem' })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Reagendar' })).toBeVisible();
+  },
+);
+
+it('não oferece cancelar uma parada planejada ao motorista sem gestão', async () => {
+  server.use(
+    http.get(`${base}/auth/me`, () =>
+      HttpResponse.json({
+        id: 'driver-user',
+        role: 'MOTORISTA',
+        name: 'Condutor',
+        email: 'driver@fsph.test',
+        permissions: ['ROUTES_READ', 'ROUTES_EXECUTE'],
+      }),
+    ),
+    http.get(`${base}/routes/r1`, () =>
+      HttpResponse.json({
+        id: 'r1',
+        driverId: 'registry-driver-id',
+        driverUserId: 'driver-user',
+        driverName: 'Condutor atribuído',
+        vehiclePlate: 'ABC1D23',
+        status: 'PLANNED',
+        plannedStartAt: '2030-01-01T12:00:00Z',
+      }),
+    ),
+    http.get(`${base}/routes/r1/stops`, () =>
+      HttpResponse.json([
+        {
+          id: 'stop',
+          stopSequence: 1,
+          serviceType: 'Coleta',
+          pickupLocation: 'FSPH',
+          destination: 'Hospital',
+          status: 'PENDING',
+        },
+      ]),
+    ),
+  );
+  renderPage('/viagens/r1');
+  await screen.findByText('Hospital');
+  expect(screen.getByRole('button', { name: 'Iniciar viagem' })).toBeVisible();
+  expect(screen.queryByRole('button', { name: 'Cancelar' })).not.toBeInTheDocument();
+});
+
 it('envia paginação e filtros de transportes ao servidor', async () => {
   const user = userEvent.setup();
   const requests: URL[] = [];

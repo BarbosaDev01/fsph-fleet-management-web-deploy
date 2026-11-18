@@ -1,0 +1,74 @@
+From 97d9d928c2aab17f30fcf7760ff727ce6a558725 Mon Sep 17 00:00:00 2001
+From: Barbosa <barbosadev01@gmail.com>
+Date: Wed, 18 Nov 2026 16:45:24 -0300
+Subject: [PATCH] fix: expoe usuario atribuido nas viagens para controles de
+ execucao
+
+---
+ .../api/v1/dtos/responses/RouteResponse.java  |  4 ++--
+ .../TransportRouteIntegrationTests.java       |  1 +
+ .../v1/dtos/responses/RouteResponseTests.java | 23 +++++++++++++++++++
+ 3 files changed, 26 insertions(+), 2 deletions(-)
+ create mode 100644 src/test/java/br/com/gestaofrota/api/v1/dtos/responses/RouteResponseTests.java
+
+diff --git a/src/main/java/br/com/gestaofrota/api/v1/dtos/responses/RouteResponse.java b/src/main/java/br/com/gestaofrota/api/v1/dtos/responses/RouteResponse.java
+index 20cd9d7..2b44fbf 100644
+--- a/src/main/java/br/com/gestaofrota/api/v1/dtos/responses/RouteResponse.java
++++ b/src/main/java/br/com/gestaofrota/api/v1/dtos/responses/RouteResponse.java
+@@ -6,13 +6,13 @@ import java.time.Instant;
+ import java.util.UUID;
+
+ public record RouteResponse(UUID id, UUID vehicleId, String vehiclePlate, UUID driverId,
+-        String driverName, UUID createdByUserId, RouteStatus status, Instant plannedStartAt,
++        String driverName, UUID driverUserId, UUID createdByUserId, RouteStatus status, Instant plannedStartAt,
+         Integer plannedDurationMinutes, Instant plannedReturnAt,
+         Instant realStartAt, Instant realEndAt, Long startMileage, Long endMileage,
+         Instant createdAt, Instant updatedAt) {
+     public static RouteResponse from(Route r) {
+         return new RouteResponse(r.getId(), r.getVehicle().getId(), r.getVehicle().getPlate(),
+-                r.getDriver().getId(), r.getDriver().getUser().getName(), r.getCreatedByUser().getId(),
++                r.getDriver().getId(), r.getDriver().getUser().getName(), r.getDriver().getUser().getId(), r.getCreatedByUser().getId(),
+                 r.getStatus(), r.getPlannedStartAt(), r.getPlannedDurationMinutes(), r.getPlannedReturnAt(),
+                 r.getRealStartAt(), r.getRealEndAt(),
+                 r.getStartMileage(), r.getEndMileage(), r.getCreatedAt(), r.getUpdatedAt());
+diff --git a/src/test/java/br/com/gestaofrota/TransportRouteIntegrationTests.java b/src/test/java/br/com/gestaofrota/TransportRouteIntegrationTests.java
+index 2df51fd..64b055b 100644
+--- a/src/test/java/br/com/gestaofrota/TransportRouteIntegrationTests.java
++++ b/src/test/java/br/com/gestaofrota/TransportRouteIntegrationTests.java
+@@ -60,6 +60,7 @@ class TransportRouteIntegrationTests extends PostgresIntegrationTest {
+
+         assertThat(route.status()).isEqualTo(RouteStatus.PLANNED);
+         assertThat(route.createdByUserId()).isEqualTo(f.admin().id());
++        assertThat(route.driverUserId()).isEqualTo(f.driver().id());
+         assertThat(first.requestedByUserId()).isEqualTo(employee.id());
+         assertThat(first.sectorId()).isEqualTo(employee.sectorId());
+         assertThat(f.driver().id()).isNotEqualTo(route.driverId());
+diff --git a/src/test/java/br/com/gestaofrota/api/v1/dtos/responses/RouteResponseTests.java b/src/test/java/br/com/gestaofrota/api/v1/dtos/responses/RouteResponseTests.java
+new file mode 100644
+index 0000000..ff692e7
+--- /dev/null
++++ b/src/test/java/br/com/gestaofrota/api/v1/dtos/responses/RouteResponseTests.java
+@@ -0,0 +1,23 @@
++package br.com.gestaofrota.api.v1.dtos.responses;
++
++import br.com.gestaofrota.domain.models.Route;
++import org.junit.jupiter.api.Test;
++import java.util.UUID;
++import static org.assertj.core.api.Assertions.assertThat;
++import static org.mockito.Mockito.*;
++
++class RouteResponseTests {
++    @Test
++    void exposesAssignedUserSeparatelyFromDriverRegistryId() {
++        Route route = mock(Route.class, RETURNS_DEEP_STUBS);
++        UUID driverId = UUID.randomUUID();
++        UUID userId = UUID.randomUUID();
++        when(route.getDriver().getId()).thenReturn(driverId);
++        when(route.getDriver().getUser().getId()).thenReturn(userId);
++
++        RouteResponse response = RouteResponse.from(route);
++
++        assertThat(response.driverId()).isEqualTo(driverId);
++        assertThat(response.driverUserId()).isEqualTo(userId).isNotEqualTo(driverId);
++    }
++}

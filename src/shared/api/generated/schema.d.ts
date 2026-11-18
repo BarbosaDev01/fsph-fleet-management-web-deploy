@@ -915,6 +915,11 @@ export interface components {
             /** Format: uuid */
             driverId: string;
             driverName: string;
+            /**
+             * Format: uuid
+             * @description Usuário vinculado ao condutor. Opcional para compatibilidade com versões anteriores da API.
+             */
+            driverUserId?: string;
             /** Format: uuid */
             createdByUserId: string;
             status: components["schemas"]["RouteStatus"];

@@ -9,6 +9,8 @@ import { routes } from '@/app/router';
 import { queryClient } from '@/app/providers/queryClient';
 import { authToken } from '@/shared/api/auth-token';
 import { permissions } from '@/shared/api/types';
+import { profileTasks } from '@/features/home/profile-tasks';
+import type { UserRole } from '@/shared/api/types';
 
 const base = `${window.location.origin}/api/v1`;
 const me = {
@@ -39,6 +41,37 @@ function renderPage(path: string, authenticated = true) {
 }
 
 describe('App', () => {
+  it.each([
+    ['ADMIN', ['USERS_READ', 'USERS_WRITE', 'SECTORS_READ'], 'Novo usuário'],
+    ['EMPLOYEE', ['TRIP_REQUESTS_WRITE'], 'Solicitar viagem'],
+    ['GESTOR_FROTA', ['TRIP_REQUESTS_READ', 'TRIP_REQUESTS_MANAGE'], 'Análise e agendamento'],
+    ['MOTORISTA', ['ROUTES_READ', 'ROUTES_EXECUTE'], 'Minhas viagens'],
+    ['ATENDENTE_SVO', ['SECTORS_READ'], null],
+    ['GESTOR_SVO', ['SECTORS_READ'], null],
+    ['EQUIPE_COLETA_SVO', ['SECTORS_READ'], null],
+  ] as const)(
+    'prioriza as atividades de %s usando as permissões da sessão',
+    async (role, granted, primary) => {
+      server.use(
+        http.get(`${base}/auth/me`, () => HttpResponse.json({ ...me, role, permissions: granted })),
+      );
+      renderPage('/');
+      expect(
+        await screen.findByRole('heading', { name: profileTasks[role as UserRole].title }),
+      ).toBeVisible();
+      if (primary) expect(screen.getByRole('link', { name: primary })).toBeVisible();
+      else {
+        expect(
+          screen.getByText(/Nenhuma atividade de atendimento ou coleta foi habilitada/),
+        ).toBeVisible();
+        expect(
+          screen.queryByRole('link', { name: 'Acessar análise e agendamento' }),
+        ).not.toBeInTheDocument();
+      }
+      if (role !== 'ADMIN')
+        expect(screen.queryByRole('link', { name: 'Novo usuário' })).not.toBeInTheDocument();
+    },
+  );
   it.each([
     '/demonstracoes/frota/veiculos',
     '/demonstracoes/dashboard',
@@ -165,13 +198,17 @@ describe('App', () => {
   it('revoga o token no backend ao sair e limpa os dados locais', async () => {
     const user = userEvent.setup();
     const logout = vi.fn(() => new HttpResponse(null, { status: 204 }));
-    server.use(http.post(`${base}/auth/logout`, logout));
-    renderPage('/');
+    server.use(
+      http.post(`${base}/auth/logout`, logout),
+      http.get(`${base}/sectors`, () => HttpResponse.json([])),
+    );
+    const router = renderPage('/setores');
     await user.click(await screen.findByRole('button', { name: 'Sair' }));
     expect(await screen.findByRole('button', { name: 'Entrar' })).toBeInTheDocument();
     expect(logout).toHaveBeenCalledOnce();
     expect(authToken.get()).toBeNull();
     expect(queryClient.getQueryData(['session', 'test-token'])).toBeUndefined();
+    expect(router.state.location.state).toBeNull();
   });
 
   it('informa falha no logout e conserva a sessão até confirmar a revogação', async () => {

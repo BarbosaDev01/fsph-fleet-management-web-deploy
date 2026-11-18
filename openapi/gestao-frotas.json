@@ -3197,6 +3197,11 @@
           "driverName": {
             "type": "string"
           },
+          "driverUserId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Usuário vinculado ao condutor. Opcional para compatibilidade com versões anteriores da API."
+          },
           "createdByUserId": {
             "type": "string",
             "format": "uuid"

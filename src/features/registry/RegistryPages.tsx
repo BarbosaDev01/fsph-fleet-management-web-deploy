@@ -81,18 +81,25 @@ export function UsersPage() {
   const sectors = useQuery({
     queryKey: ['registry', 'sectors'],
     queryFn: ({ signal }) => sectorsApi.list(signal),
-    enabled: can('SECTORS_READ'),
+    enabled: can('SECTORS_READ') && can('USERS_WRITE'),
   });
   const fields: Field[] = [
-    sectorField(sectors.data),
     { name: 'name', label: 'Nome', required: true, maxLength: 150 },
     { name: 'email', label: 'E-mail', type: 'email', required: true, maxLength: 255 },
-    { name: 'role', label: 'Perfil', required: true, options: roleOptions },
+    sectorField(sectors.data),
+    {
+      name: 'role',
+      label: 'Perfil',
+      required: true,
+      options: roleOptions,
+      helper:
+        'O perfil define as permissões iniciais. As ações disponíveis seguem as permissões efetivas da conta.',
+    },
   ];
   const userBody = (values: FormValues) => ({
     sectorId: values.sectorId!,
-    name: values.name!,
-    email: values.email!,
+    name: values.name!.trim(),
+    email: values.email!.trim(),
     role: values.role as UserRole,
   });
   return (
@@ -109,13 +116,25 @@ export function UsersPage() {
           setores.
         </Alert>
       )}
-      {sectors.isSuccess && sectors.data.length === 0 && (
-        <Alert severity="info">Cadastre um setor antes de cadastrar usuários.</Alert>
+      {can('USERS_WRITE') && sectors.isLoading && (
+        <Alert severity="info">Carregando os setores para o cadastro de usuários…</Alert>
+      )}
+      {can('USERS_WRITE') && sectors.isSuccess && sectors.data.length === 0 && (
+        <Alert severity="info">
+          Cadastre um setor antes de cadastrar usuários.
+          {can('SECTORS_WRITE') && (
+            <Button component={Link} to="/setores">
+              Ir para setores
+            </Button>
+          )}
+        </Alert>
       )}
       <RegistryScreen
         name="users"
         title="Usuários"
         createLabel="Novo usuário"
+        createPath="/usuarios/novo"
+        description="Cadastre contas e selecione o perfil de acesso de cada pessoa."
         list={usersApi.list}
         createDisabled={!sectors.isSuccess || !sectors.data.length}
         editDisabled={!sectors.isSuccess}
@@ -131,7 +150,7 @@ export function UsersPage() {
         }
         create={{
           title: 'Novo usuário',
-          fields: [...fields, passwordField],
+          fields: [...fields.slice(0, 2), passwordField, ...fields.slice(2)],
           submit: (values) => usersApi.create({ ...userBody(values), password: values.password! }),
         }}
         edit={(row) => ({

@@ -56,7 +56,7 @@ const navigation: readonly { group: string; items: readonly NavEntry[] }[] = [
     group: 'Operação',
     items: [
       ['/solicitacoes', 'Solicitações de viagem', AssignmentOutlined],
-      ['/atendimento-svo', 'Atendimento e agendamento', EventNoteOutlined],
+      ['/atendimento-svo', 'Análise e agendamento', EventNoteOutlined],
       ['/transportes', 'Transportes', DirectionsBusOutlined],
       ['/viagens', 'Rotas e viagens', AltRouteOutlined],
     ],
@@ -95,15 +95,22 @@ const drawerWidth = 248;
 
 export function AppLayout() {
   const session = useSession();
-  const { canVisit } = useAccess();
+  const { can, canVisit } = useAccess();
   const location = useLocation();
+  const [explicitLogout, setExplicitLogout] = useState(false);
   const queryClient = useQueryClient();
   const desktop = useMediaQuery(useTheme().breakpoints.up('md'));
   const [menuOpen, setMenuOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
   const [logoutError, setLogoutError] = useState<unknown>(null);
   if (!session.token)
-    return <Navigate to="/login" replace state={{ from: location.pathname + location.search }} />;
+    return (
+      <Navigate
+        to="/login"
+        replace
+        state={explicitLogout ? null : { from: location.pathname + location.search }}
+      />
+    );
   if (session.isPending) return <Loading />;
   if (session.error)
     return (
@@ -127,6 +134,7 @@ export function AppLayout() {
   if (!session.data) return null;
   const logout = async () => {
     setSigningOut(true);
+    setExplicitLogout(true);
     setLogoutError(null);
     try {
       await authApi.logout();
@@ -134,6 +142,7 @@ export function AppLayout() {
       authToken.clear();
       queryClient.clear();
     } catch (error) {
+      setExplicitLogout(false);
       setLogoutError(error);
     } finally {
       setSigningOut(false);
@@ -242,7 +251,7 @@ export function AppLayout() {
                     }}
                   >
                     <Icon aria-hidden sx={{ fontSize: 20 }} />
-                    {label}
+                    {to === '/viagens' && !can('ROUTES_MANAGE') ? 'Minhas viagens' : label}
                   </ListItemButton>
                 ))}
               </Box>
@@ -354,7 +363,7 @@ export function AppLayout() {
           <Stack spacing={2} sx={{ minWidth: 0 }}>
             <ApiFeedback error={logoutError} />
             <ModuleAccess>
-              <Outlet />
+              <Outlet key={session.data.id} />
             </ModuleAccess>
           </Stack>
         </Container>

@@ -1,0 +1,152 @@
+{
+  "api": "local Spring Boot + PostgreSQL isolado",
+  "profiles": [
+    {
+      "role": "ADMIN",
+      "permissions": [
+        "USERS_READ",
+        "USERS_WRITE",
+        "SECTORS_READ",
+        "SECTORS_WRITE",
+        "PERMISSIONS_READ",
+        "PERMISSIONS_WRITE",
+        "VEHICLES_READ",
+        "VEHICLES_WRITE",
+        "VEHICLES_ASSIGNED_READ",
+        "TRIPS_WRITE",
+        "TRIPS_READ",
+        "DRIVERS_READ",
+        "DRIVERS_WRITE",
+        "MAINTENANCES_READ",
+        "MAINTENANCES_WRITE",
+        "FUEL_STATIONS_READ",
+        "FUEL_STATIONS_WRITE",
+        "FUELINGS_READ",
+        "FUELINGS_WRITE",
+        "TRIP_REQUESTS_READ",
+        "TRIP_REQUESTS_WRITE",
+        "TRIP_REQUESTS_MANAGE",
+        "NOTIFICATIONS_READ",
+        "TRANSPORTS_READ",
+        "TRANSPORTS_REQUEST",
+        "TRANSPORTS_MANAGE",
+        "ROUTES_READ",
+        "ROUTES_MANAGE",
+        "ROUTES_EXECUTE"
+      ],
+      "menu": [
+        "Início",
+        "Painel da frota",
+        "Solicitações de viagem",
+        "Análise e agendamento",
+        "Transportes",
+        "Rotas e viagens",
+        "Veículos",
+        "Motoristas",
+        "Setores",
+        "Usuários",
+        "Permissões"
+      ],
+      "permitted": "/usuarios",
+      "api": 200,
+      "restriction": "ownership checked below"
+    },
+    {
+      "role": "EMPLOYEE",
+      "permissions": [
+        "SECTORS_READ",
+        "TRIP_REQUESTS_WRITE",
+        "NOTIFICATIONS_READ",
+        "TRANSPORTS_READ",
+        "TRANSPORTS_REQUEST"
+      ],
+      "menu": ["Início", "Solicitações de viagem", "Transportes", "Setores"],
+      "permitted": "/solicitacoes",
+      "api": 200,
+      "restriction": 403
+    },
+    {
+      "role": "GESTOR_FROTA",
+      "permissions": [
+        "SECTORS_READ",
+        "VEHICLES_READ",
+        "VEHICLES_WRITE",
+        "TRIPS_READ",
+        "DRIVERS_READ",
+        "DRIVERS_WRITE",
+        "MAINTENANCES_READ",
+        "MAINTENANCES_WRITE",
+        "FUEL_STATIONS_READ",
+        "FUEL_STATIONS_WRITE",
+        "FUELINGS_READ",
+        "FUELINGS_WRITE",
+        "TRIP_REQUESTS_READ",
+        "TRIP_REQUESTS_WRITE",
+        "TRIP_REQUESTS_MANAGE",
+        "NOTIFICATIONS_READ",
+        "TRANSPORTS_READ",
+        "TRANSPORTS_REQUEST",
+        "TRANSPORTS_MANAGE",
+        "ROUTES_READ",
+        "ROUTES_MANAGE"
+      ],
+      "menu": [
+        "Início",
+        "Painel da frota",
+        "Solicitações de viagem",
+        "Análise e agendamento",
+        "Transportes",
+        "Rotas e viagens",
+        "Veículos",
+        "Motoristas",
+        "Setores"
+      ],
+      "permitted": "/atendimento-svo",
+      "api": 200,
+      "restriction": 403
+    },
+    {
+      "role": "MOTORISTA",
+      "permissions": [
+        "SECTORS_READ",
+        "VEHICLES_ASSIGNED_READ",
+        "TRIPS_WRITE",
+        "FUEL_STATIONS_READ",
+        "FUELINGS_WRITE",
+        "NOTIFICATIONS_READ",
+        "ROUTES_READ",
+        "ROUTES_EXECUTE"
+      ],
+      "menu": ["Início", "Minhas viagens", "Setores"],
+      "permitted": "/viagens",
+      "api": 200,
+      "restriction": 403
+    },
+    {
+      "role": "ATENDENTE_SVO",
+      "permissions": ["SECTORS_READ"],
+      "menu": ["Início", "Setores"],
+      "permitted": "/setores",
+      "api": 200,
+      "restriction": 403
+    },
+    {
+      "role": "GESTOR_SVO",
+      "permissions": ["SECTORS_READ"],
+      "menu": ["Início", "Setores"],
+      "permitted": "/setores",
+      "api": 200,
+      "restriction": 403
+    },
+    {
+      "role": "EQUIPE_COLETA_SVO",
+      "permissions": ["SECTORS_READ"],
+      "menu": ["Início", "Setores"],
+      "permitted": "/setores",
+      "api": 200,
+      "restriction": 403
+    }
+  ],
+  "scopes": "own requests/transports; assigned routes/stops; global manager; forbidden cross-ID; driver execution; manager approval/scheduling; ADMIN ownership restriction",
+  "errors": []
+}

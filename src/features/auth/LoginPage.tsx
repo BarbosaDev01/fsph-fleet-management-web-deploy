@@ -34,6 +34,7 @@ export function LoginPage() {
     setError(null);
     try {
       const response = await authApi.login(values);
+      await queryClient.cancelQueries();
       queryClient.clear();
       authToken.set(response.accessToken);
     } catch (failure) {

@@ -20,6 +20,7 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
+    "test:e2e:profiles": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/test-profiles-local.ps1",
     "test:e2e:staging": "node scripts/test-staging.mjs",
     "api:generate": "node scripts/generate-api.mjs",
     "api:snapshot": "node scripts/snapshot-api.mjs"
