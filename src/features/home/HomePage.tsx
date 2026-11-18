@@ -34,7 +34,7 @@ export function HomePage() {
         title="Gestão de Frotas"
         description={`Olá, ${session.data?.name ?? ''}. Acesse os módulos para gerenciar a frota.`}
       />
-      <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 3 }}>
+      <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 2 }}>
         {[
           ...modules,
           ...(env.isStaging
@@ -49,16 +49,26 @@ export function HomePage() {
         ]
           .filter(([to]) => canVisit(to!))
           .map(([to, title, description]) => (
-            <Paper key={to} variant="outlined" sx={{ p: 3, flex: '1 1 280px' }}>
-              <Stack spacing={2}>
-                <Typography component="h2" variant="h6">
-                  {title}
-                </Typography>
-                <Typography color="text.secondary">{description}</Typography>
-                <Button component={Link} to={to} sx={{ alignSelf: 'flex-start' }}>
-                  Acessar {title.toLowerCase()}
-                </Button>
-              </Stack>
+            <Paper
+              key={to}
+              variant="outlined"
+              sx={{ p: 2.5, flex: '1 1 280px', display: 'flex', flexDirection: 'column' }}
+            >
+              <Typography component="h2" variant="h3">
+                {title}
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mt: 0.75, flex: 1 }}>
+                {description}
+              </Typography>
+              <Button
+                component={Link}
+                to={to}
+                variant="outlined"
+                size="small"
+                sx={{ alignSelf: 'flex-start', mt: 2 }}
+              >
+                Acessar {title.toLowerCase()}
+              </Button>
             </Paper>
           ))}
       </Stack>
