@@ -59,6 +59,23 @@ describe('App', () => {
     expect(screen.getByRole('navigation', { name: 'Navegação principal' })).toBeInTheDocument();
   });
 
+  it('filtra os grupos do menu pelas permissões recebidas, mesmo para ADMIN', async () => {
+    server.use(
+      http.get(`${base}/auth/me`, () =>
+        HttpResponse.json({ ...me, permissions: ['VEHICLES_READ'] }),
+      ),
+    );
+    renderPage('/');
+    await userEvent.click(await screen.findByRole('button', { name: 'Abrir menu de navegação' }));
+    const menu = within(screen.getByRole('navigation', { name: 'Navegação principal' }));
+    expect(menu.getByRole('link', { name: 'Veículos' })).toBeVisible();
+    expect(menu.getByRole('link', { name: 'Painel da frota' })).toBeVisible();
+    expect(menu.queryByRole('link', { name: 'Motoristas' })).not.toBeInTheDocument();
+    expect(menu.queryByRole('link', { name: 'Usuários' })).not.toBeInTheDocument();
+    expect(menu.queryByText('Administração')).not.toBeInTheDocument();
+    expect(menu.queryByText('Operação')).not.toBeInTheDocument();
+  });
+
   it('protege a rota e volta ao endereço solicitado após o login', async () => {
     const user = userEvent.setup();
     const login = vi.fn();

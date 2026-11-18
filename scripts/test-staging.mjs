@@ -11,7 +11,13 @@ if (!email || !password)
   throw new Error('Configure staging credentials locally before running the real test.');
 const result = spawnSync(
   process.execPath,
-  ['node_modules/@playwright/test/cli.js', 'test', '--config', 'e2e/staging-functional.config.ts'],
+  [
+    'node_modules/@playwright/test/cli.js',
+    'test',
+    '--config',
+    'e2e/staging-functional.config.ts',
+    ...process.argv.slice(3),
+  ],
   {
     stdio: 'inherit',
     env: { ...process.env, STAGING_ADMIN_EMAIL: email, STAGING_ADMIN_PASSWORD: password },

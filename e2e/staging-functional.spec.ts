@@ -34,6 +34,92 @@ async function save(page: Page, path: string, method: string, expectedStatus = 2
   return result;
 }
 
+test('staging real: padrão institucional, painel e navegação com JWT', async ({
+  page,
+  context,
+}) => {
+  test.skip(
+    !process.env.STAGING_ADMIN_EMAIL || !process.env.STAGING_ADMIN_PASSWORD,
+    'Requires real staging credentials; no backend mock fallback.',
+  );
+  test.setTimeout(180_000);
+  await localArtifact(context);
+  await page.setViewportSize({ width: 390, height: 1000 });
+  let accessToken: string | null = null;
+  try {
+    await page.goto('/veiculos');
+    await expect(page).toHaveURL(/\/login$/);
+    await page.getByLabel('E-mail').fill(process.env.STAGING_ADMIN_EMAIL!);
+    await page.getByLabel('Senha', { exact: true }).fill(process.env.STAGING_ADMIN_PASSWORD!);
+    const login = responseFor(page, 'auth/login', 'POST');
+    const identity = responseFor(page, 'auth/me', 'GET');
+    const initialVehicles = responseFor(page, 'vehicles', 'GET');
+    await page.getByRole('button', { name: 'Entrar', exact: true }).click();
+    expect((await login).status()).toBe(200);
+    const me = await identity;
+    expect(me.status()).toBe(200);
+    expect(await me.json()).toMatchObject({ role: 'ADMIN' });
+    expect((await initialVehicles).status()).toBe(200);
+    accessToken = await token(page);
+    expect(accessToken).toBeTruthy();
+    await expect(page.getByRole('heading', { name: 'Veículos', exact: true })).toBeVisible();
+
+    await page.getByRole('button', { name: 'Abrir menu de navegação' }).click();
+    const vehicles = responseFor(page, 'vehicles', 'GET');
+    await page
+      .getByRole('navigation', { name: 'Navegação principal' })
+      .getByRole('link', { name: 'Painel da frota', exact: true })
+      .click();
+    const vehicleResponse = await vehicles;
+    expect(vehicleResponse.status()).toBe(200);
+    const activeCount = ((await vehicleResponse.json()) as { active: boolean }[]).filter(
+      (vehicle) => vehicle.active,
+    ).length;
+    const vehicleCard = page
+      .getByRole('heading', { name: 'Veículos ativos', exact: true })
+      .locator('..');
+    await expect(vehicleCard.getByText(String(activeCount), { exact: true })).toBeVisible();
+
+    for (const width of [390, 768, 1440]) {
+      await page.setViewportSize({ width, height: 1000 });
+      await expect(page.getByRole('link', { name: 'Minha conta', exact: true })).toBeVisible();
+      await expect(page.getByRole('button', { name: 'Sair', exact: true })).toBeVisible();
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+        true,
+      );
+      const menu = page.getByRole('button', { name: 'Abrir menu de navegação' });
+      if (await menu.isVisible()) await menu.click();
+      await page
+        .getByRole('navigation', { name: 'Navegação principal' })
+        .getByRole('link', { name: 'Veículos', exact: true })
+        .click();
+      await expect(page.getByRole('heading', { name: 'Veículos', exact: true })).toBeVisible();
+      await page.getByRole('link', { name: 'Minha conta', exact: true }).click();
+      await expect(page.getByRole('heading', { name: 'Minha conta', exact: true })).toBeVisible();
+    }
+    await page.reload();
+    await expect(page.getByRole('heading', { name: 'Minha conta', exact: true })).toBeVisible();
+    const logout = responseFor(page, 'auth/logout', 'POST');
+    await page.getByRole('button', { name: 'Sair', exact: true }).click();
+    expect((await logout).status()).toBe(204);
+    await expect(page).toHaveURL(/\/login$/);
+    expect(await token(page)).toBeNull();
+    expect(
+      (
+        await page.request.get(`${api}/api/v1/auth/me`, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        })
+      ).status(),
+    ).toBe(401);
+    accessToken = null;
+  } finally {
+    if (accessToken)
+      await page.request.post(`${api}/api/v1/auth/logout`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+  }
+});
+
 test('staging real: JWT, CRUD, persistência, autorização e ciclo de solicitação', async ({
   page,
   context,
