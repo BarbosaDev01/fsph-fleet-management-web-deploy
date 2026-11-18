@@ -29,9 +29,12 @@ function Metric({
     enabled: allowed,
   });
   return (
-    <Paper variant="outlined" sx={{ p: 3, flex: '1 1 220px', minWidth: 0 }}>
-      <Stack spacing={2}>
-        <Typography component="h2" variant="h6">
+    <Paper
+      variant="outlined"
+      sx={{ p: 2.5, flex: '1 1 220px', minWidth: 0, display: 'flex', flexDirection: 'column' }}
+    >
+      <Stack spacing={1.25} sx={{ flex: 1 }}>
+        <Typography component="h2" variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
           {title}
         </Typography>
         {!allowed ? (
@@ -46,15 +49,24 @@ function Metric({
             }}
           />
         ) : (
-          <Typography variant="h3" component="p" color="primary">
+          <Typography
+            component="p"
+            sx={{ fontSize: 32, fontWeight: 700, lineHeight: 1.2, color: 'text.primary' }}
+          >
             {query.data}
           </Typography>
         )}
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="caption" color="text.secondary" sx={{ flex: 1 }}>
           {description}
         </Typography>
         {allowed && (
-          <Button component={Link} to={to} sx={{ alignSelf: 'flex-start' }}>
+          <Button
+            component={Link}
+            to={to}
+            size="small"
+            variant="outlined"
+            sx={{ alignSelf: 'flex-start' }}
+          >
             Consultar registros
           </Button>
         )}

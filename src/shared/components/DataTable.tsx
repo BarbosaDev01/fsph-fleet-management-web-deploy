@@ -28,18 +28,28 @@ export function DataTable<T extends { id: string }>({
       tabIndex={0}
       aria-label="Tabela de registros. Role horizontalmente para consultar todas as colunas."
     >
-      <Table>
+      <Table size="small">
         <TableHead>
           <TableRow>
             {columns.map((column) => (
-              <TableCell key={column.label}>{column.label}</TableCell>
+              <TableCell key={column.label} sx={{ py: 1.25 }}>
+                {column.label}
+              </TableCell>
             ))}
-            {actions && <TableCell align="right">Ações</TableCell>}
+            {actions && (
+              <TableCell align="right" sx={{ py: 1.25 }}>
+                Ações
+              </TableCell>
+            )}
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map((row) => (
-            <TableRow key={row.id} hover>
+            <TableRow
+              key={row.id}
+              hover
+              sx={{ '&:last-child td': { borderBottom: 0 }, '& td': { py: 1.5 } }}
+            >
               {columns.map((column) => (
                 <TableCell key={column.label}>{column.render(row)}</TableCell>
               ))}

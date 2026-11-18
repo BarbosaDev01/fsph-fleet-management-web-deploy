@@ -14,14 +14,21 @@ export function PageHeading({
     <Stack
       direction={{ xs: 'column', sm: 'row' }}
       spacing={2}
-      sx={{ justifyContent: 'space-between', alignItems: { sm: 'center' }, mb: 3 }}
+      sx={{
+        justifyContent: 'space-between',
+        alignItems: { sm: 'center' },
+        mb: 3,
+        pb: 2.5,
+        borderBottom: 1,
+        borderColor: 'divider',
+      }}
     >
       <div>
-        <Typography component="h1" variant="h4" sx={{ fontWeight: 700 }}>
+        <Typography component="h1" variant="h1">
           {title}
         </Typography>
         {description && (
-          <Typography color="text.secondary" sx={{ mt: 1 }}>
+          <Typography color="text.secondary" sx={{ mt: 0.75, fontSize: 14 }}>
             {description}
           </Typography>
         )}
