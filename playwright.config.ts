@@ -1,5 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 
+const node = `"${process.execPath}"`;
+const vite = 'node_modules/vite/bin/vite.js';
+
 export default defineConfig({
   testDir: './e2e',
   fullyParallel: true,
@@ -14,12 +17,27 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
+      testIgnore: '**/fuel-cards.spec.ts',
       use: { ...devices['Desktop Chrome'] },
     },
+    {
+      name: 'production',
+      testMatch: '**/fuel-cards.spec.ts',
+      use: { ...devices['Desktop Chrome'], baseURL: 'http://127.0.0.1:4174' },
+    },
   ],
-  webServer: {
-    command: 'pnpm preview --host 127.0.0.1',
-    url: 'http://127.0.0.1:4173',
-    reuseExistingServer: !process.env.CI,
-  },
+  webServer: [
+    {
+      env: { VITE_APP_ENV: 'staging', VITE_FUEL_CARDS_DEMO: 'true' },
+      command: `${node} ${vite} build --outDir .deploy-validation/ui-staging && ${node} ${vite} preview --outDir .deploy-validation/ui-staging --host 127.0.0.1`,
+      url: 'http://127.0.0.1:4173',
+      reuseExistingServer: false,
+    },
+    {
+      env: { VITE_APP_ENV: 'production', VITE_FUEL_CARDS_DEMO: 'true' },
+      command: `${node} ${vite} build --outDir .deploy-validation/ui-production && ${node} ${vite} preview --outDir .deploy-validation/ui-production --host 127.0.0.1 --port 4174`,
+      url: 'http://127.0.0.1:4174',
+      reuseExistingServer: false,
+    },
+  ],
 });

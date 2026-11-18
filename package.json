@@ -5,7 +5,7 @@
   "type": "module",
   "packageManager": "pnpm@11.25.0",
   "engines": {
-    "node": ">=24.0.0",
+    "node": "24.x",
     "pnpm": ">=11.0.0"
   },
   "scripts": {
@@ -20,12 +20,16 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
-    "api:generate": "node scripts/generate-api.mjs"
+    "test:e2e:staging": "node scripts/test-staging.mjs",
+    "api:generate": "node scripts/generate-api.mjs",
+    "api:snapshot": "node scripts/snapshot-api.mjs"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",
     "@emotion/styled": "11.14.1",
+    "@fontsource-variable/inter": "5.2.8",
     "@hookform/resolvers": "6.0.1",
+    "@mui/icons-material": "9.5.0",
     "@mui/material": "9.5.0",
     "@tanstack/react-query": "5.105.0",
     "openapi-fetch": "0.17.0",
