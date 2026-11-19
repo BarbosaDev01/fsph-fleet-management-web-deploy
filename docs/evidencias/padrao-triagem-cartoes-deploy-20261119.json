@@ -1,0 +1,95 @@
+{
+  "verifiedAtUtc": "2026-11-19T23:37:11.234486+00:00",
+  "timezone": "America/Fortaleza",
+  "environment": "homologacao",
+  "repository": "BarbosaDev01/fsph-fleet-management-web-deploy",
+  "branch": "feat/api-fuel-cards-svo-20261119",
+  "sourceCommit": "34e0886101ccafdfe745bef77357e48f1091b56c",
+  "scope": ["Triagem SVO", "Cartoes de combustivel: lista, cadastro, detalhes e edicao"],
+  "vercel": {
+    "projectId": "prj_1rYgCg3ttNkG1cyavfNNqExJ2XrY",
+    "teamId": "team_II16KhaGXDOWMee9ptSCohpL",
+    "deploymentId": "dpl_2cPvVhGxagqP7AFu5ugWKjDbegYV",
+    "target": "production",
+    "status": "READY",
+    "publicUrl": "https://fsph-fleet-web-staging.vercel.app",
+    "artifactUrl": "https://fsph-fleet-web-staging-66vf0j9pb-barbosas-projects-5a2b240e.vercel.app",
+    "publicAliasVerified": true,
+    "framework": "vite",
+    "effectiveBuildNodeVersion": "24.x",
+    "engineOverrideConfirmedInBuildLogs": true,
+    "source": "clean git archive of sourceCommit; unrelated local changes excluded",
+    "apiOriginVerified": true,
+    "stagedThenPromotedWithoutRebuild": true,
+    "protectionSettingsChanged": false
+  },
+  "render": {
+    "workspaceId": "tea-dbkhptm7bikc73a946p0",
+    "serviceId": "srv-dbn0cg0u01pc73fpooqg",
+    "deploymentId": "dep-dbvo9j6c6qcc7393je80",
+    "sourceCommit": "913ae68452f67379926ce2bffcd6966a4cc4f85a",
+    "status": "live",
+    "apiUrl": "https://fsph-fleet-api-staging.onrender.com",
+    "healthHttp": 200,
+    "healthStatus": "UP",
+    "backendCodeChanged": false,
+    "configurationChanged": false,
+    "postDeployErrorLogCount": 0,
+    "errorLogWindowUtc": {
+      "start": "2026-11-19T23:26:25Z",
+      "end": "2026-11-19T23:36:13Z"
+    }
+  },
+  "localValidation": {
+    "unitTests": 63,
+    "unitFiles": 10,
+    "playwrightTests": 9,
+    "typecheck": "passed",
+    "lint": "passed",
+    "format": "passed",
+    "build": "passed",
+    "visualWidths": [390, 768, 1440],
+    "visualScreens": 5
+  },
+  "publishedBrowser": {
+    "sourceCommit": "34e0886101ccafdfe745bef77357e48f1091b56c",
+    "mockedApi": false,
+    "interceptedFrontend": false,
+    "checks": [
+      "login",
+      "api_read_cross_origin",
+      "triagem_svo_390",
+      "cartoes_390",
+      "cartao_cadastro_390",
+      "triagem_svo_768",
+      "cartoes_768",
+      "cartao_cadastro_768",
+      "triagem_svo_1440",
+      "cartoes_1440",
+      "cartao_cadastro_1440",
+      "session_after_reload",
+      "logout_and_revocation"
+    ],
+    "apiCalls": [
+      {
+        "path": "/api/v1/fuel-cards",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/svo/requests",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/vehicles",
+        "status": 200
+      }
+    ],
+    "pageErrors": [],
+    "unexpectedWrites": false,
+    "success": true
+  },
+  "verificationLimitations": [
+    "Published detail and edit checks were not exercised because no visible card link was available during the run. Both screens were validated with local UI fixtures.",
+    "This publication smoke made no business-record writes; existing unit and browser tests cover mutation flows."
+  ]
+}
