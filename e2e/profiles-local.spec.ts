@@ -73,9 +73,9 @@ test('cadastro dos sete perfis, troca de conta e escopos reais da API', async ({
       await dialog.getByLabel('Nome', { exact: true }).fill(`Validação ${role}`);
       await dialog.getByLabel('E-mail', { exact: true }).fill(email);
       await dialog.getByLabel('Senha', { exact: true }).fill(password);
-      await dialog.getByRole('combobox', { name: 'Setor', exact: true }).click();
+      await dialog.getByRole('combobox', { name: 'Setor de lotação', exact: true }).click();
       await page.getByRole('option', { name: sector.name, exact: true }).click();
-      await dialog.getByRole('combobox', { name: 'Perfil', exact: true }).click();
+      await dialog.getByRole('combobox', { name: 'Perfil de acesso', exact: true }).click();
       expect(await page.getByRole('option').count()).toBe(7);
       await page.getByRole('option', { name: roleLabels[role], exact: true }).click();
       const saved = page.waitForResponse(
@@ -481,9 +481,9 @@ test('cadastro dos sete perfis, troca de conta e escopos reais da API', async ({
       await dialog.getByLabel('Nome', { exact: true }).fill('Cadastro sem leitura');
       await dialog.getByLabel('E-mail', { exact: true }).fill(`write.only.${suffix}@fsph.test`);
       await dialog.getByLabel('Senha', { exact: true }).fill(password);
-      await dialog.getByRole('combobox', { name: 'Setor', exact: true }).click();
+      await dialog.getByRole('combobox', { name: 'Setor de lotação', exact: true }).click();
       await page.getByRole('option', { name: sector.name, exact: true }).click();
-      await dialog.getByRole('combobox', { name: 'Perfil', exact: true }).click();
+      await dialog.getByRole('combobox', { name: 'Perfil de acesso', exact: true }).click();
       await page.getByRole('option', { name: 'Colaborador', exact: true }).click();
       const creation = page.waitForResponse(
         (r) => new URL(r.url()).pathname === '/api/v1/users' && r.request().method() === 'POST',

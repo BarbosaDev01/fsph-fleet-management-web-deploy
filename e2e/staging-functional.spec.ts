@@ -190,12 +190,12 @@ test('staging real: JWT, CRUD, persistência, autorização e ciclo de solicita�
     await page.goto('/usuarios');
     await expect(page.getByRole('button', { name: 'Novo usuário' })).toBeEnabled();
     await page.getByRole('button', { name: 'Novo usuário' }).click();
-    await page.getByRole('combobox', { name: 'Setor', exact: true }).click();
+    await page.getByRole('combobox', { name: 'Setor de lotação', exact: true }).click();
     await page.getByRole('option', { name: sectors[0]!.name, exact: true }).click();
     await page.getByRole('dialog').getByLabel('Nome', { exact: true }).fill(driverName);
     await page.getByRole('dialog').getByLabel('E-mail').fill(driverEmail);
     await page.getByRole('dialog').getByLabel('Senha', { exact: true }).fill(driverPassword);
-    await page.getByRole('combobox', { name: 'Perfil', exact: true }).click();
+    await page.getByRole('combobox', { name: 'Perfil de acesso', exact: true }).click();
     await page.getByRole('option', { name: 'Motorista', exact: true }).click();
     created.user = ((await (await save(page, 'users', 'POST', 201)).json()) as { id: string }).id;
     await page.reload();

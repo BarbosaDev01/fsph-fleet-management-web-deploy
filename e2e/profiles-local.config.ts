@@ -3,10 +3,20 @@ import { fileURLToPath } from 'node:url';
 
 export default defineConfig({
   testDir: '.',
-  testMatch: 'profiles-local.spec.ts',
+  testMatch: ['profiles-local.spec.ts', 'user-assignment-local.spec.ts'],
   workers: 1,
   retries: 0,
-  reporter: [['list'], ['json', { outputFile: '.deploy-validation/perfis-local/results.json' }]],
+  reporter: [
+    ['list'],
+    [
+      'json',
+      {
+        outputFile: fileURLToPath(
+          new URL('../.deploy-validation/perfis-local/results.json', import.meta.url),
+        ),
+      },
+    ],
+  ],
   use: {
     ...devices['Desktop Chrome'],
     baseURL: 'http://127.0.0.1:5183',

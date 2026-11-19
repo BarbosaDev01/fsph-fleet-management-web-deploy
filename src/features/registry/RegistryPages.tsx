@@ -86,10 +86,15 @@ export function UsersPage() {
   const fields: Field[] = [
     { name: 'name', label: 'Nome', required: true, maxLength: 150 },
     { name: 'email', label: 'E-mail', type: 'email', required: true, maxLength: 255 },
-    sectorField(sectors.data),
+    {
+      ...sectorField(sectors.data),
+      label: 'Setor de lotação',
+      helper:
+        'Para os perfis de atendimento, gestão e coleta SVO, a Superintendência SVO é uma sugestão. Confirme a unidade de atuação da pessoa.',
+    },
     {
       name: 'role',
-      label: 'Perfil',
+      label: 'Perfil de acesso',
       required: true,
       options: roleOptions,
       helper:
@@ -134,19 +139,29 @@ export function UsersPage() {
         title="Usuários"
         createLabel="Novo usuário"
         createPath="/usuarios/novo"
-        description="Cadastre contas e selecione o perfil de acesso de cada pessoa."
+        description="Gerencie o perfil de acesso e o setor de lotação de cada pessoa."
         list={usersApi.list}
         createDisabled={!sectors.isSuccess || !sectors.data.length}
         editDisabled={!sectors.isSuccess}
         columns={[
           { label: 'Nome', render: (row) => row.name },
           { label: 'E-mail', render: (row) => row.email },
-          { label: 'Setor', render: (row) => row.sectorName },
-          { label: 'Perfil', render: (row) => roleLabels[row.role] },
+          {
+            label: 'Setor de lotação',
+            render: (row) =>
+              row.sectorId && row.sectorName ? (
+                row.sectorName
+              ) : (
+                <Alert severity="warning">Lotação pendente</Alert>
+              ),
+          },
+          { label: 'Perfil de acesso', render: (row) => roleLabels[row.role] },
           { label: 'Situação', render: (row) => <ActiveChip active={row.active} /> },
         ]}
         filter={(row, text) =>
-          `${row.name} ${row.email} ${row.sectorName}`.toLocaleLowerCase('pt-BR').includes(text)
+          `${row.name} ${row.email} ${row.sectorName ?? 'Lotação pendente'} ${roleLabels[row.role]}`
+            .toLocaleLowerCase('pt-BR')
+            .includes(text)
         }
         create={{
           title: 'Novo usuário',
@@ -156,7 +171,12 @@ export function UsersPage() {
         edit={(row) => ({
           title: 'Editar usuário',
           fields,
-          defaults: { sectorId: row.sectorId!, name: row.name, email: row.email, role: row.role },
+          defaults: {
+            sectorId: row.sectorId ?? '',
+            name: row.name,
+            email: row.email,
+            role: row.role,
+          },
           submit: (values) => usersApi.update(row.id, { ...userBody(values), active: row.active }),
         })}
         actions={(row, open) =>

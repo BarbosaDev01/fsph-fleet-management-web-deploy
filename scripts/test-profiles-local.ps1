@@ -40,11 +40,15 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'Falha ao iniciar PostgreSQL isolado.' }
     & "$PostgresBin/createdb.exe" -h 127.0.0.1 -p $postgresPort -U fsph_profile fsph_profiles
     if ($LASTEXITCODE -ne 0) { throw 'Falha ao criar banco isolado.' }
+    $ErrorActionPreference = 'Continue'
+    & "$PostgresBin/psql.exe" -X -h 127.0.0.1 -p $postgresPort -U fsph_profile -d fsph_profiles -v ON_ERROR_STOP=1 -f (Join-Path $backendRoot 'src/test/resources/db/sector-catalog-regression.sql') *> (Join-Path $runRoot 'sector-catalog-test.log')
+    $ErrorActionPreference = 'Stop'
+    if ($LASTEXITCODE -ne 0) { throw "Regressão do catálogo de setores falhou. Consulte $runRoot/sector-catalog-test.log" }
     Push-Location -LiteralPath $backendRoot
     try {
         # Windows PowerShell wraps native stderr as ErrorRecord even on exit 0.
         $ErrorActionPreference = 'Continue'
-        & .\mvnw.cmd -B '-Dtest=RouteResponseTests' package *> (Join-Path $runRoot 'backend-build.log')
+        & .\mvnw.cmd -B '-Dtest=*Tests,!*IntegrationTests' package *> (Join-Path $runRoot 'backend-build.log')
         $ErrorActionPreference = 'Stop'
         if ($LASTEXITCODE -ne 0) { throw "Build/teste do backend falhou. Consulte $runRoot/backend-build.log" }
     } finally { $ErrorActionPreference = 'Stop'; Pop-Location }
@@ -54,7 +58,7 @@ try {
     $env:ADMIN_NAME = 'Administrador Local Perfis'
     $env:ADMIN_EMAIL = 'admin.perfis@fsph.test'
     $env:ADMIN_PASSWORD = 'PerfisLocal-2026!'
-    $env:ADMIN_SECTOR_NAME = 'Validação local'
+    $env:ADMIN_SECTOR_NAME = 'Administrativo'
     $env:JWT_SECRET = [guid]::NewGuid().ToString('N') + [guid]::NewGuid().ToString('N')
     $env:SERVER_PORT = "$apiPort"
     $env:CORS_ALLOWED_ORIGINS = 'http://127.0.0.1:5183'

@@ -979,8 +979,8 @@ export interface components {
             /** Format: uuid */
             id: string;
             /** Format: uuid */
-            sectorId: string;
-            sectorName: string;
+            sectorId: string | null;
+            sectorName: string | null;
             name: string;
             email: string;
             role: components["schemas"]["UserRole"];

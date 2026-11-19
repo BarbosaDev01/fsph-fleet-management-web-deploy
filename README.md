@@ -67,6 +67,8 @@ Inicie o backend conforme o README de `gestao-frotas` e use as credenciais cadas
 
 Para cadastrar uma conta, acesse **Usuários → Novo usuário** (`/usuarios/novo`). O cadastro exige `USERS_WRITE` e a seleção de setor exige `SECTORS_READ`; `USERS_READ` controla a consulta da lista. Consulte [o fluxo por perfil, escopos e evidências locais](docs/perfis-cadastro-acessos.md).
 
+Em **Usuários** (`/usuarios`), **Perfil de acesso** e **Setor de lotação** são campos distintos no cadastro, na edição e na lista. Contas legadas sem setor aparecem como **Lotação pendente**. Consulte [as regras de lotação, arquivos alterados, cenários verificados e decisões pendentes](docs/lotacao-usuarios.md).
+
 Os três filtros `GET /api/v1/drivers/find/{status|role|sector}` estão ambíguos no backend e o parâmetro `active` não corresponde a `{status}`. Eles foram excluídos do snapshot e do cliente; a tela usa `GET /api/v1/drivers` com busca local. Isso precisa ser corrigido no backend antes de integrar esses endpoints. Os demais endpoints dos controllers possuem serviços tipados.
 
 ## Arquitetura

@@ -68,6 +68,7 @@ for (const folder of ['requests', 'responses']) {
       const optionalResponse =
         folder === 'responses' &&
         ((file === 'VehicleResponse.java' && name === 'sectorId') ||
+          (file === 'UserResponse.java' && ['sectorId', 'sectorName'].includes(name)) ||
           (file === 'RouteResponse.java' &&
             ['realStartAt', 'realEndAt', 'startMileage', 'endMileage'].includes(name)) ||
           (file === 'VehicleDocumentResponse.java' &&

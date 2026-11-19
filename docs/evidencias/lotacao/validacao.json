@@ -1,0 +1,66 @@
+{
+  "date": "2026-11-18",
+  "timezone": "America/Fortaleza",
+  "environment": "Spring Boot, PostgreSQL 18 e Vite locais isolados",
+  "backendSource": ".deploy-validation/backend-perfis",
+  "backendBase": "97d9d92",
+  "frontendBase": "e587776",
+  "run": "run-b2f700a245b5446bb9335369ae9d9d54",
+  "backend": {
+    "command": "mvnw.cmd -B -Dtest=*Tests,!*IntegrationTests package",
+    "passed": 126,
+    "failed": 0,
+    "package": "success",
+    "testcontainersIntegrationClassesRun": false
+  },
+  "catalogMigration": {
+    "database": "PostgreSQL 18",
+    "equivalentNamesNotDuplicated": true,
+    "idempotent": true,
+    "missingUnitInserted": true,
+    "existingIdsAndAssignmentsPreserved": true,
+    "simulatedUnassignedLegacyAccountKeptUnassigned": true
+  },
+  "playwright": {
+    "passed": 2,
+    "failed": 0,
+    "skipped": 0,
+    "retries": 0,
+    "durationMs": 105554,
+    "mockedApi": false,
+    "browserErrors": []
+  },
+  "frontend": {
+    "focusedFiles": [
+      "src/features/registry/registry.test.tsx",
+      "src/features/registry/UserAssignment.test.tsx",
+      "src/features/fuel-cards/FuelCardsReview.test.tsx",
+      "src/features/fuel-cards/FuelCardsFlows.test.tsx",
+      "src/features/fuel-cards/FuelCardsSvo.test.tsx"
+    ],
+    "focusedPassed": 36,
+    "focusedFailed": 0,
+    "typecheck": "passed",
+    "lint": "passed",
+    "format": "passed",
+    "productionBuild": "passed",
+    "buildWarning": "Existing chunk above 500 kB",
+    "initialFullSuite": {
+      "passed": 204,
+      "failed": 10,
+      "total": 214,
+      "note": "Nine fuel-card demonstration failures and one outdated user-field selector. Selector corrected; all five relevant files passed on focused rerun. Full suite not repeated afterward."
+    }
+  },
+  "limitations": [
+    "VehicleAssignmentQuery has no configured implementation: /vehicles/me returns 503 before and after transfer.",
+    "No formal SVO role-sector requirement found in available operational rules; form suggests SVO without enforcing it.",
+    "Fleet-manager scope remains global; sector supervision requires a business decision.",
+    "Compatible API lacks specialized public SVO intake, triage and team collection-order endpoints.",
+    "No persistent user-assignment audit service exists in this backend base.",
+    "Null-assignment display and response mapping are verified with legacy fixtures; current users schema enforces a non-null sector."
+  ],
+  "remoteChanges": false,
+  "committed": false,
+  "deployed": false
+}

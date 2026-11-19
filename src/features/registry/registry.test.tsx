@@ -184,9 +184,9 @@ it('abre o cadastro pela rota e salva perfil e setor sem exigir leitura de usuá
   fireEvent.change(screen.getByLabelText('Nome'), { target: { value: 'Nova pessoa' } });
   fireEvent.change(screen.getByLabelText('E-mail'), { target: { value: 'nova@fsph.test' } });
   fireEvent.change(screen.getByLabelText('Senha'), { target: { value: 'SenhaLocal-2026!' } });
-  await userEvent.click(screen.getByRole('combobox', { name: 'Setor' }));
+  await userEvent.click(screen.getByRole('combobox', { name: 'Setor de lotação' }));
   await userEvent.click(screen.getByRole('option', { name: 'Administrativo' }));
-  await userEvent.click(screen.getByRole('combobox', { name: 'Perfil' }));
+  await userEvent.click(screen.getByRole('combobox', { name: 'Perfil de acesso' }));
   expect(screen.getAllByRole('option')).toHaveLength(7);
   await userEvent.click(screen.getByRole('option', { name: 'Gestor SVO' }));
   await userEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Salvar' }));

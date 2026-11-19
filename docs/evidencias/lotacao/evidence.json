@@ -1,0 +1,133 @@
+{
+  "api": "Spring Boot e PostgreSQL locais isolados",
+  "mocked": false,
+  "evidence": [
+    {
+      "scenario": "create-reload",
+      "accounts": [
+        {
+          "id": "64aca0c3-b51c-4384-8ee0-2510072466e0",
+          "sectorId": "bb350ec4-3ea3-4aef-bb3c-4d51fc7c7db8",
+          "sectorName": "Superintendência Lacen",
+          "name": "Lotação Lacen",
+          "email": "lacen.1795048120827@fsph.test",
+          "role": "EMPLOYEE",
+          "active": true
+        },
+        {
+          "id": "5e017d7a-af5a-414f-9dff-9788f3046cba",
+          "sectorId": "d51d2878-d3e6-4f8a-bff9-f2d2f9f560c3",
+          "sectorName": "Superintendência Hemose",
+          "name": "Lotação Hemose",
+          "email": "hemose.1795048120827@fsph.test",
+          "role": "EMPLOYEE",
+          "active": true
+        },
+        {
+          "id": "4410605d-67e5-4e72-9885-df9f9058566e",
+          "sectorId": "bb350ec4-3ea3-4aef-bb3c-4d51fc7c7db8",
+          "sectorName": "Superintendência Lacen",
+          "name": "Lotação LacenColega",
+          "email": "lacencolega.1795048120827@fsph.test",
+          "role": "EMPLOYEE",
+          "active": true
+        },
+        {
+          "id": "45f2f33e-1776-431b-b0b7-1583b05082d6",
+          "sectorId": "bb350ec4-3ea3-4aef-bb3c-4d51fc7c7db8",
+          "sectorName": "Superintendência Lacen",
+          "name": "Lotação Motorista",
+          "email": "motorista.1795048120827@fsph.test",
+          "role": "MOTORISTA",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "driver-transfer",
+      "before": {
+        "id": "45f2f33e-1776-431b-b0b7-1583b05082d6",
+        "sectorId": "bb350ec4-3ea3-4aef-bb3c-4d51fc7c7db8",
+        "sectorName": "Superintendência Lacen",
+        "name": "Lotação Motorista",
+        "email": "motorista.1795048120827@fsph.test",
+        "role": "MOTORISTA",
+        "active": true
+      },
+      "after": {
+        "id": "45f2f33e-1776-431b-b0b7-1583b05082d6",
+        "sectorId": "75e950b8-d1e3-48f2-a4ac-3589103ccb19",
+        "sectorName": "Superintendência SVO",
+        "name": "Lotação Motorista",
+        "email": "motorista.1795048120827@fsph.test",
+        "role": "MOTORISTA",
+        "active": true
+      },
+      "permissions": [
+        "SECTORS_READ",
+        "VEHICLES_ASSIGNED_READ",
+        "TRIPS_WRITE",
+        "FUEL_STATIONS_READ",
+        "FUELINGS_WRITE",
+        "NOTIFICATIONS_READ",
+        "ROUTES_READ",
+        "ROUTES_EXECUTE"
+      ],
+      "fleetUnchanged": true,
+      "assignedRoutes": [],
+      "vehicleAssignmentProvider": 503,
+      "analysis": 403
+    },
+    {
+      "scenario": "role-only",
+      "before": {
+        "id": "5e017d7a-af5a-414f-9dff-9788f3046cba",
+        "sectorId": "d51d2878-d3e6-4f8a-bff9-f2d2f9f560c3",
+        "sectorName": "Superintendência Hemose",
+        "name": "Lotação Hemose",
+        "email": "hemose.1795048120827@fsph.test",
+        "role": "EMPLOYEE",
+        "active": true
+      },
+      "after": {
+        "id": "5e017d7a-af5a-414f-9dff-9788f3046cba",
+        "sectorId": "d51d2878-d3e6-4f8a-bff9-f2d2f9f560c3",
+        "sectorName": "Superintendência Hemose",
+        "name": "Lotação Hemose",
+        "email": "hemose.1795048120827@fsph.test",
+        "role": "GESTOR_FROTA",
+        "active": true
+      }
+    },
+    {
+      "scenario": "api-error-in-form",
+      "status": 404,
+      "detail": "Setor com identificador 'f8a8d61d-f297-4e50-aa2f-16315179b05a' não encontrado.",
+      "unchanged": true
+    },
+    {
+      "scenario": "unauthorized-and-invalid",
+      "ownAndOtherUpdate": 403,
+      "missingSector": 404,
+      "passwordEndpoint": 204,
+      "unchanged": true
+    },
+    {
+      "scenario": "same-sector-individual-history",
+      "requesterIds": [
+        "64aca0c3-b51c-4384-8ee0-2510072466e0",
+        "4410605d-67e5-4e72-9885-df9f9058566e"
+      ],
+      "sectorId": "bb350ec4-3ea3-4aef-bb3c-4d51fc7c7db8",
+      "ownLists": 200,
+      "foreignId": 403
+    },
+    {
+      "scenario": "initial-admin",
+      "sectorId": "4ca7d6e7-2591-4ed2-a8ef-c124d9d42fce",
+      "usersRead": 200,
+      "createEnabled": true
+    }
+  ],
+  "browserErrors": []
+}
