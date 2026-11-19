@@ -80,3 +80,29 @@ PRs de revisão para a `main` continuam fora do escopo escolhido. A reversão de
 código não remove V26–V29 nem suas concessões adicionais. O binário Java anterior
 não conhece as permissões novas: uma reversão requer um build compatível com o
 catálogo V29, preservando os dados e o histórico Flyway.
+
+## Resultado confirmado
+
+- Render: commit `913ae68452f67379926ce2bffcd6966a4cc4f85a`, deployment
+  `dep-dbvik6ivcj2c73d2a6e0`, **live**, saúde **UP**. A CI GitHub passou.
+- Vercel: commit `029dd686f3061708e6a5380ace3475b63b926030`, deployment
+  `dpl_3NqRoHzyte5XKfHxJELAvakyJPC9`, **Production / READY / PROMOTED**.
+  O alias público foi conferido apontando exatamente para esse deployment.
+- Build remoto efetivo Vite, Node 24.x e `dist`; URL da API conferida nos chunks
+  protegidos usando a CLI autenticada, sem desabilitar proteção. O conector
+  Vercel retornou 403; a CLI acessou o mesmo projeto e time e concluiu a operação.
+- Neon após o deploy: 28 migrations até V29, todos os checksums correspondentes.
+  As cinco contas, os sete setores e todas as permissões anteriores foram preservados.
+- Navegador público, sem mocks: login, nove chamadas cross-origin reais com HTTP 200,
+  formulário de perfil/lotação vindo da API, edição cancelada, logout e JWT revogado.
+  Nenhum erro JavaScript de página ou alteração de cadastros.
+- Logs de aplicação Render: zero erros entre `16:59:59Z` e `17:04:20Z` de
+  19/11/2026 (`13:59:59`–`14:04:20`, America/Fortaleza).
+
+As escritas dos módulos novos foram testadas no PostgreSQL local isolado; o
+percurso público usou consultas e autenticação. Houve somente um deploy por
+plataforma. Os commits posteriores de documentação nas branches de trabalho
+registram estas evidências e não disparam outra publicação.
+
+Evidência sem credenciais ou dados pessoais:
+[publicacao-integrada-20261119.json](evidencias/publicacao-integrada-20261119.json).

@@ -1,0 +1,112 @@
+﻿{
+  "date": "2026-11-19",
+  "environment": "homologacao ativa; Vercel Production",
+  "backend": {
+    "repo": "cardosojse/fsph-fleet-management",
+    "branch": "perf/staging-deploy-login-20261111",
+    "commit": "913ae68452f67379926ce2bffcd6966a4cc4f85a",
+    "deployId": "dep-dbvik6ivcj2c73d2a6e0",
+    "status": "live",
+    "url": "https://fsph-fleet-api-staging.onrender.com",
+    "health": "UP",
+    "testsPassed": 254,
+    "githubCi": "success"
+  },
+  "frontend": {
+    "repo": "BarbosaDev01/fsph-fleet-management-web-deploy",
+    "deliveryBranch": "feat/perfis-cadastro-acessos-20261118",
+    "uploadBranch": "release/staging-frontend-20261119",
+    "commit": "029dd686f3061708e6a5380ace3475b63b926030",
+    "deployId": "dpl_3NqRoHzyte5XKfHxJELAvakyJPC9",
+    "target": "production",
+    "status": "READY",
+    "promoted": true,
+    "productionAliasVerified": true,
+    "url": "https://fsph-fleet-web-staging.vercel.app",
+    "node": "24.x",
+    "pnpm": "11.25.0",
+    "testsPassed": 214,
+    "lint": "passed",
+    "typecheckAndBuild": "passed",
+    "stagedApiUrlVerified": true
+  },
+  "database": {
+    "previousVersion": 25,
+    "currentVersion": 29,
+    "appliedMigrations": 28,
+    "appliedChecksumsVerified": true,
+    "existingMigrationsUnchanged": true,
+    "upgradeAndEmptyDatabaseTests": "passed",
+    "usersPreserved": 5,
+    "sectorsPreserved": 7,
+    "existingPermissionsPreserved": true,
+    "customizedPermissionMatricesPreserved": true,
+    "destructiveMigration": false,
+    "credentialsChanged": false
+  },
+  "publicBrowser": {
+    "environment": "homologacao publicada",
+    "mockedApi": false,
+    "source": "029dd686f3061708e6a5380ace3475b63b926030",
+    "checks": [
+      "published_login",
+      "released_modules_cross_origin",
+      "published_user_columns",
+      "published_create_form_from_api",
+      "published_edit_current_values",
+      "published_logout_and_revocation"
+    ],
+    "browserErrors": [],
+    "unexpectedWrites": false,
+    "realCalls": [
+      {
+        "path": "/api/v1/fuel-cards",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/svo/requests",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/svo/teams",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/svo/shifts",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/audit-logs",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/trips",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/routes",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/transports",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/trip-requests",
+        "status": 200
+      }
+    ],
+    "success": true
+  },
+  "runtimeErrors": {
+    "count": 0,
+    "startUtc": "2026-11-19T16:59:59Z",
+    "endUtc": "2026-11-19T17:04:20Z"
+  },
+  "excludedFrontendCandidates": [
+    "feature/tela-atendimento-svo@31ede13",
+    "khyori06-patch-1 PR13",
+    "dependabot PR12"
+  ],
+  "rollback": "Requires a Java build compatible with the V29 permission catalog."
+}
