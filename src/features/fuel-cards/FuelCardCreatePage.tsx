@@ -1,8 +1,8 @@
 import { useFuelCardsPath } from '@/features/fuel-cards/data/useFuelCardsPath';
-import { Box, Button, Container, Paper, Stack, Typography } from '@mui/material';
+import { Box, Button, Paper, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { FuelCardForm } from '@/features/fuel-cards/components/FuelCardForm';
-import { FuelCardsHeader } from '@/features/fuel-cards/components/FuelCardsHeader';
+import { PageHeading } from '@/shared/components/PageHeading';
 import { useFuelCardsData } from './data/FuelCardsProvider';
 import { Alert } from '@mui/material';
 
@@ -12,35 +12,31 @@ export function FuelCardCreatePage() {
   if (!data?.canWrite)
     return <Alert severity="warning">Acesso restrito: seu perfil permite apenas consulta.</Alert>;
   return (
-    <Container component="section" maxWidth="lg" sx={{ py: { xs: 3, md: 4 } }}>
+    <Box component="section" sx={{ minWidth: 0 }}>
       <Stack spacing={3}>
         <Button component={Link} to={basePath} sx={{ alignSelf: 'flex-start' }}>
           Voltar à listagem
         </Button>
-        <FuelCardsHeader
-          eyebrow="Cartões / Cadastro"
+        <PageHeading
           title="Novo cartão"
           description="Comece com os dados do cartão. O veículo e o status podem ser definidos depois."
         />
         <Box
           sx={{
             display: 'grid',
-            gridTemplateColumns: { xs: '1fr', lg: '1.6fr 1fr' },
+            gridTemplateColumns: { xs: 'minmax(0, 1fr)', lg: 'minmax(0, 1.6fr) minmax(0, 1fr)' },
             gap: 3,
             alignItems: 'start',
           }}
         >
-          <Paper
-            variant="outlined"
-            sx={{ p: { xs: 2.5, md: 4 }, borderTop: '3px solid', borderTopColor: 'secondary.main' }}
-          >
-            <Typography component="h2" variant="h6" sx={{ fontWeight: 700, mb: 3 }}>
+          <Paper variant="outlined" sx={{ p: 2.5 }}>
+            <Typography component="h2" variant="h3" sx={{ fontWeight: 700, mb: 3 }}>
               Dados do cartão
             </Typography>
             <FuelCardForm />
           </Paper>
-          <Paper variant="outlined" sx={{ p: 3 }}>
-            <Typography component="h2" variant="subtitle1" sx={{ fontWeight: 700 }}>
+          <Paper variant="outlined" sx={{ p: 2.5 }}>
+            <Typography component="h2" variant="h3" sx={{ fontWeight: 700 }}>
               Antes de salvar
             </Typography>
             <Stack spacing={2} sx={{ mt: 2 }}>
@@ -63,6 +59,6 @@ export function FuelCardCreatePage() {
           </Paper>
         </Box>
       </Stack>
-    </Container>
+    </Box>
   );
 }

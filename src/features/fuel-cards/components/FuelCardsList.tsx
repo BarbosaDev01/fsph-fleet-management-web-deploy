@@ -41,9 +41,12 @@ export function FuelCardsList({ cards }: { cards: FuelCard[] }) {
       <TableContainer
         component={Paper}
         variant="outlined"
+        role="region"
+        tabIndex={0}
+        aria-label="Tabela de cartões. Role horizontalmente para consultar todas as colunas."
         sx={{ display: { xs: 'none', lg: 'block' } }}
       >
-        <Table aria-label="Cartões de combustível">
+        <Table size="small" aria-label="Cartões de combustível">
           <TableHead>
             <TableRow>
               {[
@@ -58,6 +61,7 @@ export function FuelCardsList({ cards }: { cards: FuelCard[] }) {
                 <TableCell
                   key={label}
                   scope="col"
+                  sx={{ py: 1.25 }}
                   align={
                     label === 'Limite total' || label === 'Saldo disponível' ? 'right' : 'left'
                   }
@@ -78,26 +82,21 @@ export function FuelCardsList({ cards }: { cards: FuelCard[] }) {
                     align={
                       label === 'Limite total' || label === 'Saldo disponível' ? 'right' : 'left'
                     }
-                    sx={{ fontVariantNumeric: 'tabular-nums', py: 2, overflowWrap: 'anywhere' }}
+                    sx={{ fontVariantNumeric: 'tabular-nums', py: 1.5, overflowWrap: 'anywhere' }}
                   >
                     {label === 'Status' ? (
                       <Chip
                         label={value}
                         size="small"
                         variant="outlined"
-                        sx={
-                          value === 'Indisponível'
-                            ? { color: '#805000', bgcolor: '#fff6df', borderColor: '#d9bd83' }
-                            : value === 'Ativo'
-                              ? { color: '#17634a', bgcolor: '#edf7f1', borderColor: '#b4d6c4' }
-                              : undefined
-                        }
                         color={
                           value === 'Ativo'
                             ? 'success'
-                            : value === 'Indisponível'
+                            : value === 'Indisponível' || value === 'Bloqueado'
                               ? 'warning'
-                              : 'default'
+                              : value === 'Cancelado'
+                                ? 'error'
+                                : 'default'
                         }
                       />
                     ) : label === 'Cartão' ? (
@@ -128,7 +127,7 @@ export function FuelCardsList({ cards }: { cards: FuelCard[] }) {
       >
         {cards.map((card) => (
           <Paper component="article" variant="outlined" key={card.id} sx={{ p: 2, minWidth: 0 }}>
-            <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
+            <Typography component="h2" variant="h3" sx={{ mb: 2, overflowWrap: 'anywhere' }}>
               <Link
                 component={RouterLink}
                 to={`${basePath}/${card.id}`}

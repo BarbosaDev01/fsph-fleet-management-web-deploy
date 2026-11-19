@@ -5,7 +5,6 @@ import {
   Alert,
   Box,
   Button,
-  Container,
   Dialog,
   DialogActions,
   DialogContent,
@@ -18,7 +17,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useFuelCardsData } from '@/features/fuel-cards/data/FuelCardsProvider';
-import { FuelCardsHeader } from '@/features/fuel-cards/components/FuelCardsHeader';
+import { PageHeading } from '@/shared/components/PageHeading';
 import { FuelCardPreview } from '@/features/fuel-cards/components/FuelCardPreview';
 import { useFuelCard } from './data/useFuelCard';
 
@@ -69,13 +68,12 @@ function CardDetails({ id }: { id?: string }) {
     }
   }
   return (
-    <Container component="section" maxWidth="lg" sx={{ py: { xs: 3, md: 4 } }}>
+    <Box component="section" sx={{ minWidth: 0 }}>
       <Stack spacing={3}>
         <Button component={Link} to={basePath} sx={{ alignSelf: 'flex-start' }}>
           Voltar à listagem
         </Button>
-        <FuelCardsHeader
-          eyebrow="Cartões / Consulta"
+        <PageHeading
           title="Detalhes do cartão"
           description="Dados do cartão, vínculo com a frota e opções de gestão."
           action={
@@ -104,11 +102,18 @@ function CardDetails({ id }: { id?: string }) {
         ) : (
           <>
             <Box
-              sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: '.9fr 1.1fr' }, gap: 3 }}
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: {
+                  xs: 'minmax(0, 1fr)',
+                  lg: 'minmax(0, .9fr) minmax(0, 1.1fr)',
+                },
+                gap: 3,
+              }}
             >
               <FuelCardPreview card={card} />
-              <Paper variant="outlined" sx={{ p: 3 }}>
-                <Typography component="h2" variant="subtitle1" sx={{ fontWeight: 700, mb: 2 }}>
+              <Paper variant="outlined" sx={{ p: 2.5 }}>
+                <Typography component="h2" variant="h3" sx={{ fontWeight: 700, mb: 2 }}>
                   Informações do cartão
                 </Typography>
                 <Box
@@ -116,7 +121,7 @@ function CardDetails({ id }: { id?: string }) {
                   sx={{
                     m: 0,
                     display: 'grid',
-                    gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
+                    gridTemplateColumns: { xs: 'minmax(0, 1fr)', sm: 'repeat(2, minmax(0, 1fr))' },
                     gap: 2.5,
                   }}
                 >
@@ -144,13 +149,17 @@ function CardDetails({ id }: { id?: string }) {
             </Box>
             {data?.canWrite && (
               <Box
-                sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: '1fr 1fr' }, gap: 3 }}
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: { xs: 'minmax(0, 1fr)', lg: 'repeat(2, minmax(0, 1fr))' },
+                  gap: 3,
+                }}
               >
                 <Paper
                   component="section"
                   aria-labelledby="vehicle-title"
                   variant="outlined"
-                  sx={{ p: { xs: 2.5, md: 3 } }}
+                  sx={{ p: 2.5 }}
                 >
                   <Stack
                     component="form"
@@ -164,7 +173,7 @@ function CardDetails({ id }: { id?: string }) {
                     <Typography
                       id="vehicle-title"
                       component="h2"
-                      variant="h6"
+                      variant="h3"
                       sx={{ fontWeight: 700 }}
                     >
                       Vínculo com veículo
@@ -219,7 +228,7 @@ function CardDetails({ id }: { id?: string }) {
                   component="section"
                   aria-labelledby="status-title"
                   variant="outlined"
-                  sx={{ p: { xs: 2.5, md: 3 } }}
+                  sx={{ p: 2.5 }}
                 >
                   <Stack
                     component="form"
@@ -233,7 +242,7 @@ function CardDetails({ id }: { id?: string }) {
                     <Typography
                       id="status-title"
                       component="h2"
-                      variant="h6"
+                      variant="h3"
                       sx={{ fontWeight: 700 }}
                     >
                       Status do cartão
@@ -328,6 +337,6 @@ function CardDetails({ id }: { id?: string }) {
           </>
         )}
       </Stack>
-    </Container>
+    </Box>
   );
 }

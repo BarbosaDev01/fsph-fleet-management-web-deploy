@@ -4,7 +4,6 @@ import {
   Box,
   Button,
   CircularProgress,
-  Container,
   MenuItem,
   Paper,
   Pagination,
@@ -15,7 +14,8 @@ import {
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FuelCardsList } from '@/features/fuel-cards/components/FuelCardsList';
-import { FuelCardsHeader } from '@/features/fuel-cards/components/FuelCardsHeader';
+import { PageHeading } from '@/shared/components/PageHeading';
+import { SummaryCard } from '@/shared/components/SummaryCard';
 import type { FuelCard } from '@/features/fuel-cards/fuel-card.types';
 import { useFuelCardsData } from '@/features/fuel-cards/data/FuelCardsProvider';
 
@@ -71,10 +71,9 @@ export function FuelCardsPage({ state: providedState }: FuelCardsPageProps) {
   }
 
   return (
-    <Container component="section" maxWidth="lg" sx={{ py: { xs: 3, md: 4 } }}>
+    <Box component="section" sx={{ minWidth: 0 }}>
       <Stack spacing={3}>
-        <FuelCardsHeader
-          eyebrow="Frota / Combustível"
+        <PageHeading
           title="Cartões de combustível"
           description="Consulte limites, saldos e vínculos dos cartões da frota."
           action={
@@ -83,7 +82,7 @@ export function FuelCardsPage({ state: providedState }: FuelCardsPageProps) {
                 component={Link}
                 to={`${basePath}/novo`}
                 variant="contained"
-                sx={{ whiteSpace: 'nowrap', px: 3 }}
+                sx={{ whiteSpace: 'nowrap' }}
               >
                 <Box component="span" aria-hidden="true" sx={{ mr: 1 }}>
                   +
@@ -98,57 +97,34 @@ export function FuelCardsPage({ state: providedState }: FuelCardsPageProps) {
             <Box
               sx={{
                 display: 'grid',
-                gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, 1fr)' },
+                gridTemplateColumns: { xs: 'minmax(0, 1fr)', sm: 'repeat(3, minmax(0, 1fr))' },
                 gap: 2,
               }}
             >
-              {[
+              {(
                 [
-                  'Cartões cadastrados',
-                  String(
-                    api && data?.state.status === 'ready'
-                      ? (data.state.totalElements ?? cards.length)
-                      : cards.length,
-                  ),
-                  api ? 'Total conforme os filtros' : 'Visão geral dos cartões',
-                ],
-                [
-                  'Cartões vinculados',
-                  String(cards.filter((card) => card.vehicle).length),
-                  api ? 'Nesta página' : 'Cartões com vínculo informado',
-                ],
-                [
-                  'Cartões ativos',
-                  String(cards.filter((card) => card.status === 'Ativo').length),
-                  api ? 'Nesta página' : 'Status informado',
-                ],
-              ].map(([label, value, description]) => (
-                <Paper
-                  key={label}
-                  variant="outlined"
-                  sx={{
-                    p: 2.5,
-                    borderTop: '3px solid',
-                    borderTopColor: label === 'Cartões ativos' ? 'secondary.main' : 'primary.main',
-                  }}
-                >
-                  <Typography color="text.secondary" variant="body2">
-                    {label}
-                  </Typography>
-                  <Typography
-                    sx={{
-                      fontSize: 32,
-                      fontWeight: 750,
-                      my: 0.5,
-                      fontVariantNumeric: 'tabular-nums',
-                    }}
-                  >
-                    {value}
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    {description}
-                  </Typography>
-                </Paper>
+                  [
+                    'Cartões cadastrados',
+                    String(
+                      api && data?.state.status === 'ready'
+                        ? (data.state.totalElements ?? cards.length)
+                        : cards.length,
+                    ),
+                    api ? 'Total conforme os filtros' : 'Visão geral dos cartões',
+                  ],
+                  [
+                    'Cartões vinculados',
+                    String(cards.filter((card) => card.vehicle).length),
+                    api ? 'Nesta página' : 'Cartões com vínculo informado',
+                  ],
+                  [
+                    'Cartões ativos',
+                    String(cards.filter((card) => card.status === 'Ativo').length),
+                    api ? 'Nesta página' : 'Status informado',
+                  ],
+                ] as const
+              ).map(([label, value, description]) => (
+                <SummaryCard key={label} title={label} value={value} description={description} />
               ))}
             </Box>
             <Paper
@@ -158,7 +134,7 @@ export function FuelCardsPage({ state: providedState }: FuelCardsPageProps) {
               sx={{ p: 2.5 }}
             >
               <Stack spacing={2}>
-                <Typography component="h2" variant="subtitle1" sx={{ fontWeight: 700 }}>
+                <Typography component="h2" variant="h3" sx={{ fontWeight: 700 }}>
                   Encontre um cartão
                 </Typography>
                 <Box
@@ -225,8 +201,13 @@ export function FuelCardsPage({ state: providedState }: FuelCardsPageProps) {
                   )}
                 </Box>
                 <Stack
-                  direction="row"
-                  sx={{ justifyContent: 'space-between', alignItems: 'center', gap: 2 }}
+                  direction={{ xs: 'column', sm: 'row' }}
+                  sx={{
+                    justifyContent: 'space-between',
+                    alignItems: { sm: 'center' },
+                    gap: 2,
+                    flexWrap: 'wrap',
+                  }}
                 >
                   <Typography variant="body2" color="text.secondary" aria-live="polite">
                     {filtered.length} de{' '}
@@ -292,7 +273,7 @@ export function FuelCardsPage({ state: providedState }: FuelCardsPageProps) {
                 role="status"
                 sx={{ p: { xs: 3, md: 5 }, textAlign: 'center' }}
               >
-                <Typography component="h2" variant="h6">
+                <Typography component="h2" variant="h3">
                   {cards.length
                     ? 'Nenhum resultado para esta pesquisa'
                     : 'Nenhum cartão encontrado'}
@@ -319,6 +300,6 @@ export function FuelCardsPage({ state: providedState }: FuelCardsPageProps) {
           />
         )}
       </Stack>
-    </Container>
+    </Box>
   );
 }

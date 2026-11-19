@@ -1,8 +1,8 @@
 import { useFuelCardsPath } from '@/features/fuel-cards/data/useFuelCardsPath';
-import { Alert, Button, Container, Paper, Stack } from '@mui/material';
+import { Alert, Box, Button, Paper, Stack } from '@mui/material';
 import { Link, useParams } from 'react-router-dom';
 import { FuelCardForm } from '@/features/fuel-cards/components/FuelCardForm';
-import { FuelCardsHeader } from '@/features/fuel-cards/components/FuelCardsHeader';
+import { PageHeading } from '@/shared/components/PageHeading';
 import { useFuelCardsData } from '@/features/fuel-cards/data/FuelCardsProvider';
 import { useFuelCard } from './data/useFuelCard';
 
@@ -12,16 +12,12 @@ export function FuelCardEditPage() {
   const data = useFuelCardsData();
   const { card, error, loading } = useFuelCard(id);
   return (
-    <Container component="section" maxWidth="md" sx={{ py: 4 }}>
+    <Box component="section" sx={{ minWidth: 0 }}>
       <Stack spacing={3}>
         <Button component={Link} to={basePath} sx={{ alignSelf: 'flex-start' }}>
           Voltar à listagem
         </Button>
-        <FuelCardsHeader
-          eyebrow="Cartões / Edição"
-          title="Editar cartão"
-          description="Revise os dados cadastrais do cartão."
-        />
+        <PageHeading title="Editar cartão" description="Revise os dados cadastrais do cartão." />
         {!data?.canWrite ? (
           <Alert severity="warning">Acesso restrito: seu perfil permite apenas consulta.</Alert>
         ) : loading ? (
@@ -31,7 +27,7 @@ export function FuelCardEditPage() {
         ) : error ? (
           <Alert severity="error">{error}</Alert>
         ) : card ? (
-          <Paper variant="outlined" sx={{ p: { xs: 2, md: 4 } }}>
+          <Paper variant="outlined" sx={{ p: 2.5 }}>
             <FuelCardForm key={card.id} card={card} />
           </Paper>
         ) : (
@@ -42,6 +38,6 @@ export function FuelCardEditPage() {
           </Alert>
         )}
       </Stack>
-    </Container>
+    </Box>
   );
 }

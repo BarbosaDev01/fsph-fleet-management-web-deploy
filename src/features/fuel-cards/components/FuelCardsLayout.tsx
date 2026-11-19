@@ -1,10 +1,11 @@
 import { useFuelCardsPath } from '@/features/fuel-cards/data/useFuelCardsPath';
-import { Alert, Box, Button, CircularProgress, Container, Stack, Typography } from '@mui/material';
+import { Alert, Box, Button, CircularProgress, Stack, Typography } from '@mui/material';
+import { PageHeading } from '@/shared/components/PageHeading';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
 import { useFuelCardsData } from '@/features/fuel-cards/data/FuelCardsProvider';
 
-/** Contêiner local sem menu principal, pronto para compor o layout da equipe. */
+/** Conteúdo do módulo; largura e margens externas pertencem ao AppLayout. */
 export function FuelCardsLayout() {
   const basePath = useFuelCardsPath();
   const data = useFuelCardsData();
@@ -19,14 +20,7 @@ export function FuelCardsLayout() {
     <Box
       sx={{
         minHeight: '60vh',
-        bgcolor: 'background.default',
-        color: 'text.primary',
-        '& .MuiButton-root': { textTransform: 'none', fontWeight: 600, minHeight: 44 },
-        '& .MuiTableCell-head': {
-          bgcolor: 'action.hover',
-          color: 'text.secondary',
-          fontWeight: 600,
-        },
+        minWidth: 0,
       }}
     >
       <Box
@@ -37,7 +31,7 @@ export function FuelCardsLayout() {
           top: 8,
           left: 8,
           zIndex: 1600,
-          bgcolor: 'white',
+          bgcolor: 'background.paper',
           p: 0,
           width: 1,
           height: 1,
@@ -53,16 +47,17 @@ export function FuelCardsLayout() {
         {ready ? (
           <Outlet />
         ) : (
-          <Container component="section" maxWidth="lg" sx={{ py: 5 }}>
+          <Box component="section">
             <Stack spacing={3}>
               {pathname !== basePath && (
                 <Button component={Link} to={basePath} sx={{ alignSelf: 'flex-start' }}>
                   Voltar à listagem
                 </Button>
               )}
-              <Typography component="h1" variant="h4">
-                Cartões de combustível
-              </Typography>
+              <PageHeading
+                title="Cartões de combustível"
+                description="Consulte limites, saldos e vínculos dos cartões da frota."
+              />
               {data?.state.status === 'loading' ? (
                 <Stack role="status" spacing={2} sx={{ alignItems: 'center', py: 4 }}>
                   <CircularProgress aria-label="Carregando cartões" />
@@ -82,14 +77,14 @@ export function FuelCardsLayout() {
                 </Alert>
               )}
             </Stack>
-          </Container>
+          </Box>
         )}
       </Box>
       <Typography
         component="footer"
         variant="caption"
         color="text.secondary"
-        sx={{ px: { xs: 2, md: 4 }, pb: 3, display: 'block', maxWidth: 1200, mx: 'auto' }}
+        sx={{ mt: 3, display: 'block' }}
       >
         {demo
           ? 'Modo demonstrativo: dados fictícios, sem integração com a API. Alterações em memória; recarregar ou sair da área restaura os exemplos.'
