@@ -77,4 +77,6 @@ logout e rejeição do JWT revogado.
 Os módulos demonstrativos não passam a gravar cartões ou solicitações SVO novas
 automaticamente pela existência dos endpoints. As candidatas de interface e os
 PRs de revisão para a `main` continuam fora do escopo escolhido. A reversão de
-código não remove V26–V29 nem suas concessões adicionais.
+código não remove V26–V29 nem suas concessões adicionais. O binário Java anterior
+não conhece as permissões novas: uma reversão requer um build compatível com o
+catálogo V29, preservando os dados e o histórico Flyway.
