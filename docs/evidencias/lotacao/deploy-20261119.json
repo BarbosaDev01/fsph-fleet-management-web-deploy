@@ -1,0 +1,79 @@
+{
+  "date": "2026-11-19",
+  "timezone": "America/Fortaleza",
+  "environment": "homologacao existente",
+  "frontend": {
+    "project": "fsph-fleet-web-staging",
+    "projectId": "prj_1rYgCg3ttNkG1cyavfNNqExJ2XrY",
+    "sourceCommit": "2f4511b6d29ea1d92f5af48c577b7dbf928b6e6c",
+    "featureCommit": "8f7d513",
+    "deploymentId": "dpl_D9iZZg6GzK3m2oc8ofhP6YrATfkK",
+    "previousDeploymentId": "dpl_H6eWUtWA1uB5yRhavoqEBeFDj5Mi",
+    "target": "Production do projeto de homologacao",
+    "status": "READY",
+    "url": "https://fsph-fleet-web-staging.vercel.app",
+    "nodeVersion": "24.x",
+    "publication": "Staged production build verified and promoted without rebuilding",
+    "aliasMatchesDeployment": true
+  },
+  "backend": {
+    "serviceId": "srv-dbn0cg0u01pc73fpooqg",
+    "sourceCommit": "71df10edc611d4127cfc92b9253fc1b37effb07f",
+    "baseCommit": "10dc153201c7afc75dc8c5f6485cff83567065bf",
+    "deploymentId": "dep-dbv4c31srm7s73bcprn0",
+    "previousDeploymentId": "dep-dbv2krk9v7es738g4png",
+    "status": "live",
+    "url": "https://fsph-fleet-api-staging.onrender.com",
+    "autoDeploy": false,
+    "buildCacheCleared": false,
+    "testsPassed": 153,
+    "migration": {
+      "before": 24,
+      "after": 25,
+      "applied": 1,
+      "confirmedByFlywayRuntimeLog": true
+    }
+  },
+  "publishedDataVerification": {
+    "health": "UP",
+    "existingUsers": 5,
+    "userRecordsAndAssignmentsPreserved": true,
+    "permissionsMatrixPreserved": true,
+    "adminAccessPreserved": true,
+    "sectorsBefore": 3,
+    "sectorsAfter": 7,
+    "existingSectorIdsAndNamesPreserved": true,
+    "addedUnits": [
+      "Coordenação de Infraestrutura",
+      "Superintendência Hemose",
+      "Superintendência Lacen",
+      "Superintendência SVO"
+    ],
+    "method": "Authenticated read-only comparison using hashes; no account details published"
+  },
+  "publishedBrowserVerification": {
+    "success": true,
+    "mockedApi": false,
+    "checks": [
+      "Login and current ADMIN session",
+      "Separate profile and assignment columns",
+      "Seven role options and sector choices loaded from API",
+      "New form has no preset role or sector",
+      "Selecting SVO keeps MOTORISTA selected",
+      "Edit form loads the current role and sector",
+      "User list loads after refresh",
+      "Dashboard counts match API",
+      "Vehicle, driver, user, sector and trip-request lists",
+      "Legacy route assignment contract preserved",
+      "Prototype warning preserved",
+      "Logout, local token removal and server-side token revocation"
+    ],
+    "browserErrors": [],
+    "testMutations": "Authentication and logout only; no accounts created or edited",
+    "runtimeErrorsInPostPromotionWindow": 0,
+    "runtimeErrorWindowUtc": "2026-11-19T14:33:00Z to 2026-11-19T14:34:59Z"
+  },
+  "operationalNote": "First read-only post-release attempt timed out during Render cold startup. Runtime logs confirmed startup, then health and all subsequent verification passed.",
+  "credentialsRecorded": false,
+  "unrelatedServicesChanged": false
+}

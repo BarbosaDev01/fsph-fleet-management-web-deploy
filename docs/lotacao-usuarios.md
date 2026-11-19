@@ -203,4 +203,4 @@ Contagens e limites: [validacao.json](evidencias/lotacao/validacao.json).
 
 Os resultados acima correspondem à validação local, concluída antes de qualquer
 publicação. A atualização de homologação autorizada posteriormente é registrada
-em `docs/deploy-lotacao-20261118.md`.
+em `docs/deploy-lotacao-20261119.md`.
