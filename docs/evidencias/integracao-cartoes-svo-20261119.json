@@ -1,0 +1,89 @@
+{
+  "date": "2026-11-19",
+  "timezone": "America/Fortaleza",
+  "repository": "BarbosaDev01/fsph-fleet-management-web-deploy",
+  "branch": "feat/api-fuel-cards-svo-20261119",
+  "sourceCommit": "ba795e7d5808f7268ef1b116dc7e14c0ca34ee33",
+  "baseBranch": "release/staging-frontend-20261119",
+  "baseCommit": "143a2f2f68f2184cfb6ddd60063c0859b096bbce",
+  "deployment": {
+    "id": "dpl_6zoBG88H4ThDwMQ9n2V9Kyeojx1g",
+    "target": "production",
+    "status": "READY",
+    "projectId": "prj_1rYgCg3ttNkG1cyavfNNqExJ2XrY",
+    "scope": "barbosas-projects-5a2b240e",
+    "url": "https://fsph-fleet-web-staging.vercel.app",
+    "artifactUrl": "https://fsph-fleet-web-staging-l92t823oj-barbosas-projects-5a2b240e.vercel.app",
+    "nodeVersion": "24.x",
+    "framework": "vite",
+    "apiOriginVerified": true,
+    "publicAliasVerified": true,
+    "productionProject": false,
+    "configurationChanges": false
+  },
+  "backend": {
+    "officialMain": "b7b430c4d6c5d6c0a09b43cf06331b7c23538179",
+    "liveCommit": "913ae68452f67379926ce2bffcd6966a4cc4f85a",
+    "liveDeploy": "dep-dbvik6ivcj2c73d2a6e0",
+    "serviceId": "srv-dbn0cg0u01pc73fpooqg",
+    "workspaceId": "tea-dbkhptm7bikc73a946p0",
+    "status": "live",
+    "contractCompatible": true,
+    "updateRequired": false,
+    "deploymentChanged": false
+  },
+  "localChecks": {
+    "build": "passed",
+    "typecheck": "passed",
+    "lint": "passed",
+    "format": "passed",
+    "unitFiles": 34,
+    "unitTestsPassed": 228,
+    "unitExecution": "All test files in isolated processes, timeout 15s; SVO suite expanded from 6 to 8 and rerun successfully.",
+    "preservedDemoBrowserTestsPassed": 6,
+    "apiRealBrowserFlow": "passed",
+    "backendMocked": false
+  },
+  "publishedBrowser": {
+    "status": "passed",
+    "testsPassed": 1,
+    "backendMocked": false,
+    "frontendIntercepted": false,
+    "pageErrors": 0,
+    "normalNavigation": true,
+    "flows": {
+      "fuelCardCreate": "passed",
+      "fuelCardUpdate": "passed",
+      "fuelCardBindVehicle": "passed",
+      "fuelCardUnbindVehicle": "passed",
+      "fuelCardStatus": "passed",
+      "fuelCardReloadPersistence": "passed",
+      "svoApprove": "passed",
+      "svoReject": "passed",
+      "svoQueueReloadPersistence": "passed",
+      "svoPendingTotal": "passed",
+      "employeeOwnRequests": "passed",
+      "employeeTriageDenied403": "passed",
+      "employeeCardsAccessDenied": "passed",
+      "mobile390NoOverflow": "passed"
+    }
+  },
+  "locallyVerifiedOnly": [
+    "SVO_REQUESTS_READ without SVO_REQUESTS_MANAGE; no standard role has this exact combination in staging.",
+    "Pending total across multiple pages (57 records in a unit fixture).",
+    "Already-triaged conflict (HTTP 400/409 handling tested locally with simulated API responses).",
+    "Form preservation on API failure and confirmed write followed by refresh failure."
+  ],
+  "fixtures": {
+    "realOccurrences": false,
+    "labeledAsFictitious": true,
+    "testCardsCanceledAndUnbound": true,
+    "testVehiclesDeactivated": true,
+    "testUsersDeactivated": true,
+    "svoDecisionsPreserved": true,
+    "existingRolePermissionsChanged": false
+  },
+  "limitations": [
+    "The backend exposes no ETag/version or atomic concurrency guard for exactly simultaneous triage writes."
+  ]
+}
