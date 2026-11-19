@@ -117,7 +117,7 @@ export function OverviewPage() {
           title="Solicitações agendadas"
           permission="TRIP_REQUESTS_READ"
           load={countScheduled}
-          to="/atendimento-svo"
+          to="/analise-viagens"
           description="Reservas agendadas, incluindo o histórico. Esta contagem não representa viagens em execução."
         />
       </Stack>

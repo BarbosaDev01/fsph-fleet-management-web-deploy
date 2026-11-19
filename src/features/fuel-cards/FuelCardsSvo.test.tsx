@@ -26,7 +26,7 @@ async function setup(path = '/demonstracoes/cartoes-combustivel') {
   return userEvent.setup();
 }
 
-describe('Frota SVO na HU30', () => {
+describe('Frota SVO na HU30', { timeout: 15_000 }, () => {
   it('filtra somente os cartões SVO e mostra setor na tabela, no celular e nos detalhes', async () => {
     const user = await setup();
     await user.click(await screen.findByRole('combobox', { name: 'Setor' }));

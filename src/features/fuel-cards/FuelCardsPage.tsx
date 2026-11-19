@@ -1,4 +1,5 @@
-﻿import {
+import { useFuelCardsPath } from '@/features/fuel-cards/data/useFuelCardsPath';
+import {
   Alert,
   Box,
   Button,
@@ -6,6 +7,7 @@
   Container,
   MenuItem,
   Paper,
+  Pagination,
   Stack,
   TextField,
   Typography,
@@ -27,35 +29,45 @@ interface FuelCardsPageProps {
 }
 
 export function FuelCardsPage({ state: providedState }: FuelCardsPageProps) {
+  const basePath = useFuelCardsPath();
   const data = useFuelCardsData();
   const state: FuelCardsState =
     providedState ??
     (data?.state.status === 'error'
       ? { status: 'error', onRetry: data.retry }
       : (data?.state ?? { status: 'unavailable' }));
-  const [search, setSearch] = useState('');
-  const [status, setStatus] = useState('');
+  const api = data?.mode === 'api';
+  const [search, setSearch] = useState(data?.query.search ?? '');
+  const [status, setStatus] = useState(data?.query.status ?? '');
+  const [vehicleId, setVehicleId] = useState(data?.query.vehicleId ?? '');
   const [sector, setSector] = useState('');
   const cards = state.status === 'ready' ? state.cards : [];
   const vehicles = data?.state.status === 'ready' ? data.state.vehicles : [];
   const sectors = [
     ...new Set([...cards, ...vehicles].flatMap((item) => (item.sector ? [item.sector] : []))),
   ].sort();
-  const statuses = [...new Set(cards.flatMap((card) => (card.status ? [card.status] : [])))].sort();
+  const statuses =
+    api && data?.state.status === 'ready'
+      ? data.state.statusOptions
+      : [...new Set(cards.flatMap((card) => (card.status ? [card.status] : [])))].sort();
   const query = search.trim().toLocaleLowerCase('pt-BR').replace(/[\s-]/g, '');
-  const filtered = cards.filter(
-    (card) =>
-      (!query ||
-        card.card?.replace(/\D/g, '').includes(query) ||
-        card.vehicle?.toLocaleLowerCase('pt-BR').replace(/[\s-]/g, '').includes(query)) &&
-      (!status || (status === 'unknown' ? !card.status : card.status === status)) &&
-      (!sector || (sector === 'unknown' ? !card.sector : card.sector === sector)),
-  );
-  const hasFilters = Boolean(search || status || sector);
+  const filtered = api
+    ? cards
+    : cards.filter(
+        (card) =>
+          (!query ||
+            card.card?.replace(/\D/g, '').includes(query) ||
+            card.vehicle?.toLocaleLowerCase('pt-BR').replace(/[\s-]/g, '').includes(query)) &&
+          (!status || (status === 'unknown' ? !card.status : card.status === status)) &&
+          (!sector || (sector === 'unknown' ? !card.sector : card.sector === sector)),
+      );
+  const hasFilters = Boolean(search || status || sector || vehicleId);
   function clearFilters() {
     setSearch('');
     setStatus('');
     setSector('');
+    setVehicleId('');
+    if (api) data?.setQuery({ page: 0 });
   }
 
   return (
@@ -66,10 +78,10 @@ export function FuelCardsPage({ state: providedState }: FuelCardsPageProps) {
           title="Cartões de combustível"
           description="Consulte limites, saldos e vínculos dos cartões da frota."
           action={
-            state.status === 'ready' ? (
+            state.status === 'ready' && (!data || data.canWrite) ? (
               <Button
                 component={Link}
-                to="/demonstracoes/cartoes-combustivel/novo"
+                to={`${basePath}/novo`}
                 variant="contained"
                 sx={{ whiteSpace: 'nowrap', px: 3 }}
               >
@@ -91,16 +103,24 @@ export function FuelCardsPage({ state: providedState }: FuelCardsPageProps) {
               }}
             >
               {[
-                ['Cartões cadastrados', String(cards.length), 'Visão geral dos cartões'],
+                [
+                  'Cartões cadastrados',
+                  String(
+                    api && data?.state.status === 'ready'
+                      ? (data.state.totalElements ?? cards.length)
+                      : cards.length,
+                  ),
+                  api ? 'Total conforme os filtros' : 'Visão geral dos cartões',
+                ],
                 [
                   'Cartões vinculados',
                   String(cards.filter((card) => card.vehicle).length),
-                  'Cartões com vínculo informado',
+                  api ? 'Nesta página' : 'Cartões com vínculo informado',
                 ],
                 [
                   'Cartões ativos',
                   String(cards.filter((card) => card.status === 'Ativo').length),
-                  'Status informado',
+                  api ? 'Nesta página' : 'Status informado',
                 ],
               ].map(([label, value, description]) => (
                 <Paper
@@ -149,7 +169,9 @@ export function FuelCardsPage({ state: providedState }: FuelCardsPageProps) {
                   }}
                 >
                   <TextField
-                    label="Pesquisar por final do cartão ou placa"
+                    label={
+                      api ? 'Pesquisar cartão ou titular' : 'Pesquisar por final do cartão ou placa'
+                    }
                     value={search}
                     onChange={(event) => setSearch(event.target.value)}
                     size="small"
@@ -167,34 +189,65 @@ export function FuelCardsPage({ state: providedState }: FuelCardsPageProps) {
                         {value}
                       </MenuItem>
                     ))}
-                    <MenuItem value="unknown">Não informado</MenuItem>
+                    {!api && <MenuItem value="unknown">Não informado</MenuItem>}
                   </TextField>
-                  <TextField
-                    select
-                    label="Setor"
-                    value={sector}
-                    onChange={(event) => setSector(event.target.value)}
-                    size="small"
-                  >
-                    <MenuItem value="">Todos os setores</MenuItem>
-                    {sectors.map((value) => (
-                      <MenuItem key={value} value={value}>
-                        {value}
-                      </MenuItem>
-                    ))}
-                    <MenuItem value="unknown">Não informado</MenuItem>
-                  </TextField>
+                  {api ? (
+                    <TextField
+                      select
+                      label="Veículo"
+                      value={vehicleId}
+                      onChange={(event) => setVehicleId(event.target.value)}
+                      size="small"
+                    >
+                      <MenuItem value="">Todos os veículos</MenuItem>
+                      {vehicles.map((vehicle) => (
+                        <MenuItem key={vehicle.id} value={vehicle.id}>
+                          {vehicle.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  ) : (
+                    <TextField
+                      select
+                      label="Setor"
+                      value={sector}
+                      onChange={(event) => setSector(event.target.value)}
+                      size="small"
+                    >
+                      <MenuItem value="">Todos os setores</MenuItem>
+                      {sectors.map((value) => (
+                        <MenuItem key={value} value={value}>
+                          {value}
+                        </MenuItem>
+                      ))}
+                      <MenuItem value="unknown">Não informado</MenuItem>
+                    </TextField>
+                  )}
                 </Box>
                 <Stack
                   direction="row"
                   sx={{ justifyContent: 'space-between', alignItems: 'center', gap: 2 }}
                 >
                   <Typography variant="body2" color="text.secondary" aria-live="polite">
-                    {filtered.length} de {cards.length} cartões
+                    {filtered.length} de{' '}
+                    {api && data?.state.status === 'ready'
+                      ? (data.state.totalElements ?? cards.length)
+                      : cards.length}{' '}
+                    cartões
                   </Typography>
                   <Button onClick={clearFilters} disabled={!hasFilters}>
                     Limpar filtros
                   </Button>
+                  {api && (
+                    <Button
+                      variant="contained"
+                      onClick={() =>
+                        data?.setQuery({ page: 0, search: search.trim(), status, vehicleId })
+                      }
+                    >
+                      Aplicar filtros
+                    </Button>
+                  )}
                 </Stack>
               </Stack>
             </Paper>
@@ -257,6 +310,14 @@ export function FuelCardsPage({ state: providedState }: FuelCardsPageProps) {
               </Paper>
             ))}
         </Box>
+        {api && data?.state.status === 'ready' && (data.state.totalPages ?? 0) > 1 && (
+          <Pagination
+            aria-label="Páginas de cartões"
+            count={data.state.totalPages}
+            page={(data.query.page ?? 0) + 1}
+            onChange={(_, page) => data.setQuery({ ...data.query, page: page - 1 })}
+          />
+        )}
       </Stack>
     </Container>
   );

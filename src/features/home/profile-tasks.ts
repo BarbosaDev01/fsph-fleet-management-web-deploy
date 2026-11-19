@@ -20,7 +20,13 @@ export const profileTasks: Record<
     title: 'Análise e organização da frota',
     description:
       'Analise as solicitações, confira a disponibilidade e defina o veículo e o condutor de cada viagem.',
-    priorities: ['/atendimento-svo', '/viagens', '/veiculos', '/motoristas'],
+    priorities: [
+      '/analise-viagens',
+      '/viagens',
+      '/veiculos',
+      '/motoristas',
+      '/cartoes-combustivel',
+    ],
   },
   MOTORISTA: {
     title: 'Suas viagens atribuídas',
@@ -31,7 +37,7 @@ export const profileTasks: Record<
   ATENDENTE_SVO: {
     title: 'Atendimento SVO',
     description: 'Consulte abaixo as atividades habilitadas para sua conta de atendimento.',
-    priorities: ['/transportes', '/solicitacoes', '/setores'],
+    priorities: ['/atendimento-svo', '/transportes', '/solicitacoes', '/setores'],
   },
   GESTOR_SVO: {
     title: 'Gestão SVO',

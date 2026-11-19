@@ -21,9 +21,19 @@ const modules = [
     'Registre demandas e acompanhe aprovação e agendamento.',
   ],
   [
-    '/atendimento-svo',
+    '/analise-viagens',
     'Análise e agendamento',
     'Consulte demandas institucionais e, quando autorizado, aprove e defina veículo e condutor.',
+  ],
+  [
+    '/atendimento-svo',
+    'Triagem SVO',
+    'Consulte as ocorrências e registre a decisão de triagem quando autorizado.',
+  ],
+  [
+    '/cartoes-combustivel',
+    'Cartões de combustível',
+    'Consulte limites, saldos e vínculos dos cartões da frota.',
   ],
   ['/transportes', 'Transportes', 'Solicite transportes e acompanhe o atendimento.'],
   ['/viagens', 'Viagens', 'Consulte o veículo, o condutor e as paradas de cada viagem.'],

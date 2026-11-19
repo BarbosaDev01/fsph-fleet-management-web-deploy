@@ -10,7 +10,9 @@ const modulePermissions: Record<string, readonly Permission[]> = {
   '/transportes': ['TRANSPORTS_READ', 'TRANSPORTS_MANAGE'],
   '/viagens': ['ROUTES_READ', 'ROUTES_MANAGE'],
   '/solicitacoes': ['TRIP_REQUESTS_READ', 'TRIP_REQUESTS_WRITE'],
-  '/atendimento-svo': ['TRIP_REQUESTS_READ'],
+  '/analise-viagens': ['TRIP_REQUESTS_READ'],
+  '/atendimento-svo': ['SVO_REQUESTS_READ', 'SVO_REQUESTS_WRITE'],
+  '/cartoes-combustivel': ['FUEL_CARDS_READ'],
   '/permissoes': ['PERMISSIONS_READ'],
 };
 
@@ -25,6 +27,8 @@ export function useAccess() {
     if (path === '/usuarios/novo') return can('USERS_WRITE');
     if (path === '/motoristas/novo') return can('DRIVERS_READ') && can('DRIVERS_WRITE');
     if (path === '/veiculos/novo') return can('VEHICLES_READ') && can('VEHICLES_WRITE');
+    if (path === '/cartoes-combustivel/novo' || /^\/cartoes-combustivel\/[^/]+\/editar$/.test(path))
+      return can('FUEL_CARDS_READ') && can('FUEL_CARDS_WRITE');
     const required = modulePermissions[`/${path.split('/')[1]}`];
     return !required || canAny(required);
   };

@@ -4,7 +4,7 @@ import type { FuelCard } from '@/features/fuel-cards/fuel-card.types';
 export function FuelCardPreview({ card }: { card: FuelCard }) {
   return (
     <Box
-      aria-label="Representação do cartão demonstrativo"
+      aria-label="Representação do cartão"
       sx={{
         bgcolor: '#10192c',
         color: '#fff',
@@ -74,7 +74,7 @@ export function FuelCardPreview({ card }: { card: FuelCard }) {
         </Typography>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2, gap: 2 }}>
           <Typography variant="caption" sx={{ color: '#c7d3e2' }}>
-            COMBUSTÍVEL · DEMONSTRAÇÃO
+            COMBUSTÍVEL
           </Typography>
           <Typography variant="caption">VALIDADE {card.validity ?? 'Não informada'}</Typography>
         </Box>

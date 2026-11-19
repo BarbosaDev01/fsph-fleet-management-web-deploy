@@ -1,3 +1,4 @@
+import { useFuelCardsPath } from '@/features/fuel-cards/data/useFuelCardsPath';
 import { Alert, Button, Stack, TextField } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -26,6 +27,7 @@ function FuelCardFields({
 }) {
   const data = useFuelCardsData();
   const navigate = useNavigate();
+  const basePath = useFuelCardsPath();
   const {
     register,
     handleSubmit,
@@ -37,9 +39,15 @@ function FuelCardFields({
       number: '',
       limit: card?.totalLimit?.toFixed(2).replace('.', ',') ?? '',
       validity: card?.validity?.split('/').reverse().join('-') ?? '',
+      cardholderName: card?.cardholderName ?? '',
+      availableBalance: card?.availableBalance?.toFixed(2).replace('.', ',') ?? '',
+      notes: card?.notes ?? '',
     },
   });
   const { ref: numberRef, ...numberField } = register('number');
+  const { ref: holderRef, ...holderField } = register('cardholderName');
+  const { ref: balanceRef, ...balanceField } = register('availableBalance');
+  const { ref: notesRef, ...notesField } = register('notes');
   const { ref: limitRef, ...limitField } = register('limit');
   const { ref: validityRef, ...validityField } = register('validity');
 
@@ -47,16 +55,19 @@ function FuelCardFields({
     if (!data) return;
     const result = await (card ? data.editCard(card.id, values) : data.createCard(values));
     if ('error' in result) {
-      setError('number', { message: result.error }, { shouldFocus: true });
+      setError(
+        repository.mode === 'demo' ? 'number' : 'root',
+        { message: result.error },
+        { shouldFocus: repository.mode === 'demo' },
+      );
       return;
     }
-    navigate(
-      card ? `/demonstracoes/cartoes-combustivel/${card.id}` : '/demonstracoes/cartoes-combustivel',
-    );
+    navigate(card ? `${basePath}/${card.id}` : basePath);
   }
 
   return (
     <Stack component="form" noValidate onSubmit={handleSubmit(submit)} spacing={3}>
+      {errors.root && <Alert severity="error">{errors.root.message}</Alert>}
       {repository.mode === 'demo' && (
         <Alert severity="info" role="note">
           Use apenas números fictícios. Validações provisórias: 8 a 19 dígitos, limite maior que
@@ -66,22 +77,42 @@ function FuelCardFields({
             : 'O saldo e o status iniciais ficam como “Não informado”.'}
         </Alert>
       )}
-      <TextField
-        label={card ? 'Novo número do cartão' : 'Número do cartão'}
-        type="password"
-        required={!card}
-        autoComplete="new-password"
-        {...numberField}
-        inputRef={numberRef}
-        error={Boolean(errors.number)}
-        helperText={
-          errors.number?.message ??
-          (card
-            ? `Atual: ${card.card}. Deixe vazio para manter o número.`
-            : 'Número oculto durante a digitação. Espaços e hífens são permitidos.')
-        }
-        slotProps={{ htmlInput: { inputMode: 'numeric', maxLength: 40 } }}
-      />
+      {repository.mode === 'api' && card ? (
+        <TextField
+          label="Número do cartão"
+          value={card.card ?? ''}
+          disabled
+          helperText="O número não pode ser alterado pela API."
+        />
+      ) : (
+        <TextField
+          label={card ? 'Novo número do cartão' : 'Número do cartão'}
+          type="password"
+          required={!card}
+          autoComplete="new-password"
+          {...numberField}
+          inputRef={numberRef}
+          error={Boolean(errors.number)}
+          helperText={
+            errors.number?.message ??
+            (card
+              ? `Atual: ${card.card}. Deixe vazio para manter o número.`
+              : 'Número oculto durante a digitação. Espaços e hífens são permitidos.')
+          }
+          slotProps={{ htmlInput: { maxLength: repository.mode === 'api' ? 50 : 40 } }}
+        />
+      )}
+      {repository.mode === 'api' && (
+        <TextField
+          label="Titular ou identificador"
+          required
+          {...holderField}
+          inputRef={holderRef}
+          error={Boolean(errors.cardholderName)}
+          helperText={errors.cardholderName?.message}
+          slotProps={{ htmlInput: { maxLength: 120 } }}
+        />
+      )}
       <TextField
         label="Limite total (R$)"
         required
@@ -93,14 +124,43 @@ function FuelCardFields({
       />
       <TextField
         label="Validade"
-        type="month"
+        type={repository.mode === 'api' ? 'date' : 'month'}
         required
         {...validityField}
         inputRef={validityRef}
         error={Boolean(errors.validity)}
-        helperText={errors.validity?.message ?? 'Mês e ano de validade.'}
+        helperText={
+          errors.validity?.message ??
+          (repository.mode === 'api' ? 'Data completa de validade.' : 'Mês e ano de validade.')
+        }
         slotProps={{ inputLabel: { shrink: true } }}
       />
+      {repository.mode === 'api' && (
+        <>
+          <TextField
+            label="Saldo disponível (R$)"
+            required={Boolean(card)}
+            {...balanceField}
+            inputRef={balanceRef}
+            error={Boolean(errors.availableBalance)}
+            helperText={
+              errors.availableBalance?.message ??
+              'No cadastro, deixe vazio para usar o limite total como saldo inicial.'
+            }
+            slotProps={{ htmlInput: { inputMode: 'decimal' } }}
+          />
+          <TextField
+            label="Observações"
+            multiline
+            minRows={2}
+            {...notesField}
+            inputRef={notesRef}
+            error={Boolean(errors.notes)}
+            helperText={errors.notes?.message}
+            slotProps={{ htmlInput: { maxLength: 500 } }}
+          />
+        </>
+      )}
       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
         <Button
           type="submit"
@@ -114,12 +174,7 @@ function FuelCardFields({
               ? 'Salvar cartão demonstrativo'
               : 'Salvar cartão'}
         </Button>
-        <Button
-          component={Link}
-          to="/demonstracoes/cartoes-combustivel"
-          variant="outlined"
-          sx={{ minHeight: 44 }}
-        >
+        <Button component={Link} to={basePath} variant="outlined" sx={{ minHeight: 44 }}>
           {card ? 'Cancelar edição' : 'Cancelar cadastro'}
         </Button>
       </Stack>

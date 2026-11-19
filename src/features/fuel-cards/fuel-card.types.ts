@@ -8,4 +8,8 @@ export interface FuelCard {
   availableBalance?: number;
   validity?: string;
   status?: string;
+  cardholderName?: string;
+  expirationDate?: string;
+  notes?: string | null;
+  vehicleId?: string;
 }

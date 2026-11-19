@@ -1,4 +1,5 @@
-﻿import { useState } from 'react';
+import { useFuelCardsPath } from '@/features/fuel-cards/data/useFuelCardsPath';
+import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import {
   Alert,
@@ -19,6 +20,7 @@ import {
 import { useFuelCardsData } from '@/features/fuel-cards/data/FuelCardsProvider';
 import { FuelCardsHeader } from '@/features/fuel-cards/components/FuelCardsHeader';
 import { FuelCardPreview } from '@/features/fuel-cards/components/FuelCardPreview';
+import { useFuelCard } from './data/useFuelCard';
 
 const money = (value?: number) =>
   value == null
@@ -31,9 +33,10 @@ export function FuelCardDetailsPage() {
   return <CardDetails key={id} id={id} />;
 }
 function CardDetails({ id }: { id?: string }) {
+  const basePath = useFuelCardsPath();
   const data = useFuelCardsData();
   const snapshot = data?.state.status === 'ready' ? data.state : undefined;
-  const card = snapshot?.cards.find((item) => item.id === id);
+  const { card, error, loading } = useFuelCard(id);
   const vehicles = snapshot?.vehicles ?? [];
   const statusOptions = snapshot?.statusOptions ?? [];
   const [vehicleId, setVehicleId] = useState('');
@@ -42,11 +45,15 @@ function CardDetails({ id }: { id?: string }) {
   const fields = card
     ? [
         ['Número do cartão', card.card ?? 'Não informado'],
+        ...(data?.mode === 'api'
+          ? [['Titular ou identificador', card.cardholderName ?? 'Não informado']]
+          : []),
         ['Veículo vinculado', card.vehicle ?? 'Não informado'],
         ['Limite total', money(card.totalLimit)],
         ['Saldo disponível', money(card.availableBalance)],
         ['Validade', card.validity ?? 'Não informado'],
         ['Status atual', card.status ?? 'Não informado'],
+        ...(data?.mode === 'api' ? [['Observações', card.notes ?? 'Não informado']] : []),
         ...(card.sector ? [['Setor do veículo', card.sector]] : []),
       ]
     : [];
@@ -64,11 +71,7 @@ function CardDetails({ id }: { id?: string }) {
   return (
     <Container component="section" maxWidth="lg" sx={{ py: { xs: 3, md: 4 } }}>
       <Stack spacing={3}>
-        <Button
-          component={Link}
-          to="/demonstracoes/cartoes-combustivel"
-          sx={{ alignSelf: 'flex-start' }}
-        >
+        <Button component={Link} to={basePath} sx={{ alignSelf: 'flex-start' }}>
           Voltar à listagem
         </Button>
         <FuelCardsHeader
@@ -76,21 +79,27 @@ function CardDetails({ id }: { id?: string }) {
           title="Detalhes do cartão"
           description="Dados do cartão, vínculo com a frota e opções de gestão."
           action={
-            card ? (
-              <Button
-                component={Link}
-                to={`/demonstracoes/cartoes-combustivel/${card.id}/editar`}
-                variant="outlined"
-              >
+            card && data?.canWrite ? (
+              <Button component={Link} to={`${basePath}/${card.id}/editar`} variant="outlined">
                 Editar cartão
               </Button>
             ) : undefined
           }
         />
-        {!card ? (
+        {loading ? (
+          <Alert severity="info" role="status">
+            Carregando cartão…
+          </Alert>
+        ) : error ? (
+          <Alert severity="error">
+            {error}
+            <Button onClick={data?.retry}>Tentar novamente</Button>
+          </Alert>
+        ) : !card ? (
           <Alert severity="warning">
-            Cartão não encontrado nesta demonstração. Volte à listagem para consultar os cartões
-            disponíveis.
+            {data?.mode === 'demo'
+              ? 'Cartão não encontrado nesta demonstração. Volte à listagem para consultar os cartões disponíveis.'
+              : 'Cartão não encontrado. Volte à listagem para consultar os cartões disponíveis.'}
           </Alert>
         ) : (
           <>
@@ -133,132 +142,144 @@ function CardDetails({ id }: { id?: string }) {
                 </Box>
               </Paper>
             </Box>
-            <Box
-              sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: '1fr 1fr' }, gap: 3 }}
-            >
-              <Paper
-                component="section"
-                aria-labelledby="vehicle-title"
-                variant="outlined"
-                sx={{ p: { xs: 2.5, md: 3 } }}
+            {data?.canWrite && (
+              <Box
+                sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: '1fr 1fr' }, gap: 3 }}
               >
-                <Stack
-                  component="form"
-                  spacing={2}
-                  onSubmit={async (event) => {
-                    event.preventDefault();
-                    if (vehicleId && (await data?.linkVehicle(card.id, vehicleId)))
-                      setVehicleId('');
-                  }}
+                <Paper
+                  component="section"
+                  aria-labelledby="vehicle-title"
+                  variant="outlined"
+                  sx={{ p: { xs: 2.5, md: 3 } }}
                 >
-                  <Typography
-                    id="vehicle-title"
-                    component="h2"
-                    variant="h6"
-                    sx={{ fontWeight: 700 }}
+                  <Stack
+                    component="form"
+                    spacing={2}
+                    onSubmit={async (event) => {
+                      event.preventDefault();
+                      if (vehicleId && (await data?.linkVehicle(card.id, vehicleId)))
+                        setVehicleId('');
+                    }}
                   >
-                    Vínculo com veículo
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Escolha o veículo que utilizará este cartão. Os veículos abaixo são fictícios.
-                  </Typography>
-                  <TextField
-                    select
-                    label="Veículo demonstrativo"
-                    value={vehicleId}
-                    onChange={(event) => setVehicleId(event.target.value)}
-                  >
-                    <MenuItem value="">Selecione um veículo</MenuItem>
-                    {vehicles.map((vehicle) => (
-                      <MenuItem key={vehicle.id} value={vehicle.id}>
-                        {vehicle.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                  <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1}>
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      disabled={
-                        data?.busy ||
-                        !vehicleId ||
-                        vehicles.find((vehicle) => vehicle.id === vehicleId)?.label === card.vehicle
-                      }
+                    <Typography
+                      id="vehicle-title"
+                      component="h2"
+                      variant="h6"
+                      sx={{ fontWeight: 700 }}
                     >
-                      Vincular veículo
-                    </Button>
-                    <Button
-                      disabled={!card.vehicle || data?.busy}
-                      onClick={() => setConfirmation({ kind: 'unlink' })}
+                      Vínculo com veículo
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {data?.mode === 'demo'
+                        ? 'Escolha o veículo que utilizará este cartão. Os veículos abaixo são fictícios.'
+                        : 'Selecione um veículo ativo. O servidor valida se ele já possui outro cartão vinculado.'}
+                    </Typography>
+                    <TextField
+                      select
+                      label={data?.mode === 'demo' ? 'Veículo demonstrativo' : 'Veículo'}
+                      value={vehicleId}
+                      onChange={(event) => setVehicleId(event.target.value)}
                     >
-                      Desvincular veículo
-                    </Button>
+                      <MenuItem value="">Selecione um veículo</MenuItem>
+                      {vehicles.map((vehicle) => (
+                        <MenuItem key={vehicle.id} value={vehicle.id}>
+                          {vehicle.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                    {data?.mode === 'api' && !vehicles.length && (
+                      <Alert severity="info">
+                        Nenhum veículo ativo disponível para seleção. A consulta de veículos exige a
+                        permissão VEHICLES_READ.
+                      </Alert>
+                    )}
+                    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1}>
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        disabled={
+                          data?.busy ||
+                          !vehicleId ||
+                          vehicles.find((vehicle) => vehicle.id === vehicleId)?.label ===
+                            card.vehicle
+                        }
+                      >
+                        Vincular veículo
+                      </Button>
+                      <Button
+                        disabled={!card.vehicle || data?.busy}
+                        onClick={() => setConfirmation({ kind: 'unlink' })}
+                      >
+                        Desvincular veículo
+                      </Button>
+                    </Stack>
                   </Stack>
-                </Stack>
-              </Paper>
-              <Paper
-                component="section"
-                aria-labelledby="status-title"
-                variant="outlined"
-                sx={{ p: { xs: 2.5, md: 3 } }}
-              >
-                <Stack
-                  component="form"
-                  spacing={2}
-                  onSubmit={(event) => {
-                    event.preventDefault();
-                    if (status && status !== card.status)
-                      setConfirmation({ kind: 'status', status });
-                  }}
+                </Paper>
+                <Paper
+                  component="section"
+                  aria-labelledby="status-title"
+                  variant="outlined"
+                  sx={{ p: { xs: 2.5, md: 3 } }}
                 >
-                  <Typography
-                    id="status-title"
-                    component="h2"
-                    variant="h6"
-                    sx={{ fontWeight: 700 }}
+                  <Stack
+                    component="form"
+                    spacing={2}
+                    onSubmit={(event) => {
+                      event.preventDefault();
+                      if (status && status !== card.status)
+                        setConfirmation({ kind: 'status', status });
+                    }}
                   >
-                    Status do cartão
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Alterações apenas demonstrativas. Opções e transições definitivas dependem de
-                    confirmação.
-                  </Typography>
-                  <TextField
-                    select
-                    label="Novo status demonstrativo"
-                    value={status}
-                    onChange={(event) => setStatus(event.target.value)}
-                  >
-                    <MenuItem value="">Selecione um status</MenuItem>
-                    {statusOptions.map((option) => (
-                      <MenuItem key={option} value={option}>
-                        {option}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                  <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1}>
-                    <Button
-                      type="submit"
-                      variant="outlined"
-                      disabled={data?.busy || !status || status === card.status}
+                    <Typography
+                      id="status-title"
+                      component="h2"
+                      variant="h6"
+                      sx={{ fontWeight: 700 }}
                     >
-                      Revisar alteração de status
-                    </Button>
-                    <Button
-                      color="error"
-                      disabled={
-                        data?.busy ||
-                        card.status === 'Cancelado' ||
-                        !statusOptions.includes('Cancelado')
-                      }
-                      onClick={() => setConfirmation({ kind: 'status', status: 'Cancelado' })}
+                      Status do cartão
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {data?.mode === 'demo'
+                        ? 'Alterações apenas demonstrativas. Opções e transições definitivas dependem de confirmação.'
+                        : 'O status exibido será atualizado após a confirmação do servidor.'}
+                    </Typography>
+                    <TextField
+                      select
+                      label={data?.mode === 'demo' ? 'Novo status demonstrativo' : 'Novo status'}
+                      value={status}
+                      onChange={(event) => setStatus(event.target.value)}
                     >
-                      Cancelar cartão
-                    </Button>
+                      <MenuItem value="">Selecione um status</MenuItem>
+                      {statusOptions.map((option) => (
+                        <MenuItem key={option} value={option}>
+                          {option}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1}>
+                      <Button
+                        type="submit"
+                        variant="outlined"
+                        disabled={data?.busy || !status || status === card.status}
+                      >
+                        Revisar alteração de status
+                      </Button>
+                      <Button
+                        color="error"
+                        disabled={
+                          data?.busy ||
+                          card.status === 'Cancelado' ||
+                          !statusOptions.includes('Cancelado')
+                        }
+                        onClick={() => setConfirmation({ kind: 'status', status: 'Cancelado' })}
+                      >
+                        Cancelar cartão
+                      </Button>
+                    </Stack>
                   </Stack>
-                </Stack>
-              </Paper>
-            </Box>
+                </Paper>
+              </Box>
+            )}
             <Dialog
               open={Boolean(confirmation)}
               onClose={() => setConfirmation(null)}
@@ -270,14 +291,18 @@ function CardDetails({ id }: { id?: string }) {
               <DialogTitle id="confirm-status-title">
                 {confirmation?.kind === 'unlink'
                   ? 'Desvincular veículo?'
-                  : 'Confirmar alteração demonstrativa?'}
+                  : data?.mode === 'demo'
+                    ? 'Confirmar alteração demonstrativa?'
+                    : 'Confirmar alteração?'}
               </DialogTitle>
               <DialogContent>
                 <DialogContentText id="confirm-status-description">
                   {confirmation?.kind === 'unlink'
                     ? `O veículo ${card.vehicle} será desvinculado do cartão ${card.card}.`
                     : `O cartão ${card.card} passará de ${card.status ?? 'Não informado'} para ${confirmation?.status ?? ''}.`}{' '}
-                  A alteração ocorre apenas nesta demonstração, sem envio ao servidor.
+                  {data?.mode === 'demo'
+                    ? 'A alteração ocorre apenas nesta demonstração, sem envio ao servidor.'
+                    : 'A alteração será gravada na API. Desvincular remove somente a associação com o veículo.'}
                 </DialogContentText>
               </DialogContent>
               <DialogActions

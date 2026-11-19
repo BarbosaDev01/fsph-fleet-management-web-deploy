@@ -1,17 +1,20 @@
-﻿import { Box, Button, Container, Paper, Stack, Typography } from '@mui/material';
+import { useFuelCardsPath } from '@/features/fuel-cards/data/useFuelCardsPath';
+import { Box, Button, Container, Paper, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { FuelCardForm } from '@/features/fuel-cards/components/FuelCardForm';
 import { FuelCardsHeader } from '@/features/fuel-cards/components/FuelCardsHeader';
+import { useFuelCardsData } from './data/FuelCardsProvider';
+import { Alert } from '@mui/material';
 
 export function FuelCardCreatePage() {
+  const basePath = useFuelCardsPath();
+  const data = useFuelCardsData();
+  if (!data?.canWrite)
+    return <Alert severity="warning">Acesso restrito: seu perfil permite apenas consulta.</Alert>;
   return (
     <Container component="section" maxWidth="lg" sx={{ py: { xs: 3, md: 4 } }}>
       <Stack spacing={3}>
-        <Button
-          component={Link}
-          to="/demonstracoes/cartoes-combustivel"
-          sx={{ alignSelf: 'flex-start' }}
-        >
+        <Button component={Link} to={basePath} sx={{ alignSelf: 'flex-start' }}>
           Voltar à listagem
         </Button>
         <FuelCardsHeader
@@ -42,14 +45,19 @@ export function FuelCardCreatePage() {
             </Typography>
             <Stack spacing={2} sx={{ mt: 2 }}>
               <Typography color="text.secondary" variant="body2">
-                Use somente números fictícios. O número é oculto durante a digitação e aparece
-                mascarado nas consultas.
+                {data.mode === 'demo'
+                  ? 'Use somente números fictícios.'
+                  : 'Informe o número e o titular ou identificador do cartão. O número não poderá ser editado após o cadastro.'}
               </Typography>
               <Typography color="text.secondary" variant="body2">
-                O limite informado não define o saldo. Saldo e status começam como “Não informado”.
+                {data.mode === 'demo'
+                  ? 'O limite informado não define o saldo. Saldo e status começam como “Não informado”.'
+                  : 'Se o saldo inicial ficar vazio, o servidor utilizará o limite total. O cartão será criado com status Ativo.'}
               </Typography>
               <Typography color="text.secondary" variant="body2">
-                O cadastro fica disponível apenas nesta demonstração, sem envio ao servidor.
+                {data.mode === 'demo'
+                  ? 'O cadastro fica disponível apenas nesta demonstração, sem envio ao servidor.'
+                  : 'O vínculo com o veículo poderá ser definido nos detalhes após salvar.'}
               </Typography>
             </Stack>
           </Paper>

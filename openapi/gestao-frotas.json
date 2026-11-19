@@ -2638,6 +2638,627 @@
           }
         }
       }
+    },
+    "/api/v1/fuel-cards/{id}": {
+      "get": {
+        "tags": ["fuel-card-controller"],
+        "operationId": "getById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FuelCardResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["fuel-card-controller"],
+        "operationId": "update_6",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateFuelCardRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FuelCardResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/svo/requests": {
+      "get": {
+        "tags": ["svo-death-request-controller"],
+        "operationId": "listAll_1",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["PENDING_TRIAGE", "TRIAGED", "REJECTED", "CANCELED", "ORDER_GENERATED"]
+            }
+          },
+          {
+            "name": "city",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageSvoDeathRequestResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["svo-death-request-controller"],
+        "operationId": "create_6",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSvoDeathRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SvoDeathRequestResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/fuel-cards": {
+      "get": {
+        "tags": ["fuel-card-controller"],
+        "operationId": "list_10",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["ACTIVE", "INACTIVE", "BLOCKED", "CANCELED"]
+            }
+          },
+          {
+            "name": "vehicleId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageFuelCardResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["fuel-card-controller"],
+        "operationId": "create_10",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFuelCardRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FuelCardResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/fuel-cards/{id}/bind-vehicle": {
+      "post": {
+        "tags": ["fuel-card-controller"],
+        "operationId": "bindVehicle",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BindVehicleRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FuelCardResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["fuel-card-controller"],
+        "operationId": "unbindVehicle",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FuelCardResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/svo/requests/{id}/triage": {
+      "patch": {
+        "tags": ["svo-death-request-controller"],
+        "operationId": "triage",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TriageSvoDeathRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SvoDeathRequestResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/svo/requests/{id}/cancel": {
+      "patch": {
+        "tags": ["svo-death-request-controller"],
+        "operationId": "cancel_3",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CancelSvoDeathRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SvoDeathRequestResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/fuel-cards/{id}/status": {
+      "patch": {
+        "tags": ["fuel-card-controller"],
+        "operationId": "updateStatus",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateFuelCardStatusRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FuelCardResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/svo/requests/{id}": {
+      "get": {
+        "tags": ["svo-death-request-controller"],
+        "operationId": "getById_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SvoDeathRequestResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/svo/requests/protocol/{protocolNumber}": {
+      "get": {
+        "tags": ["svo-death-request-controller"],
+        "operationId": "getByProtocol",
+        "parameters": [
+          {
+            "name": "protocolNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SvoDeathRequestResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/svo/requests/my-requests": {
+      "get": {
+        "tags": ["svo-death-request-controller"],
+        "operationId": "listMyRequests",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageSvoDeathRequestResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/fuel-cards/by-vehicle/{vehicleId}": {
+      "get": {
+        "tags": ["fuel-card-controller"],
+        "operationId": "getByVehicleId",
+        "parameters": [
+          {
+            "name": "vehicleId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FuelCardResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/fuel-cards/by-number/{cardNumber}": {
+      "get": {
+        "tags": ["fuel-card-controller"],
+        "operationId": "getByCardNumber",
+        "parameters": [
+          {
+            "name": "cardNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FuelCardResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -2677,7 +3298,17 @@
           "TRANSPORTS_MANAGE",
           "ROUTES_READ",
           "ROUTES_MANAGE",
-          "ROUTES_EXECUTE"
+          "ROUTES_EXECUTE",
+          "SVO_TEAMS_READ",
+          "SVO_TEAMS_WRITE",
+          "SVO_SHIFTS_READ",
+          "SVO_SHIFTS_WRITE",
+          "AUDIT_LOGS_READ",
+          "FUEL_CARDS_READ",
+          "FUEL_CARDS_WRITE",
+          "SVO_REQUESTS_READ",
+          "SVO_REQUESTS_WRITE",
+          "SVO_REQUESTS_MANAGE"
         ]
       },
       "RecordStatus": {
@@ -4158,6 +4789,563 @@
             }
           }
         }
+      },
+      "FuelCardResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "cardNumber": {
+            "type": "string"
+          },
+          "cardholderName": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["ACTIVE", "INACTIVE", "BLOCKED", "CANCELED"]
+          },
+          "totalLimit": {
+            "type": "number"
+          },
+          "availableBalance": {
+            "type": "number"
+          },
+          "expirationDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "vehicle": {
+            "$ref": "#/components/schemas/FuelCardVehicleSummaryResponse",
+            "nullable": true
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "cardNumber",
+          "cardholderName",
+          "status",
+          "totalLimit",
+          "availableBalance",
+          "expirationDate"
+        ]
+      },
+      "FuelCardVehicleSummaryResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "plate": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          }
+        },
+        "required": ["id", "plate", "model"]
+      },
+      "UpdateFuelCardRequest": {
+        "type": "object",
+        "properties": {
+          "cardholderName": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 0
+          },
+          "expirationDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "totalLimit": {
+            "type": "number",
+            "minimum": 0
+          },
+          "availableBalance": {
+            "type": "number",
+            "minimum": 0
+          },
+          "notes": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 0
+          }
+        },
+        "required": ["availableBalance", "cardholderName", "expirationDate", "totalLimit"]
+      },
+      "Pageable": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 1
+          },
+          "sort": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "PageSvoDeathRequestResponse": {
+        "type": "object",
+        "properties": {
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SvoDeathRequestResponse"
+            }
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject",
+            "nullable": true
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject",
+            "nullable": true
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "first": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "last": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "empty": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "required": ["content", "number", "size", "totalElements", "totalPages"]
+      },
+      "SvoDeathRequestResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "protocolNumber": {
+            "type": "string"
+          },
+          "requesterId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "requesterName": {
+            "type": "string"
+          },
+          "requesterEmail": {
+            "type": "string"
+          },
+          "deceasedName": {
+            "type": "string",
+            "nullable": true
+          },
+          "deceasedAge": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "deceasedGender": {
+            "type": "string",
+            "nullable": true
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "deathLocationType": {
+            "type": "string",
+            "enum": ["DOMICILE", "PUBLIC_WAY", "HOSPITAL", "HEALTH_POST", "OTHER"]
+          },
+          "address": {
+            "type": "string"
+          },
+          "neighborhood": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "referencePoint": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactName": {
+            "type": "string"
+          },
+          "contactPhone": {
+            "type": "string"
+          },
+          "relationshipWithDeceased": {
+            "type": "string",
+            "nullable": true
+          },
+          "presumedCircumstance": {
+            "type": "string",
+            "nullable": true
+          },
+          "hasSuspectedViolence": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["PENDING_TRIAGE", "TRIAGED", "REJECTED", "CANCELED", "ORDER_GENERATED"]
+          },
+          "rejectionReason": {
+            "type": "string",
+            "nullable": true
+          },
+          "triagedById": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "triagedByName": {
+            "type": "string",
+            "nullable": true
+          },
+          "triagedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "protocolNumber",
+          "requesterId",
+          "requesterName",
+          "requesterEmail",
+          "occurredAt",
+          "deathLocationType",
+          "address",
+          "neighborhood",
+          "city",
+          "contactName",
+          "contactPhone",
+          "hasSuspectedViolence",
+          "status",
+          "createdAt"
+        ]
+      },
+      "SortObject": {
+        "type": "object",
+        "properties": {
+          "empty": {
+            "type": "boolean"
+          },
+          "sorted": {
+            "type": "boolean"
+          },
+          "unsorted": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PageableObject": {
+        "type": "object",
+        "properties": {
+          "offset": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "paged": {
+            "type": "boolean"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "unpaged": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CreateSvoDeathRequest": {
+        "type": "object",
+        "properties": {
+          "deceasedName": {
+            "type": "string",
+            "maxLength": 150,
+            "minLength": 0
+          },
+          "deceasedAge": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "deceasedGender": {
+            "type": "string",
+            "maxLength": 20,
+            "minLength": 0
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "deathLocationType": {
+            "type": "string",
+            "enum": ["DOMICILE", "PUBLIC_WAY", "HOSPITAL", "HEALTH_POST", "OTHER"]
+          },
+          "address": {
+            "type": "string",
+            "maxLength": 250,
+            "minLength": 0
+          },
+          "neighborhood": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 0
+          },
+          "city": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 0
+          },
+          "referencePoint": {
+            "type": "string",
+            "maxLength": 250,
+            "minLength": 0
+          },
+          "contactName": {
+            "type": "string",
+            "maxLength": 150,
+            "minLength": 0
+          },
+          "contactPhone": {
+            "type": "string",
+            "maxLength": 30,
+            "minLength": 0
+          },
+          "relationshipWithDeceased": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 0
+          },
+          "presumedCircumstance": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 0
+          },
+          "hasSuspectedViolence": {
+            "type": "boolean"
+          },
+          "notes": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 0
+          }
+        },
+        "required": [
+          "address",
+          "city",
+          "contactName",
+          "contactPhone",
+          "deathLocationType",
+          "neighborhood",
+          "occurredAt"
+        ]
+      },
+      "PageFuelCardResponse": {
+        "type": "object",
+        "properties": {
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FuelCardResponse"
+            }
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject",
+            "nullable": true
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject",
+            "nullable": true
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "first": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "last": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "empty": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "required": ["content", "number", "size", "totalElements", "totalPages"]
+      },
+      "CreateFuelCardRequest": {
+        "type": "object",
+        "properties": {
+          "cardNumber": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 4
+          },
+          "cardholderName": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 0
+          },
+          "expirationDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "totalLimit": {
+            "type": "number",
+            "minimum": 0
+          },
+          "availableBalance": {
+            "type": "number",
+            "minimum": 0
+          },
+          "vehicleId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "notes": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 0
+          }
+        },
+        "required": ["cardNumber", "cardholderName", "expirationDate", "totalLimit"]
+      },
+      "BindVehicleRequest": {
+        "type": "object",
+        "properties": {
+          "vehicleId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": ["vehicleId"]
+      },
+      "TriageSvoDeathRequest": {
+        "type": "object",
+        "properties": {
+          "approved": {
+            "type": "boolean"
+          },
+          "rejectionReason": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 0
+          }
+        },
+        "required": ["approved"]
+      },
+      "CancelSvoDeathRequest": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 0
+          }
+        }
+      },
+      "UpdateFuelCardStatusRequest": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["ACTIVE", "INACTIVE", "BLOCKED", "CANCELED"]
+          }
+        },
+        "required": ["status"]
       }
     }
   }

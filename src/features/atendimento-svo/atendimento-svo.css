@@ -1,3 +1,26 @@
+.svo-api-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  padding: 18px;
+  margin: 0;
+}
+.svo-api-fields dt {
+  color: #64748b;
+  font-size: 12px;
+}
+.svo-api-fields dd {
+  margin: 4px 0 0;
+  overflow-wrap: anywhere;
+}
+.svo-api-audit {
+  padding: 18px;
+}
+@media (max-width: 600px) {
+  .svo-api-fields {
+    grid-template-columns: 1fr;
+  }
+}
 .svo-app-shell {
   --svo-navy: var(--fsph-sidebar, #101a2e);
   --svo-navy-soft: #202c42;

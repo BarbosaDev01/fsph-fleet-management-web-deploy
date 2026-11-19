@@ -5,19 +5,25 @@ import type {
   FuelCardsRepository,
   FuelCardsSnapshot,
   FuelCardFormValues,
+  FuelCardsQuery,
 } from '@/features/fuel-cards/data/fuel-cards-repository';
+import { ApiError, errorMessage as apiErrorMessage } from '@/shared/api/result';
 import { isFuelCardsDemoEnabled } from '@/features/fuel-cards/data/fuel-cards-repository';
 
 type DataState =
   | { status: 'unavailable' }
   | { status: 'loading' }
-  | { status: 'error' }
+  | { status: 'error'; message?: string }
   | ({ status: 'ready' } & FuelCardsSnapshot);
 interface FuelCardsData {
   state: DataState;
   mode: 'demo' | 'api' | 'unavailable';
   busy: boolean;
   repository: FuelCardsRepository | null;
+  canWrite: boolean;
+  revision: number;
+  query: FuelCardsQuery;
+  setQuery: (query: FuelCardsQuery) => void;
   retry: () => void;
   createCard: (values: FuelCardFormValues) => Promise<{ id: string } | { error: string }>;
   editCard: (id: string, values: FuelCardFormValues) => Promise<{ id: string } | { error: string }>;
@@ -33,7 +39,8 @@ const errorMessage = (error: unknown) =>
 export function FuelCardsProvider({
   children,
   repository: supplied,
-}: PropsWithChildren<{ repository?: FuelCardsRepository }>) {
+  canWrite = true,
+}: PropsWithChildren<{ repository?: FuelCardsRepository; canWrite?: boolean }>) {
   const [demoEnabled] = useState(isFuelCardsDemoEnabled);
   const allowedSource = supplied?.mode === 'demo' && !demoEnabled ? undefined : supplied;
   const [repository, setRepository] = useState<FuelCardsRepository | null>(null);
@@ -42,6 +49,8 @@ export function FuelCardsProvider({
   });
   const [attempt, setAttempt] = useState(0);
   const [busy, setBusy] = useState(false);
+  const [query, setQuery] = useState<FuelCardsQuery>({ page: 0 });
+  const [revision, setRevision] = useState(0);
   const [feedback, setFeedback] = useState<{ text: string; severity: 'success' | 'error' } | null>(
     null,
   );
@@ -62,32 +71,46 @@ export function FuelCardsProvider({
           if (active) setState({ status: 'unavailable' });
           return;
         }
-        const snapshot = await source.load();
+        const snapshot = await source.load(query);
         if (active) {
           setRepository(source);
           setState({ status: 'ready', ...snapshot });
         }
-      } catch {
-        if (active) setState({ status: 'error' });
+      } catch (error) {
+        if (active)
+          setState({
+            status: 'error',
+            message: error instanceof ApiError ? apiErrorMessage(error) : undefined,
+          });
       }
     }
     void load();
     return () => {
       active = false;
     };
-  }, [allowedSource, demoEnabled, attempt]);
+  }, [allowedSource, demoEnabled, attempt, query]);
 
   async function mutate<T>(
     operation: (source: FuelCardsRepository) => Promise<T>,
     text: string,
     fieldErrors = false,
   ): Promise<T | { error: string }> {
-    if (!repository || busy) return { error: 'A operação não está disponível neste momento.' };
+    if (!repository || busy || !canWrite)
+      return { error: 'A operação não está disponível neste momento.' };
     setBusy(true);
     try {
       const result = await operation(repository);
-      const snapshot = await repository.load();
-      setState({ status: 'ready', ...snapshot });
+      setRevision((value) => value + 1);
+      try {
+        const snapshot = await repository.load(query);
+        setState({ status: 'ready', ...snapshot });
+      } catch {
+        setFeedback({
+          text: 'Operação gravada, mas não foi possível atualizar a lista. Recarregue para consultar os dados atuais.',
+          severity: 'error',
+        });
+        return result;
+      }
       setFeedback({
         text: repository.mode === 'demo' ? `${text} apenas nesta demonstração.` : `${text}.`,
         severity: 'success',
@@ -114,8 +137,15 @@ export function FuelCardsProvider({
         state,
         repository,
         busy,
+        canWrite,
+        revision,
+        query,
+        setQuery,
         mode: repository?.mode ?? (demoEnabled ? 'demo' : 'unavailable'),
-        retry: () => setAttempt((value) => value + 1),
+        retry: () => {
+          setAttempt((value) => value + 1);
+          setRevision((value) => value + 1);
+        },
         createCard: (values) =>
           mutate((source) => source.createCard(values), 'Cartão cadastrado', true),
         editCard: (id, values) =>

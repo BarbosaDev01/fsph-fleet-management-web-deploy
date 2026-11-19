@@ -1,10 +1,12 @@
-﻿import { Alert, Box, Button, CircularProgress, Container, Stack, Typography } from '@mui/material';
+import { useFuelCardsPath } from '@/features/fuel-cards/data/useFuelCardsPath';
+import { Alert, Box, Button, CircularProgress, Container, Stack, Typography } from '@mui/material';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
 import { useFuelCardsData } from '@/features/fuel-cards/data/FuelCardsProvider';
 
 /** Contêiner local sem menu principal, pronto para compor o layout da equipe. */
 export function FuelCardsLayout() {
+  const basePath = useFuelCardsPath();
   const data = useFuelCardsData();
   const { pathname } = useLocation();
   const content = useRef<HTMLDivElement>(null);
@@ -53,12 +55,8 @@ export function FuelCardsLayout() {
         ) : (
           <Container component="section" maxWidth="lg" sx={{ py: 5 }}>
             <Stack spacing={3}>
-              {pathname !== '/demonstracoes/cartoes-combustivel' && (
-                <Button
-                  component={Link}
-                  to="/demonstracoes/cartoes-combustivel"
-                  sx={{ alignSelf: 'flex-start' }}
-                >
+              {pathname !== basePath && (
+                <Button component={Link} to={basePath} sx={{ alignSelf: 'flex-start' }}>
                   Voltar à listagem
                 </Button>
               )}
@@ -72,7 +70,7 @@ export function FuelCardsLayout() {
                 </Stack>
               ) : data?.state.status === 'error' ? (
                 <Alert severity="error">
-                  Não foi possível carregar os cartões e veículos.
+                  Não foi possível carregar os cartões e veículos. {data.state.message}
                   <Box sx={{ mt: 2 }}>
                     <Button onClick={data.retry}>Tentar novamente</Button>
                   </Box>
@@ -95,7 +93,7 @@ export function FuelCardsLayout() {
       >
         {demo
           ? 'Modo demonstrativo: dados fictícios, sem integração com a API. Alterações em memória; recarregar ou sair da área restaura os exemplos.'
-          : 'Integração real ainda não configurada. Nenhuma requisição a endpoints não confirmados é realizada.'}
+          : 'Cartões e vínculos consultados na API. O setor do veículo não é informado no contrato de cartões.'}
       </Typography>
     </Box>
   );

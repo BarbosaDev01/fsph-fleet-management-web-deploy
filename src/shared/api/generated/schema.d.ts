@@ -724,6 +724,198 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/fuel-cards/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getById"];
+        put: operations["update_6"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/svo/requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listAll_1"];
+        put?: never;
+        post: operations["create_6"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/fuel-cards": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["list_10"];
+        put?: never;
+        post: operations["create_10"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/fuel-cards/{id}/bind-vehicle": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["bindVehicle"];
+        delete: operations["unbindVehicle"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/svo/requests/{id}/triage": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["triage"];
+        trace?: never;
+    };
+    "/api/v1/svo/requests/{id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["cancel_3"];
+        trace?: never;
+    };
+    "/api/v1/fuel-cards/{id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["updateStatus"];
+        trace?: never;
+    };
+    "/api/v1/svo/requests/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getById_1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/svo/requests/protocol/{protocolNumber}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getByProtocol"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/svo/requests/my-requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listMyRequests"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/fuel-cards/by-vehicle/{vehicleId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getByVehicleId"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/fuel-cards/by-number/{cardNumber}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getByCardNumber"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -731,7 +923,7 @@ export interface components {
         /** @enum {string} */
         DriverStatus: "AVAIBLE" | "IN_ROUTE" | "UNAVAIBLE";
         /** @enum {string} */
-        Permission: "USERS_READ" | "USERS_WRITE" | "SECTORS_READ" | "SECTORS_WRITE" | "PERMISSIONS_READ" | "PERMISSIONS_WRITE" | "VEHICLES_READ" | "VEHICLES_WRITE" | "VEHICLES_ASSIGNED_READ" | "TRIPS_WRITE" | "TRIPS_READ" | "DRIVERS_READ" | "DRIVERS_WRITE" | "MAINTENANCES_READ" | "MAINTENANCES_WRITE" | "FUEL_STATIONS_READ" | "FUEL_STATIONS_WRITE" | "FUELINGS_READ" | "FUELINGS_WRITE" | "TRIP_REQUESTS_READ" | "TRIP_REQUESTS_WRITE" | "TRIP_REQUESTS_MANAGE" | "NOTIFICATIONS_READ" | "TRANSPORTS_READ" | "TRANSPORTS_REQUEST" | "TRANSPORTS_MANAGE" | "ROUTES_READ" | "ROUTES_MANAGE" | "ROUTES_EXECUTE";
+        Permission: "USERS_READ" | "USERS_WRITE" | "SECTORS_READ" | "SECTORS_WRITE" | "PERMISSIONS_READ" | "PERMISSIONS_WRITE" | "VEHICLES_READ" | "VEHICLES_WRITE" | "VEHICLES_ASSIGNED_READ" | "TRIPS_WRITE" | "TRIPS_READ" | "DRIVERS_READ" | "DRIVERS_WRITE" | "MAINTENANCES_READ" | "MAINTENANCES_WRITE" | "FUEL_STATIONS_READ" | "FUEL_STATIONS_WRITE" | "FUELINGS_READ" | "FUELINGS_WRITE" | "TRIP_REQUESTS_READ" | "TRIP_REQUESTS_WRITE" | "TRIP_REQUESTS_MANAGE" | "NOTIFICATIONS_READ" | "TRANSPORTS_READ" | "TRANSPORTS_REQUEST" | "TRANSPORTS_MANAGE" | "ROUTES_READ" | "ROUTES_MANAGE" | "ROUTES_EXECUTE" | "SVO_TEAMS_READ" | "SVO_TEAMS_WRITE" | "SVO_SHIFTS_READ" | "SVO_SHIFTS_WRITE" | "AUDIT_LOGS_READ" | "FUEL_CARDS_READ" | "FUEL_CARDS_WRITE" | "SVO_REQUESTS_READ" | "SVO_REQUESTS_WRITE" | "SVO_REQUESTS_MANAGE";
         /** @enum {string} */
         RecordStatus: "ACTIVE" | "REPLACED";
         /** @enum {string} */
@@ -1248,6 +1440,182 @@ export interface components {
             inMaintenance?: boolean;
             completelyFreeInPeriod?: boolean;
             reservations?: components["schemas"]["FleetCalendarReservationResponse"][];
+        };
+        FuelCardResponse: {
+            /** Format: uuid */
+            id: string;
+            cardNumber: string;
+            cardholderName: string;
+            /** @enum {string} */
+            status: "ACTIVE" | "INACTIVE" | "BLOCKED" | "CANCELED";
+            totalLimit: number;
+            availableBalance: number;
+            /** Format: date */
+            expirationDate: string;
+            vehicle?: components["schemas"]["FuelCardVehicleSummaryResponse"];
+            notes?: string | null;
+            /** Format: date-time */
+            createdAt?: string | null;
+            /** Format: date-time */
+            updatedAt?: string | null;
+        };
+        FuelCardVehicleSummaryResponse: {
+            /** Format: uuid */
+            id: string;
+            plate: string;
+            model: string;
+        };
+        UpdateFuelCardRequest: {
+            cardholderName: string;
+            /** Format: date */
+            expirationDate: string;
+            totalLimit: number;
+            availableBalance: number;
+            notes?: string;
+        };
+        Pageable: {
+            /** Format: int32 */
+            page?: number;
+            /** Format: int32 */
+            size?: number;
+            sort?: string[];
+        };
+        PageSvoDeathRequestResponse: {
+            /** Format: int32 */
+            totalPages: number;
+            /** Format: int64 */
+            totalElements: number;
+            /** Format: int32 */
+            size: number;
+            content: components["schemas"]["SvoDeathRequestResponse"][];
+            /** Format: int32 */
+            number: number;
+            sort?: components["schemas"]["SortObject"];
+            pageable?: components["schemas"]["PageableObject"];
+            /** Format: int32 */
+            numberOfElements?: number | null;
+            first?: boolean | null;
+            last?: boolean | null;
+            empty?: boolean | null;
+        };
+        SvoDeathRequestResponse: {
+            /** Format: uuid */
+            id: string;
+            protocolNumber: string;
+            /** Format: uuid */
+            requesterId: string;
+            requesterName: string;
+            requesterEmail: string;
+            deceasedName?: string | null;
+            /** Format: int32 */
+            deceasedAge?: number | null;
+            deceasedGender?: string | null;
+            /** Format: date-time */
+            occurredAt: string;
+            /** @enum {string} */
+            deathLocationType: "DOMICILE" | "PUBLIC_WAY" | "HOSPITAL" | "HEALTH_POST" | "OTHER";
+            address: string;
+            neighborhood: string;
+            city: string;
+            referencePoint?: string | null;
+            contactName: string;
+            contactPhone: string;
+            relationshipWithDeceased?: string | null;
+            presumedCircumstance?: string | null;
+            hasSuspectedViolence: boolean;
+            /** @enum {string} */
+            status: "PENDING_TRIAGE" | "TRIAGED" | "REJECTED" | "CANCELED" | "ORDER_GENERATED";
+            rejectionReason?: string | null;
+            /** Format: uuid */
+            triagedById?: string | null;
+            triagedByName?: string | null;
+            /** Format: date-time */
+            triagedAt?: string | null;
+            notes?: string | null;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt?: string | null;
+        };
+        SortObject: {
+            empty?: boolean;
+            sorted?: boolean;
+            unsorted?: boolean;
+        };
+        PageableObject: {
+            /** Format: int64 */
+            offset?: number;
+            paged?: boolean;
+            /** Format: int32 */
+            pageNumber?: number;
+            /** Format: int32 */
+            pageSize?: number;
+            sort?: components["schemas"]["SortObject"];
+            unpaged?: boolean;
+        };
+        CreateSvoDeathRequest: {
+            deceasedName?: string;
+            /** Format: int32 */
+            deceasedAge?: number;
+            deceasedGender?: string;
+            /** Format: date-time */
+            occurredAt: string;
+            /** @enum {string} */
+            deathLocationType: "DOMICILE" | "PUBLIC_WAY" | "HOSPITAL" | "HEALTH_POST" | "OTHER";
+            address: string;
+            neighborhood: string;
+            city: string;
+            referencePoint?: string;
+            contactName: string;
+            contactPhone: string;
+            relationshipWithDeceased?: string;
+            presumedCircumstance?: string;
+            hasSuspectedViolence?: boolean;
+            notes?: string;
+        };
+        PageFuelCardResponse: {
+            /** Format: int32 */
+            totalPages: number;
+            /** Format: int64 */
+            totalElements: number;
+            /** Format: int32 */
+            size: number;
+            content: components["schemas"]["FuelCardResponse"][];
+            /** Format: int32 */
+            number: number;
+            sort?: components["schemas"]["SortObject"];
+            pageable?: components["schemas"]["PageableObject"];
+            /** Format: int32 */
+            numberOfElements?: number | null;
+            first?: boolean | null;
+            last?: boolean | null;
+            empty?: boolean | null;
+        };
+        CreateFuelCardRequest: {
+            cardNumber: string;
+            cardholderName: string;
+            /** Format: date */
+            expirationDate: string;
+            totalLimit: number;
+            availableBalance?: number;
+            /** Format: uuid */
+            vehicleId?: string;
+            notes?: string;
+        };
+        BindVehicleRequest: {
+            /** Format: uuid */
+            vehicleId: string;
+        };
+        TriageSvoDeathRequest: {
+            approved: boolean;
+            rejectionReason?: string;
+        };
+        CancelSvoDeathRequest: {
+            reason?: string;
+        };
+        UpdateFuelCardStatusRequest: {
+            /** @enum {string} */
+            status: "ACTIVE" | "INACTIVE" | "BLOCKED" | "CANCELED";
         };
     };
     responses: never;
@@ -3322,6 +3690,396 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["FleetCalendarResponse"];
+                };
+            };
+        };
+    };
+    getById: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["FuelCardResponse"];
+                };
+            };
+        };
+    };
+    update_6: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateFuelCardRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["FuelCardResponse"];
+                };
+            };
+        };
+    };
+    listAll_1: {
+        parameters: {
+            query?: {
+                status?: "PENDING_TRIAGE" | "TRIAGED" | "REJECTED" | "CANCELED" | "ORDER_GENERATED";
+                city?: string;
+                from?: string;
+                to?: string;
+                search?: string;
+                page?: number;
+                size?: number;
+                sort?: string[];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PageSvoDeathRequestResponse"];
+                };
+            };
+        };
+    };
+    create_6: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateSvoDeathRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["SvoDeathRequestResponse"];
+                };
+            };
+        };
+    };
+    list_10: {
+        parameters: {
+            query?: {
+                status?: "ACTIVE" | "INACTIVE" | "BLOCKED" | "CANCELED";
+                vehicleId?: string;
+                search?: string;
+                page?: number;
+                size?: number;
+                sort?: string[];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PageFuelCardResponse"];
+                };
+            };
+        };
+    };
+    create_10: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateFuelCardRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["FuelCardResponse"];
+                };
+            };
+        };
+    };
+    bindVehicle: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BindVehicleRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["FuelCardResponse"];
+                };
+            };
+        };
+    };
+    unbindVehicle: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["FuelCardResponse"];
+                };
+            };
+        };
+    };
+    triage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TriageSvoDeathRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["SvoDeathRequestResponse"];
+                };
+            };
+        };
+    };
+    cancel_3: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["CancelSvoDeathRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["SvoDeathRequestResponse"];
+                };
+            };
+        };
+    };
+    updateStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateFuelCardStatusRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["FuelCardResponse"];
+                };
+            };
+        };
+    };
+    getById_1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["SvoDeathRequestResponse"];
+                };
+            };
+        };
+    };
+    getByProtocol: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                protocolNumber: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["SvoDeathRequestResponse"];
+                };
+            };
+        };
+    };
+    listMyRequests: {
+        parameters: {
+            query?: {
+                page?: number;
+                size?: number;
+                sort?: string[];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PageSvoDeathRequestResponse"];
+                };
+            };
+        };
+    };
+    getByVehicleId: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                vehicleId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["FuelCardResponse"];
+                };
+            };
+        };
+    };
+    getByCardNumber: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                cardNumber: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["FuelCardResponse"];
                 };
             };
         };

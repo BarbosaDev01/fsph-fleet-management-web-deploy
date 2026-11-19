@@ -1,12 +1,12 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 
-import { AtendimentoSvoPage } from '@/features/atendimento-svo/AtendimentoSvoPage';
+import { AtendimentoSvoDemoPage } from '@/features/atendimento-svo/AtendimentoSvoDemoPage';
 import { transports } from '@/features/atendimento-svo/data/atendimentoSvoMock';
 
 function renderPage() {
   const router = createMemoryRouter(
-    [{ path: '/demonstracoes/atendimento-svo', element: <AtendimentoSvoPage /> }],
+    [{ path: '/demonstracoes/atendimento-svo', element: <AtendimentoSvoDemoPage /> }],
     { initialEntries: ['/demonstracoes/atendimento-svo'] },
   );
   return render(<RouterProvider router={router} />);
@@ -19,7 +19,7 @@ function selectRequest(protocol: string) {
   fireEvent.click(within(queue()).getByText(protocol));
 }
 
-describe('AtendimentoSvoPage', () => {
+describe('AtendimentoSvoDemoPage', () => {
   it('renderiza a fila, detalhes e painéis de operação', () => {
     renderPage();
     expect(screen.getByRole('heading', { name: 'Atendimento SVO' })).toBeInTheDocument();

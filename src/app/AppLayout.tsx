@@ -2,6 +2,7 @@ import { useState } from 'react';
 import AltRouteOutlined from '@mui/icons-material/AltRouteOutlined';
 import AssignmentOutlined from '@mui/icons-material/AssignmentOutlined';
 import BadgeOutlined from '@mui/icons-material/BadgeOutlined';
+import CreditCardOutlined from '@mui/icons-material/CreditCardOutlined';
 import ApartmentOutlined from '@mui/icons-material/ApartmentOutlined';
 import DashboardOutlined from '@mui/icons-material/DashboardOutlined';
 import DirectionsBusOutlined from '@mui/icons-material/DirectionsBusOutlined';
@@ -56,7 +57,8 @@ const navigation: readonly { group: string; items: readonly NavEntry[] }[] = [
     group: 'Operação',
     items: [
       ['/solicitacoes', 'Solicitações de viagem', AssignmentOutlined],
-      ['/atendimento-svo', 'Análise e agendamento', EventNoteOutlined],
+      ['/analise-viagens', 'Análise e agendamento', EventNoteOutlined],
+      ['/atendimento-svo', 'Triagem SVO', EventNoteOutlined],
       ['/transportes', 'Transportes', DirectionsBusOutlined],
       ['/viagens', 'Rotas e viagens', AltRouteOutlined],
     ],
@@ -66,6 +68,7 @@ const navigation: readonly { group: string; items: readonly NavEntry[] }[] = [
     items: [
       ['/veiculos', 'Veículos', DirectionsCarOutlined],
       ['/motoristas', 'Motoristas', BadgeOutlined],
+      ['/cartoes-combustivel', 'Cartões de combustível', CreditCardOutlined],
     ],
   },
   {

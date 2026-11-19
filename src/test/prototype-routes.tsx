@@ -10,7 +10,7 @@ import { UsuariosPage } from '@/features/usuarios/UsuariosPage';
 import { DashboardPage } from '@/features/dashboard/DashboardPage';
 import { SolicitacoesPage } from '@/features/solicitacoes/SolicitacoesPage';
 import { NovaSolicitacaoPage } from '@/features/nova-solicitacao/NovaSolicitacaoPage';
-import { AtendimentoSvoPage } from '@/features/atendimento-svo/AtendimentoSvoPage';
+import { AtendimentoSvoDemoPage } from '@/features/atendimento-svo/AtendimentoSvoDemoPage';
 
 export const prototypeRoutes: RouteObject[] = [
   {
@@ -28,5 +28,5 @@ export const prototypeRoutes: RouteObject[] = [
   { path: '/demonstracoes/dashboard', element: <DashboardPage /> },
   { path: '/demonstracoes/solicitacoes', element: <SolicitacoesPage /> },
   { path: '/demonstracoes/solicitacoes/nova', element: <NovaSolicitacaoPage /> },
-  { path: '/demonstracoes/atendimento-svo', element: <AtendimentoSvoPage /> },
+  { path: '/demonstracoes/atendimento-svo', element: <AtendimentoSvoDemoPage /> },
 ];

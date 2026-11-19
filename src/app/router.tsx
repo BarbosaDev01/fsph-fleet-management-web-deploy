@@ -63,11 +63,52 @@ export const routes: RouteObject[] = [
         }),
       },
       {
-        path: 'atendimento-svo',
+        path: 'analise-viagens',
         lazy: async () => {
           const { RequestsPage } = await import('@/features/requests/RequestsPage');
           return { Component: () => <RequestsPage management /> };
         },
+      },
+      {
+        path: 'atendimento-svo',
+        lazy: async () => ({
+          Component: (await import('@/features/atendimento-svo/AtendimentoSvoPage'))
+            .AtendimentoSvoPage,
+        }),
+      },
+      {
+        path: 'cartoes-combustivel',
+        lazy: async () => ({
+          Component: (await import('@/features/fuel-cards/FuelCardsRoute')).FuelCardsRoute,
+        }),
+        children: [
+          {
+            index: true,
+            lazy: async () => ({
+              Component: (await import('@/features/fuel-cards/FuelCardsPage')).FuelCardsPage,
+            }),
+          },
+          {
+            path: 'novo',
+            lazy: async () => ({
+              Component: (await import('@/features/fuel-cards/FuelCardCreatePage'))
+                .FuelCardCreatePage,
+            }),
+          },
+          {
+            path: ':id/editar',
+            lazy: async () => ({
+              Component: (await import('@/features/fuel-cards/FuelCardEditPage')).FuelCardEditPage,
+            }),
+          },
+          {
+            path: ':id',
+            lazy: async () => ({
+              Component: (await import('@/features/fuel-cards/FuelCardDetailsPage'))
+                .FuelCardDetailsPage,
+            }),
+          },
+        ],
       },
       {
         path: 'setores',
@@ -179,8 +220,8 @@ export const routes: RouteObject[] = [
           {
             path: 'atendimento-svo',
             lazy: async () => ({
-              Component: (await import('@/features/atendimento-svo/AtendimentoSvoPage'))
-                .AtendimentoSvoPage,
+              Component: (await import('@/features/atendimento-svo/AtendimentoSvoDemoPage'))
+                .AtendimentoSvoDemoPage,
             }),
           },
           {

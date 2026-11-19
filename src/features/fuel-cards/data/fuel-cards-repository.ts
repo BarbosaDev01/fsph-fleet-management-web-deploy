@@ -6,6 +6,15 @@ export interface FuelCardFormValues {
   number: string;
   limit: string;
   validity: string;
+  cardholderName?: string;
+  availableBalance?: string;
+  notes?: string;
+}
+export interface FuelCardsQuery {
+  page?: number;
+  search?: string;
+  status?: string;
+  vehicleId?: string;
 }
 export interface FuelCardVehicle {
   id: string;
@@ -16,12 +25,16 @@ export interface FuelCardsSnapshot {
   cards: FuelCard[];
   vehicles: FuelCardVehicle[];
   statusOptions: string[];
+  totalElements?: number;
+  totalPages?: number;
+  page?: number;
 }
 export interface FuelCardsRepository {
   mode: 'demo' | 'api';
   formSchema: ZodType<FuelCardFormValues, FuelCardFormValues>;
   editSchema: ZodType<FuelCardFormValues, FuelCardFormValues>;
-  load: () => Promise<FuelCardsSnapshot>;
+  load: (query?: FuelCardsQuery) => Promise<FuelCardsSnapshot>;
+  findCard?: (id: string) => Promise<FuelCard>;
   createCard: (values: FuelCardFormValues) => Promise<{ id: string }>;
   editCard: (id: string, values: FuelCardFormValues) => Promise<{ id: string }>;
   linkVehicle: (id: string, vehicleId: string) => Promise<void>;

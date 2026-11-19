@@ -1,3 +1,4 @@
+import { useFuelCardsPath } from '@/features/fuel-cards/data/useFuelCardsPath';
 import {
   Box,
   Chip,
@@ -34,6 +35,7 @@ function fields(card: FuelCard) {
 }
 
 export function FuelCardsList({ cards }: { cards: FuelCard[] }) {
+  const basePath = useFuelCardsPath();
   return (
     <>
       <TableContainer
@@ -101,7 +103,7 @@ export function FuelCardsList({ cards }: { cards: FuelCard[] }) {
                     ) : label === 'Cartão' ? (
                       <Link
                         component={RouterLink}
-                        to={`/demonstracoes/cartoes-combustivel/${card.id}`}
+                        to={`${basePath}/${card.id}`}
                         aria-label={`Ver detalhes do cartão ${value}`}
                         sx={{ display: 'inline-flex', alignItems: 'center', minHeight: 44 }}
                       >
@@ -129,7 +131,7 @@ export function FuelCardsList({ cards }: { cards: FuelCard[] }) {
             <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
               <Link
                 component={RouterLink}
-                to={`/demonstracoes/cartoes-combustivel/${card.id}`}
+                to={`${basePath}/${card.id}`}
                 sx={{ display: 'inline-flex', alignItems: 'center', minHeight: 44 }}
               >
                 Cartão {card.card ?? missing}
