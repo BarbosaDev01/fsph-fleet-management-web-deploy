@@ -1,0 +1,92 @@
+{
+  "verifiedAtUtc": "2026-11-20T01:55:20Z",
+  "date": "2026-11-19",
+  "timezone": "America/Fortaleza",
+  "environment": "homologacao existente",
+  "frontend": {
+    "repository": "BarbosaDev01/fsph-fleet-management-web-deploy",
+    "branch": "feat/api-fuel-cards-svo-20261119",
+    "sourceCommit": "24480d3ada6d8f4ceb823b203e5c12ef17cdf1ec",
+    "includedUpdates": [
+      "Integracao existente de cartoes de combustivel e triagem SVO com a API",
+      "Padrao visual institucional existente",
+      "Remocao dos atalhos de prototipos pendentes da navegacao principal e da pagina inicial"
+    ],
+    "projectId": "prj_1rYgCg3ttNkG1cyavfNNqExJ2XrY",
+    "teamId": "team_II16KhaGXDOWMee9ptSCohpL",
+    "deploymentId": "dpl_W6YyL7azKndx6JB6wWWXiB9NFHPc",
+    "previousDeploymentId": "dpl_2cPvVhGxagqP7AFu5ugWKjDbegYV",
+    "target": "production do projeto de homologacao",
+    "status": "READY",
+    "url": "https://fsph-fleet-web-staging.vercel.app",
+    "artifactUrl": "https://fsph-fleet-web-staging-3n0aq1szv-barbosas-projects-5a2b240e.vercel.app",
+    "publicAliasMatchesDeployment": true,
+    "stagedAndPromotedWithoutRebuild": true,
+    "apiOriginVerifiedInPublishedAsset": true,
+    "deploymentProtectionChanged": false,
+    "access": "Existing authenticated Vercel CLI 66.4.0; connected MCP returned a scope authorization error"
+  },
+  "backend": {
+    "repository": "cardosojse/fsph-fleet-management",
+    "branch": "perf/staging-deploy-login-20261111",
+    "sourceCommit": "913ae68452f67379926ce2bffcd6966a4cc4f85a",
+    "workspaceId": "tea-dbkhptm7bikc73a946p0",
+    "serviceId": "srv-dbn0cg0u01pc73fpooqg",
+    "deploymentId": "dep-dbvqbkt9fdbs73bml7ag",
+    "previousDeploymentId": "dep-dbvo9j6c6qcc7393je80",
+    "status": "live",
+    "url": "https://fsph-fleet-api-staging.onrender.com",
+    "latestRemoteBranchCommitMatches": true,
+    "republishedExistingLatestCode": true,
+    "codeChanged": false,
+    "configurationChanged": false,
+    "autoDeploy": false,
+    "buildCacheCleared": false,
+    "healthHttp": 200,
+    "healthStatus": "UP",
+    "openApiPaths": 102,
+    "fuelCardsAndSvoRequestsContractsPresent": true,
+    "postDeployRuntimeErrorCount": 0,
+    "errorScanStartUtc": "2026-11-20T01:47:21Z"
+  },
+  "validation": {
+    "lint": "passed",
+    "typecheckAndBuild": "passed",
+    "changedFilesFormatting": "passed",
+    "unitTestFiles": 34,
+    "unitTests": 228,
+    "localNodeVersion": "22.19.0",
+    "publishedBrowser": {
+      "success": true,
+      "mockedApi": false,
+      "interceptedFrontend": false,
+      "checksPassed": 14,
+      "checks": [
+        "Login",
+        "Home and main navigation without prototype shortcuts",
+        "Authenticated cross-origin API reads",
+        "SVO, fuel-card list and new-card form at widths 390, 768 and 1440",
+        "Session after reload",
+        "Logout and server-side JWT revocation"
+      ],
+      "apiReadHttp": {
+        "/api/v1/fuel-cards": 200,
+        "/api/v1/svo/requests": 200,
+        "/api/v1/vehicles": 200
+      },
+      "pageErrors": [],
+      "unexpectedBusinessWrites": false
+    },
+    "vercelRuntimeErrorCount": 0,
+    "vercelRuntimeErrorWindowUtc": {
+      "start": "2026-11-20T01:50:00.000Z",
+      "end": "2026-11-20T01:55:20.482Z"
+    }
+  },
+  "limitations": [
+    "No backend source changes were required; the current published branch already contained its latest updates.",
+    "Published verification did not create or edit business records. Card detail and edit screens were not exercised because the account had no visible card link in this run."
+  ],
+  "credentialsRecorded": false,
+  "unrelatedServicesChanged": false
+}
