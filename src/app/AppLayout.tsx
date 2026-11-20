@@ -13,7 +13,6 @@ import HomeOutlined from '@mui/icons-material/HomeOutlined';
 import LogoutRounded from '@mui/icons-material/LogoutRounded';
 import MenuRounded from '@mui/icons-material/MenuRounded';
 import PersonOutlineRounded from '@mui/icons-material/PersonOutlineRounded';
-import ScienceOutlined from '@mui/icons-material/ScienceOutlined';
 import VerifiedUserOutlined from '@mui/icons-material/VerifiedUserOutlined';
 import type { SvgIconComponent } from '@mui/icons-material';
 import {
@@ -40,7 +39,6 @@ import { useSession } from '@/features/auth/useSession';
 import { authToken } from '@/shared/api/auth-token';
 import { roleLabels } from '@/shared/api/types';
 import { ApiFeedback, Loading } from '@/shared/components/ApiFeedback';
-import { env } from '@/shared/config/env';
 import { tokens } from '@/app/theme';
 
 type NavEntry = readonly [to: string, label: string, icon: SvgIconComponent];
@@ -80,10 +78,6 @@ const navigation: readonly { group: string; items: readonly NavEntry[] }[] = [
     ],
   },
 ];
-const stagingGroup = {
-  group: 'Homologação',
-  items: [['/demonstracoes', 'Protótipos pendentes', ScienceOutlined]] as const,
-};
 
 function initials(name: string) {
   return name
@@ -206,7 +200,7 @@ export function AppLayout() {
           aria-label="Navegação principal"
           sx={{ px: 1.5, py: 2, overflowY: 'auto', flex: 1 }}
         >
-          {[...navigation, ...(env.isStaging ? [stagingGroup] : [])]
+          {navigation
             .map((section) => ({
               ...section,
               items: section.items.filter(([to]) => canVisit(to)),

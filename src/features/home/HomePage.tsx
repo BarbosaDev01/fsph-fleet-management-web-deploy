@@ -1,7 +1,6 @@
 import { Alert, Button, Chip, Paper, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { PageHeading } from '@/shared/components/PageHeading';
-import { env } from '@/shared/config/env';
 import { useAccess } from '@/features/auth/access';
 import { roleLabels } from '@/shared/api/types';
 import { profileTasks } from './profile-tasks';
@@ -99,44 +98,31 @@ export function HomePage() {
         </Stack>
       </Paper>
       <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 2 }}>
-        {[
-          ...visible,
-          ...(env.isStaging
-            ? [
-                [
-                  '/demonstracoes',
-                  'Protótipos pendentes',
-                  'Consulte as interfaces que ainda dependem de integração.',
-                ],
-              ]
-            : []),
-        ]
-          .filter(([to]) => canVisit(to!))
-          .map(([to, title, description]) => (
-            <Paper
-              key={to}
+        {visible.map(([to, title, description]) => (
+          <Paper
+            key={to}
+            variant="outlined"
+            sx={{ p: 2.5, flex: '1 1 280px', display: 'flex', flexDirection: 'column' }}
+          >
+            <Typography component="h2" variant="h3">
+              {to === '/viagens' && !can('ROUTES_MANAGE') ? 'Minhas viagens' : title}
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 0.75, flex: 1 }}>
+              {to === '/viagens' && !can('ROUTES_MANAGE')
+                ? 'Veja somente as viagens atribuídas a você e o veículo definido para cada saída.'
+                : description}
+            </Typography>
+            <Button
+              component={Link}
+              to={to}
               variant="outlined"
-              sx={{ p: 2.5, flex: '1 1 280px', display: 'flex', flexDirection: 'column' }}
+              size="small"
+              sx={{ alignSelf: 'flex-start', mt: 2 }}
             >
-              <Typography component="h2" variant="h3">
-                {to === '/viagens' && !can('ROUTES_MANAGE') ? 'Minhas viagens' : title}
-              </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 0.75, flex: 1 }}>
-                {to === '/viagens' && !can('ROUTES_MANAGE')
-                  ? 'Veja somente as viagens atribuídas a você e o veículo definido para cada saída.'
-                  : description}
-              </Typography>
-              <Button
-                component={Link}
-                to={to}
-                variant="outlined"
-                size="small"
-                sx={{ alignSelf: 'flex-start', mt: 2 }}
-              >
-                Acessar {title.toLowerCase()}
-              </Button>
-            </Paper>
-          ))}
+              Acessar {title.toLowerCase()}
+            </Button>
+          </Paper>
+        ))}
       </Stack>
     </Stack>
   );
