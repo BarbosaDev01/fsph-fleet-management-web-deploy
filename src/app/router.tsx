@@ -33,6 +33,12 @@ export const routes: RouteObject[] = [
     children: [
       { index: true, element: <HomePage /> },
       {
+        path: 'relatorios',
+        lazy: async () => ({
+          Component: (await import('@/features/reports/ReportsRoute')).ReportsRoute,
+        }),
+      },
+      {
         path: 'conta',
         lazy: async () => ({
           Component: (await import('@/features/auth/AccountPage')).AccountPage,

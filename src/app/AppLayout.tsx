@@ -49,6 +49,7 @@ const navigation: readonly { group: string; items: readonly NavEntry[] }[] = [
     items: [
       ['/', 'Início', HomeOutlined],
       ['/dashboard', 'Painel da frota', DashboardOutlined],
+      ['/relatorios', 'Relatórios', AssignmentOutlined],
     ],
   },
   {

@@ -13,25 +13,35 @@ export const apiClient = createClient<paths>({
   fetch: (request) => globalThis.fetch(request),
 });
 
-apiClient.use({
-  async onRequest({ request }) {
-    const token = authToken.get();
-
-    if (token) {
-      request.headers.set('Authorization', `Bearer ${token}`);
-    }
-
+function authorize(request: Request) {
+  const token = authToken.get();
+  if (token) request.headers.set('Authorization', `Bearer ${token}`);
+  if (!request.headers.has('Accept')) {
     request.headers.set('Accept', 'application/json, application/problem+json');
-    return request;
-  },
-  onResponse({ request, response }) {
-    if (
-      response.status === 401 &&
-      authToken.get() &&
-      request.headers.get('Authorization') === `Bearer ${authToken.get()}` &&
-      !new URL(request.url).pathname.endsWith('/auth/login')
-    ) {
-      authToken.clear();
-    }
-  },
+  }
+  return request;
+}
+
+function handleUnauthorized(request: Request, response: Response) {
+  const token = authToken.get();
+  if (
+    response.status === 401 &&
+    token &&
+    request.headers.get('Authorization') === `Bearer ${token}` &&
+    !new URL(request.url).pathname.endsWith('/auth/login')
+  ) {
+    authToken.clear();
+  }
+}
+
+export async function apiRequest(path: string, init: RequestInit = {}) {
+  const request = authorize(new Request(`${baseUrl}${path}`, { ...init, cache: 'no-store' }));
+  const response = await fetch(request);
+  handleUnauthorized(request, response);
+  return response;
+}
+
+apiClient.use({
+  onRequest: ({ request }) => authorize(request),
+  onResponse: ({ request, response }) => handleUnauthorized(request, response),
 });

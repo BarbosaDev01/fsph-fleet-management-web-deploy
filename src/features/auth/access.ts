@@ -26,6 +26,11 @@ export function useAccess() {
   const canVisit = (path: string) => {
     path = path.split(/[?#]/)[0]!.replace(/\/+$/, '') || '/';
     if (path === '/solicitacoes/nova') return can('TRIP_REQUESTS_WRITE');
+    if (path === '/relatorios')
+      return (
+        (data?.role !== 'MOTORISTA' && can('VEHICLES_READ') && can('TRIPS_READ')) ||
+        canAny(['TRIP_REQUESTS_READ', 'FUELINGS_READ', 'MAINTENANCES_READ'])
+      );
     if (path === '/usuarios/novo') return can('USERS_WRITE');
     if (path === '/motoristas/novo') return can('DRIVERS_READ') && can('DRIVERS_WRITE');
     if (path === '/veiculos/novo') return can('VEHICLES_READ') && can('VEHICLES_WRITE');

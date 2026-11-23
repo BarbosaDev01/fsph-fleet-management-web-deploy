@@ -20,6 +20,7 @@ const modules = [
     'Informe período, origem, destino, finalidade e passageiros.',
   ],
   ['/dashboard', 'Painel da frota', 'Consulte os indicadores disponíveis para sua conta.'],
+  ['/relatorios', 'Relatórios', 'Consulte e exporte os relatórios de frota e do SVO.'],
   [
     '/solicitacoes',
     'Solicitações de viagem',
