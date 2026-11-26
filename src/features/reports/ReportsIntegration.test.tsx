@@ -37,7 +37,7 @@ it.each(['MOTORISTA', 'EMPLOYEE'])(
     );
     expect(await screen.findByText(/Acesso restrito\. Sua conta/)).toBeVisible();
     expect(screen.queryByRole('heading', { name: 'Relatórios', level: 1 })).not.toBeInTheDocument();
-    expect(screen.queryByRole('link', { name: 'Relatórios', exact: true })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Relatórios' })).not.toBeInTheDocument();
   },
 );
 
