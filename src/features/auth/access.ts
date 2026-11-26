@@ -15,6 +15,7 @@ const modulePermissions: Record<string, readonly Permission[]> = {
   '/indicadores-svo': ['SVO_ORDERS_REPORT'],
   '/atendimento-svo': ['SVO_REQUESTS_READ', 'SVO_REQUESTS_WRITE'],
   '/cartoes-combustivel': ['FUEL_CARDS_READ'],
+  '/abastecimentos': ['FUELINGS_READ', 'FUELINGS_WRITE'],
   '/permissoes': ['PERMISSIONS_READ'],
 };
 
@@ -34,6 +35,7 @@ export function useAccess() {
     if (path === '/usuarios/novo') return can('USERS_WRITE');
     if (path === '/motoristas/novo') return can('DRIVERS_READ') && can('DRIVERS_WRITE');
     if (path === '/veiculos/novo') return can('VEHICLES_READ') && can('VEHICLES_WRITE');
+    if (path === '/abastecimentos/novo') return can('FUELINGS_WRITE') && can('FUEL_STATIONS_READ');
     if (path === '/cartoes-combustivel/novo' || /^\/cartoes-combustivel\/[^/]+\/editar$/.test(path))
       return can('FUEL_CARDS_READ') && can('FUEL_CARDS_WRITE');
     const required = modulePermissions[`/${path.split('/')[1]}`];
