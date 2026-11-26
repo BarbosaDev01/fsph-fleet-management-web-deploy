@@ -1,0 +1,132 @@
+{
+  "date": "2026-11-25",
+  "timezone": "America/Fortaleza",
+  "verifiedAtUtc": "2026-11-26T02:19:55.772Z",
+  "environment": "homologacao existente",
+  "frontend": {
+    "repository": "BarbosaDev01/fsph-fleet-management-web-deploy",
+    "branch": "release/staging-frontend-20261125",
+    "sourceCommit": "e7cf9bfe43be99f8b93e05732ac90d36bb27015a",
+    "integratedOfficialCommit": "5236fd3e1e9babcdae50f7c31ca81360447f289b",
+    "deploymentId": "dpl_7cdhq1NVZKJ1zc3ZNEWEq5JESpvy",
+    "previousDeploymentId": "dpl_W6YyL7azKndx6JB6wWWXiB9NFHPc",
+    "url": "https://fsph-fleet-web-staging.vercel.app",
+    "artifactUrl": "https://fsph-fleet-web-staging-jnncmhrxe-barbosas-projects-5a2b240e.vercel.app",
+    "status": "READY",
+    "stagedAndPromotedWithoutRebuild": true,
+    "publicHttp": 200,
+    "publicAsset": "/assets/index-DoTl8m9h.js",
+    "publicAliasMatchesArtifact": true,
+    "nodeVersion": "24.22.3",
+    "deploymentProtectionChanged": false
+  },
+  "backend": {
+    "repository": "cardosojse/fsph-fleet-management",
+    "sourceBranch": "perf/staging-deploy-login-20261111",
+    "releaseBranch": "integracao-staging-backend-20261125",
+    "sourceCommit": "76781d87c4d0ae589f11ed6517e9a85c80ecda9e",
+    "integratedOfficialCommit": "6fa7f34f2822417989631877aad38384bcbba3a0",
+    "serviceId": "srv-dbn0cg0u01pc73fpooqg",
+    "workspaceId": "tea-dbkhptm7bikc73a946p0",
+    "deploymentId": "dep-dc3pa6lg1s2s73cajal0",
+    "previousDeploymentId": "dep-dbvqbkt9fdbs73bml7ag",
+    "status": "live",
+    "finishedAtUtc": "2026-11-26T02:15:10.118812Z",
+    "url": "https://fsph-fleet-api-staging.onrender.com",
+    "migration": "V30__svo_collection_tracking.sql",
+    "historicalMigrationsChanged": false,
+    "healthStatus": "UP",
+    "openApiPaths": 123,
+    "sourceSettingsChanged": false,
+    "autoDeploy": false
+  },
+  "validation": {
+    "backendTests": {
+      "tests": 312,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "database": "PostgreSQL 18 isolated",
+      "java": "21"
+    },
+    "frontendTests": {
+      "files": 39,
+      "tests": 286,
+      "failures": 0,
+      "execution": "isolated per file, corrected files rerun"
+    },
+    "typecheck": "passed",
+    "lint": "passed",
+    "formatting": "passed",
+    "finalNode24Build": "passed",
+    "localRealApiBrowserScenarios": 2,
+    "publishedRealApiBrowserScenarios": 1,
+    "publishedScenarioSeconds": 43.5,
+    "publishedBrowser": {
+      "api": "https://fsph-fleet-api-staging.onrender.com",
+      "checks": {
+        "/api/v1/reports/svo/availability": 200,
+        "/api/v1/reports/svo/availability/pdf": 200,
+        "/api/v1/reports/svo/availability/excel": 200,
+        "/api/v1/reports/svo/fleet-status": 200,
+        "/api/v1/reports/svo/fleet-status/pdf": 200,
+        "/api/v1/reports/svo/fleet-status/excel": 200,
+        "/api/v1/reports/svo/triage": 200,
+        "/api/v1/reports/svo/triage/pdf": 200,
+        "/api/v1/reports/svo/triage/excel": 200,
+        "/api/v1/reports/svo/daily-requests": 200,
+        "/api/v1/reports/svo/daily-requests/pdf": 200,
+        "/api/v1/reports/svo/daily-requests/excel": 200,
+        "/api/v1/reports/svo/ongoing-trips": 200,
+        "/api/v1/reports/svo/ongoing-trips/pdf": 200,
+        "/api/v1/reports/svo/ongoing-trips/excel": 200,
+        "/api/v1/reports/svo/vehicle-consumption": 200,
+        "/api/v1/reports/svo/vehicle-consumption/pdf": 200,
+        "/api/v1/reports/svo/vehicle-consumption/excel": 200,
+        "/api/v1/reports/svo/recent-fuelings": 200,
+        "/api/v1/reports/svo/recent-fuelings/pdf": 200,
+        "/api/v1/reports/svo/recent-fuelings/excel": 200,
+        "/api/v1/reports/svo/maintenance-alerts": 200,
+        "/api/v1/reports/svo/maintenance-alerts/pdf": 200,
+        "/api/v1/reports/svo/maintenance-alerts/excel": 200,
+        "/api/v1/reports/svo/general": 200,
+        "/api/v1/reports/svo/general/pdf": 200,
+        "/api/v1/reports/svo/general/excel": 200,
+        "/api/v1/reports/fuelings": 200
+      },
+      "unauthenticated": 401,
+      "revoked": 401,
+      "widths": [390, 768, 1440],
+      "printChromeHidden": true,
+      "uiDownloads": ["pdf", "excel"],
+      "pageErrors": []
+    },
+    "postDeployRuntimeErrorCounts": {
+      "render": 0,
+      "vercel": 0
+    },
+    "errorScanWindowUtc": {
+      "render": ["2026-11-26T02:15:10Z", "2026-11-26T02:17:12Z"],
+      "vercel": ["2026-11-26T02:16:00Z", "2026-11-26T02:17:11Z"]
+    }
+  },
+  "preservation": {
+    "frontend": {
+      "checked": 12,
+      "preserved": true
+    },
+    "backend": {
+      "checked": 17,
+      "preserved": true
+    },
+    "trackedPatchesUnchanged": true
+  },
+  "officialMainChanged": false,
+  "credentialsRecorded": false,
+  "businessRecordsWrittenInPublishedVerification": false,
+  "limitations": [
+    "Automatic 19-package dependency update excluded; existing validated lockfile retained.",
+    "Existing bundle size warning remains.",
+    "API rollback must support V30 permission enum values; do not blindly promote the previous API."
+  ]
+}
