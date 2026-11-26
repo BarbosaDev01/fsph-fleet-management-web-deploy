@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { readResponse } from '@/features/auth/api';
-import { apiRequest } from '@/shared/api/client';
+import { result } from '@/shared/api/result';
+import { apiClient } from '@/shared/api/client';
 import { useSession } from '@/features/auth/useSession';
 import { Stack, TextField, Typography } from '@mui/material';
 
@@ -35,8 +35,7 @@ export function ReportFilters({
   const ongoing = indicator === 'ongoing-trips' || isSvoGeneral(value);
   const sectors = useQuery({
     queryKey: ['reports', 'sectors', user?.id, user?.sectorId],
-    queryFn: async ({ signal }) =>
-      readResponse<{ id: string; name: string }[]>(await apiRequest('/api/v1/sectors', { signal })),
+    queryFn: ({ signal }) => result(apiClient.GET('/api/v1/sectors', { signal })),
     enabled: ongoing && Boolean(user?.permissions.includes('SECTORS_READ')),
   });
   return (

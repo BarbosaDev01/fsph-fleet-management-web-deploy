@@ -10,6 +10,37 @@ import { fuelingFixture } from './test-fixtures';
 vi.setConfig({ testTimeout: 20000 });
 
 const fetchMock = vi.fn();
+
+it.each(['MOTORISTA', 'EMPLOYEE'])(
+  'bloqueia acesso direto de %s sem autoridades de relatório',
+  async (role) => {
+    queryClient.clear();
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () =>
+        Response.json({
+          id: `restricted-${role}`,
+          name: 'Conta restrita',
+          email: 'restricted@example.test',
+          role,
+          permissions: role === 'MOTORISTA' ? ['VEHICLES_READ', 'TRIPS_READ'] : [],
+          sectorId: null,
+        }),
+      ),
+    );
+    authToken.set(`restricted-${role}`);
+    const router = createMemoryRouter(routes, { initialEntries: ['/relatorios'] });
+    render(
+      <AppProviders>
+        <RouterProvider router={router} />
+      </AppProviders>,
+    );
+    expect(await screen.findByText(/Acesso restrito\. Sua conta/)).toBeVisible();
+    expect(screen.queryByRole('heading', { name: 'Relatórios', level: 1 })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Relatórios', exact: true })).not.toBeInTheDocument();
+  },
+);
+
 beforeEach(() => {
   fetchMock.mockReset();
   vi.stubGlobal('fetch', (request: Request) => {

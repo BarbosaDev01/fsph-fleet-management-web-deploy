@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 const webPort = Number(process.env.FSPH_SVO_WEB_PORT ?? 9194);
 export default defineConfig({
   testDir: '.',
-  testMatch: 'svo-orders-local.spec.ts',
+  testMatch: ['svo-orders-local.spec.ts', 'reports-real.spec.ts'],
   workers: 1,
   retries: 0,
   reporter: [

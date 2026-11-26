@@ -90,7 +90,9 @@ it.each([
   expect(request.url).toContain(`/fuelings/${format}?`);
   expect(request.headers.get('Authorization')).toBe('Bearer test-token');
   expect(request.headers.get('Accept')).toContain(mime);
-  expect(create.mock.calls[0]![0]).toBeInstanceOf(Blob);
+  const downloaded = create.mock.calls[0]![0];
+  expect(downloaded.type).toBe(mime);
+  expect(await downloaded.text()).toBe('file-bytes');
   expect(click).toHaveBeenCalledOnce();
   expect(document.querySelector('a[download]')).toBeNull();
   await vi.runAllTimersAsync();

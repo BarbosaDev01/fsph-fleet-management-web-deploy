@@ -149,9 +149,10 @@ export function AppLayout() {
     }
   };
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', minWidth: 0 }}>
+    <Box className="app-layout" sx={{ display: 'flex', minHeight: '100vh', minWidth: 0 }}>
       <Box
         component="a"
+        className="app-layout-chrome"
         href="#app-content"
         sx={{
           position: 'fixed',
@@ -167,6 +168,7 @@ export function AppLayout() {
         Ir para o conteúdo principal
       </Box>
       <Drawer
+        className="app-layout-chrome"
         variant={desktop ? 'permanent' : 'temporary'}
         open={desktop || menuOpen}
         onClose={() => setMenuOpen(false)}
@@ -272,6 +274,7 @@ export function AppLayout() {
       </Drawer>
       <Box sx={{ flex: 1, minWidth: 0 }}>
         <AppBar
+          className="app-layout-chrome"
           position="sticky"
           color="default"
           elevation={0}
