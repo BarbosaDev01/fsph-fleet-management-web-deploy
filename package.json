@@ -23,7 +23,8 @@
     "test:e2e:profiles": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/test-profiles-local.ps1",
     "test:e2e:staging": "node scripts/test-staging.mjs",
     "api:generate": "node scripts/generate-api.mjs",
-    "api:snapshot": "node scripts/snapshot-api.mjs"
+    "api:snapshot": "node scripts/snapshot-api.mjs",
+    "test:e2e:svo": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/test-svo-local.ps1"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",

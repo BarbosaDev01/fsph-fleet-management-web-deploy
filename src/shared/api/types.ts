@@ -44,6 +44,11 @@ export const permissions: Permission[] = [
   'NOTIFICATIONS_READ',
   'FUEL_CARDS_READ',
   'FUEL_CARDS_WRITE',
+  'SVO_ORDERS_READ',
+  'SVO_ORDERS_MANAGE',
+  'SVO_ORDERS_EXECUTE',
+  'SVO_ORDERS_NOTES',
+  'SVO_ORDERS_REPORT',
   'SVO_REQUESTS_READ',
   'SVO_REQUESTS_WRITE',
   'SVO_REQUESTS_MANAGE',
@@ -63,6 +68,12 @@ export const roleLabels: Record<UserRole, string> = {
   EQUIPE_COLETA_SVO: 'Equipe de coleta SVO',
 };
 export const permissionLabels: Record<Permission, string> = {
+  SVO_ORDERS_READ: 'Consultar coletas SVO',
+  SVO_ORDERS_MANAGE: 'Atribuir e gerenciar coletas SVO',
+  SVO_ORDERS_EXECUTE: 'Executar coletas atribuídas',
+  SVO_ORDERS_NOTES: 'Registrar providências SVO',
+  SVO_ORDERS_REPORT: 'Consultar indicadores SVO',
+
   USERS_READ: 'Consultar usuários',
   USERS_WRITE: 'Gerenciar usuários',
   SECTORS_READ: 'Consultar setores',

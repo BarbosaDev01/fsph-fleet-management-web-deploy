@@ -6,6 +6,12 @@ import { roleLabels } from '@/shared/api/types';
 import { profileTasks } from './profile-tasks';
 
 const modules = [
+  ['/coletas-svo', 'Coletas SVO', 'Acompanhe etapas, prazos e providências das ordens de coleta.'],
+  [
+    '/indicadores-svo',
+    'Indicadores SVO',
+    'Consulte os tempos reais de solicitação, coleta e entrega.',
+  ],
   ['/usuarios/novo', 'Novo usuário', 'Cadastre nome, e-mail, senha, setor e perfil de acesso.'],
   ['/permissoes', 'Permissões', 'Confira as ações concedidas a cada perfil.'],
   [
@@ -59,7 +65,9 @@ export function HomePage() {
   const svoWithoutActivities =
     ['ATENDENTE_SVO', 'GESTOR_SVO', 'EQUIPE_COLETA_SVO'].includes(user.role) &&
     !visible.some(([to]) =>
-      ['/solicitacoes', '/transportes', '/viagens', '/atendimento-svo'].includes(to),
+      ['/solicitacoes', '/transportes', '/viagens', '/atendimento-svo', '/coletas-svo'].includes(
+        to,
+      ),
     );
   return (
     <Stack spacing={3}>

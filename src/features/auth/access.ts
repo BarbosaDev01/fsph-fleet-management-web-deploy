@@ -11,6 +11,8 @@ const modulePermissions: Record<string, readonly Permission[]> = {
   '/viagens': ['ROUTES_READ', 'ROUTES_MANAGE'],
   '/solicitacoes': ['TRIP_REQUESTS_READ', 'TRIP_REQUESTS_WRITE'],
   '/analise-viagens': ['TRIP_REQUESTS_READ'],
+  '/coletas-svo': ['SVO_ORDERS_READ'],
+  '/indicadores-svo': ['SVO_ORDERS_REPORT'],
   '/atendimento-svo': ['SVO_REQUESTS_READ', 'SVO_REQUESTS_WRITE'],
   '/cartoes-combustivel': ['FUEL_CARDS_READ'],
   '/permissoes': ['PERMISSIONS_READ'],

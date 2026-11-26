@@ -52,6 +52,8 @@ O extrator offline suporta os padrões atuais de records e controllers; não sub
 
 ## Telas integradas
 
+O acompanhamento de coletas do SVO está disponível em `/coletas-svo` e `/indicadores-svo`. Consulte [o fluxo, as branches, as validações e o roteiro pelos três perfis](docs/coletas-svo.md).
+
 - `/login`: autenticação JWT; `/conta`: usuário atual e alteração da própria senha;
 - `/setores`: listagem, criação, edição e exclusão;
 - `/usuarios`: cadastro, edição, senha, desativação e reativação;

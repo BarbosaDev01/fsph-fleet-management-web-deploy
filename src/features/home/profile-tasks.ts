@@ -21,6 +21,8 @@ export const profileTasks: Record<
     description:
       'Analise as solicitações, confira a disponibilidade e defina o veículo e o condutor de cada viagem.',
     priorities: [
+      '/indicadores-svo',
+      '/coletas-svo',
       '/analise-viagens',
       '/viagens',
       '/veiculos',
@@ -32,21 +34,28 @@ export const profileTasks: Record<
     title: 'Suas viagens atribuídas',
     description:
       'Confira o veículo e as paradas de cada viagem atribuída a você. O veículo é definido por viagem; não há veículo fixo.',
-    priorities: ['/viagens'],
+    priorities: ['/coletas-svo', '/viagens'],
   },
   ATENDENTE_SVO: {
     title: 'Atendimento SVO',
     description: 'Consulte abaixo as atividades habilitadas para sua conta de atendimento.',
-    priorities: ['/atendimento-svo', '/transportes', '/solicitacoes', '/setores'],
+    priorities: ['/atendimento-svo', '/coletas-svo', '/transportes', '/solicitacoes', '/setores'],
   },
   GESTOR_SVO: {
     title: 'Gestão SVO',
     description: 'Consulte abaixo as atividades habilitadas para sua conta de gestão do SVO.',
-    priorities: ['/atendimento-svo', '/transportes', '/viagens', '/setores'],
+    priorities: [
+      '/indicadores-svo',
+      '/coletas-svo',
+      '/atendimento-svo',
+      '/transportes',
+      '/viagens',
+      '/setores',
+    ],
   },
   EQUIPE_COLETA_SVO: {
     title: 'Equipe de coleta SVO',
     description: 'Consulte abaixo as atividades habilitadas para sua conta da equipe de coleta.',
-    priorities: ['/viagens', '/transportes', '/setores'],
+    priorities: ['/coletas-svo', '/viagens', '/transportes', '/setores'],
   },
 };

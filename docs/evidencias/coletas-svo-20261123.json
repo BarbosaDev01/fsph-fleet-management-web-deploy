@@ -1,0 +1,80 @@
+{
+  "date": "2026-11-23",
+  "frontendBranch": "feat/api-fuel-cards-svo-20261119",
+  "backendBranch": "release/staging-backend-20261119",
+  "backendTests": {
+    "tests": 257,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "frontendTests": {
+    "files": 35,
+    "tests": 234,
+    "failures": 0,
+    "execution": "isolated processes per test file"
+  },
+  "checks": {
+    "frontendTypecheck": "passed",
+    "frontendLint": "passed",
+    "frontendFormat": "passed",
+    "frontendBuild": "passed",
+    "backendPackage": "passed",
+    "playwright": "passed",
+    "mobileWidth": 390,
+    "javascriptErrors": [],
+    "nodeVersion": "22.19.0 (project declares 24.x)",
+    "javaVersion": "21",
+    "postgresVersion": "18.4"
+  },
+  "order": {
+    "id": "e25f8d64-48df-4372-8c29-973c2b234d92",
+    "requestId": "42fbe358-27cd-4827-9de0-e3b804ccd8d5",
+    "protocolNumber": "SVO-20261123-0005",
+    "status": "DELIVERED",
+    "requestedAt": "2026-11-23T18:22:57.962393Z",
+    "collectedAt": "2026-11-23T18:23:14.499152Z",
+    "deliveredAt": "2026-11-23T18:23:18.217279Z",
+    "requestToCollectionMinutes": 0.2756,
+    "collectionToDeliveryMinutes": 0.06196666666666667,
+    "requestToDeliveryMinutes": 0.3375666666666667,
+    "deadlineStatus": "UNDEFINED"
+  },
+  "events": [
+    {
+      "type": "CREATED",
+      "authorName": "Teste ATENDENTE_SVO",
+      "occurredAt": "2026-11-23T18:23:06.028966Z"
+    },
+    {
+      "type": "ASSIGNED",
+      "authorName": "Teste GESTOR_FROTA",
+      "occurredAt": "2026-11-23T18:23:12.113733Z"
+    },
+    {
+      "type": "STATUS_CHANGED",
+      "authorName": "Teste EQUIPE_COLETA_SVO",
+      "occurredAt": "2026-11-23T18:23:14.193973Z"
+    },
+    {
+      "type": "STATUS_CHANGED",
+      "authorName": "Teste EQUIPE_COLETA_SVO",
+      "occurredAt": "2026-11-23T18:23:14.504166Z"
+    },
+    {
+      "type": "NOTE",
+      "authorName": "Teste ATENDENTE_SVO",
+      "occurredAt": "2026-11-23T18:23:16.624240Z"
+    },
+    {
+      "type": "STATUS_CHANGED",
+      "authorName": "Teste EQUIPE_COLETA_SVO",
+      "occurredAt": "2026-11-23T18:23:18.222270Z"
+    }
+  ],
+  "checksHttp": {
+    "unassignedOperator": 403,
+    "invalidTransition": 409,
+    "repeatedDelivery": 409
+  }
+}

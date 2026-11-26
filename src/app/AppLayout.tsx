@@ -57,6 +57,8 @@ const navigation: readonly { group: string; items: readonly NavEntry[] }[] = [
       ['/solicitacoes', 'Solicitações de viagem', AssignmentOutlined],
       ['/analise-viagens', 'Análise e agendamento', EventNoteOutlined],
       ['/atendimento-svo', 'Triagem SVO', EventNoteOutlined],
+      ['/coletas-svo', 'Coletas SVO', DirectionsBusOutlined],
+      ['/indicadores-svo', 'Indicadores SVO', DashboardOutlined],
       ['/transportes', 'Transportes', DirectionsBusOutlined],
       ['/viagens', 'Rotas e viagens', AltRouteOutlined],
     ],

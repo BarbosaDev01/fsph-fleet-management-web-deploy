@@ -169,7 +169,9 @@ export function AtendimentoSvoPage() {
   const [status, setStatus] = useState<SvoStatus | ''>('PENDING_TRIAGE');
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState('');
-  const [selectedId, setSelectedId] = useState<string>();
+  const [selectedId, setSelectedId] = useState<string | undefined>(
+    () => new URLSearchParams(window.location.search).get('requestId') ?? undefined,
+  );
   const [dialog, setDialog] = useState<'approve' | 'reject' | null>(null);
   const [reason, setReason] = useState('');
   const [busy, setBusy] = useState(false);
@@ -454,6 +456,18 @@ export function AtendimentoSvoPage() {
             request && (
               <>
                 <Details request={request} />
+                {can('SVO_ORDERS_READ') &&
+                  ['TRIAGED', 'ORDER_GENERATED'].includes(request.status) && (
+                    <Button
+                      href={`/coletas-svo?requestId=${request.id}`}
+                      variant="outlined"
+                      sx={{ alignSelf: 'flex-start' }}
+                    >
+                      {request.status === 'TRIAGED'
+                        ? 'Gerar ou abrir coleta'
+                        : 'Acompanhar ordem de coleta'}
+                    </Button>
+                  )}
                 <Paper
                   component="section"
                   variant="outlined"

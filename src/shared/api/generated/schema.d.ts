@@ -916,6 +916,134 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/svo/orders/{id}/assignment": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["assign"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/svo/requests/{id}/order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["generate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/svo/orders/{id}/notes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["note"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/svo/orders/{id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["transition"];
+        trace?: never;
+    };
+    "/api/v1/svo/orders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["list_12"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/svo/orders/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["find_8"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/svo/orders/{id}/resources": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["resources"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/svo/orders/report": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["report"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -923,7 +1051,7 @@ export interface components {
         /** @enum {string} */
         DriverStatus: "AVAIBLE" | "IN_ROUTE" | "UNAVAIBLE";
         /** @enum {string} */
-        Permission: "USERS_READ" | "USERS_WRITE" | "SECTORS_READ" | "SECTORS_WRITE" | "PERMISSIONS_READ" | "PERMISSIONS_WRITE" | "VEHICLES_READ" | "VEHICLES_WRITE" | "VEHICLES_ASSIGNED_READ" | "TRIPS_WRITE" | "TRIPS_READ" | "DRIVERS_READ" | "DRIVERS_WRITE" | "MAINTENANCES_READ" | "MAINTENANCES_WRITE" | "FUEL_STATIONS_READ" | "FUEL_STATIONS_WRITE" | "FUELINGS_READ" | "FUELINGS_WRITE" | "TRIP_REQUESTS_READ" | "TRIP_REQUESTS_WRITE" | "TRIP_REQUESTS_MANAGE" | "NOTIFICATIONS_READ" | "TRANSPORTS_READ" | "TRANSPORTS_REQUEST" | "TRANSPORTS_MANAGE" | "ROUTES_READ" | "ROUTES_MANAGE" | "ROUTES_EXECUTE" | "SVO_TEAMS_READ" | "SVO_TEAMS_WRITE" | "SVO_SHIFTS_READ" | "SVO_SHIFTS_WRITE" | "AUDIT_LOGS_READ" | "FUEL_CARDS_READ" | "FUEL_CARDS_WRITE" | "SVO_REQUESTS_READ" | "SVO_REQUESTS_WRITE" | "SVO_REQUESTS_MANAGE";
+        Permission: "USERS_READ" | "USERS_WRITE" | "SECTORS_READ" | "SECTORS_WRITE" | "PERMISSIONS_READ" | "PERMISSIONS_WRITE" | "VEHICLES_READ" | "VEHICLES_WRITE" | "VEHICLES_ASSIGNED_READ" | "TRIPS_WRITE" | "TRIPS_READ" | "DRIVERS_READ" | "DRIVERS_WRITE" | "MAINTENANCES_READ" | "MAINTENANCES_WRITE" | "FUEL_STATIONS_READ" | "FUEL_STATIONS_WRITE" | "FUELINGS_READ" | "FUELINGS_WRITE" | "TRIP_REQUESTS_READ" | "TRIP_REQUESTS_WRITE" | "TRIP_REQUESTS_MANAGE" | "NOTIFICATIONS_READ" | "TRANSPORTS_READ" | "TRANSPORTS_REQUEST" | "TRANSPORTS_MANAGE" | "ROUTES_READ" | "ROUTES_MANAGE" | "ROUTES_EXECUTE" | "SVO_TEAMS_READ" | "SVO_TEAMS_WRITE" | "SVO_SHIFTS_READ" | "SVO_SHIFTS_WRITE" | "AUDIT_LOGS_READ" | "FUEL_CARDS_READ" | "FUEL_CARDS_WRITE" | "SVO_REQUESTS_READ" | "SVO_REQUESTS_WRITE" | "SVO_REQUESTS_MANAGE" | "SVO_ORDERS_READ" | "SVO_ORDERS_MANAGE" | "SVO_ORDERS_EXECUTE" | "SVO_ORDERS_NOTES" | "SVO_ORDERS_REPORT";
         /** @enum {string} */
         RecordStatus: "ACTIVE" | "REPLACED";
         /** @enum {string} */
@@ -1616,6 +1744,120 @@ export interface components {
         UpdateFuelCardStatusRequest: {
             /** @enum {string} */
             status: "ACTIVE" | "INACTIVE" | "BLOCKED" | "CANCELED";
+        };
+        AssignSvoOrderRequest: {
+            /** Format: int64 */
+            expectedVersion: number;
+            /** Format: uuid */
+            driverId: string;
+            /** Format: uuid */
+            vehicleId: string;
+            /** Format: uuid */
+            teamId?: string;
+            /** Format: date-time */
+            scheduledAt: string;
+            /** Format: date-time */
+            plannedReturnAt: string;
+            /** Format: date-time */
+            collectionDeadlineAt?: string;
+        };
+        SvoOrderResponse: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            requestId: string;
+            protocolNumber: string;
+            /** Format: uuid */
+            sectorId: string;
+            sectorName: string;
+            address: string;
+            city: string;
+            deceasedName: string | null;
+            driverId: string | null;
+            driverName: string | null;
+            teamId: string | null;
+            teamName: string | null;
+            vehicleId: string | null;
+            vehiclePlate: string | null;
+            /** @enum {string} */
+            status: "WAITING_ASSIGNMENT" | "ASSIGNED" | "IN_PROGRESS" | "COLLECTED" | "DELIVERED" | "CANCELED";
+            /** Format: int64 */
+            version: number;
+            /** Format: date-time */
+            requestedAt: string;
+            scheduledAt: string | null;
+            plannedReturnAt: string | null;
+            collectionDeadlineAt: string | null;
+            startedAt: string | null;
+            collectedAt: string | null;
+            deliveredAt: string | null;
+            deadlineStatus: string;
+            requestToCollectionMinutes: number | null;
+            collectionToDeliveryMinutes: number | null;
+            requestToDeliveryMinutes: number | null;
+            allowedTransitions: ("WAITING_ASSIGNMENT" | "ASSIGNED" | "IN_PROGRESS" | "COLLECTED" | "DELIVERED" | "CANCELED")[];
+            events: components["schemas"]["SvoOrderEventResponse"][];
+        };
+        SvoOrderEventResponse: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            authorId: string;
+            authorName: string;
+            type: string;
+            text: string | null;
+            fromStatus: ("WAITING_ASSIGNMENT" | "ASSIGNED" | "IN_PROGRESS" | "COLLECTED" | "DELIVERED" | "CANCELED") | null;
+            /** @enum {string} */
+            toStatus: "WAITING_ASSIGNMENT" | "ASSIGNED" | "IN_PROGRESS" | "COLLECTED" | "DELIVERED" | "CANCELED";
+            /** Format: date-time */
+            occurredAt: string;
+            /** Format: int64 */
+            orderVersion: number;
+        };
+        AddSvoOrderNoteRequest: {
+            /** Format: int64 */
+            expectedVersion: number;
+            text: string;
+        };
+        TransitionSvoOrderRequest: {
+            /** Format: int64 */
+            expectedVersion: number;
+            /** @enum {string} */
+            status: "WAITING_ASSIGNMENT" | "ASSIGNED" | "IN_PROGRESS" | "COLLECTED" | "DELIVERED" | "CANCELED";
+            observation?: string;
+        };
+        PageResponseSvoOrderResponse: {
+            content: components["schemas"]["SvoOrderResponse"][];
+            /** Format: int32 */
+            page: number;
+            /** Format: int32 */
+            size: number;
+            /** Format: int64 */
+            totalElements: number;
+            /** Format: int32 */
+            totalPages: number;
+        };
+        SvoOrderResourcesResponse: {
+            drivers: components["schemas"]["Option"][];
+            vehicles: components["schemas"]["Option"][];
+            teams: components["schemas"]["Option"][];
+        };
+        Option: {
+            /** Format: uuid */
+            id: string;
+            label: string;
+        };
+        SvoOrderReportResponse: {
+            /** Format: int64 */
+            totalOrders: number;
+            /** Format: int64 */
+            collectionCount: number;
+            /** Format: int64 */
+            deliveryCount: number;
+            averageRequestToCollectionMinutes: number | null;
+            averageCollectionToDeliveryMinutes: number | null;
+            averageRequestToDeliveryMinutes: number | null;
+            orders: components["schemas"]["SvoOrderResponse"][];
         };
     };
     responses: never;
@@ -4080,6 +4322,205 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["FuelCardResponse"];
+                };
+            };
+        };
+    };
+    assign: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AssignSvoOrderRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["SvoOrderResponse"];
+                };
+            };
+        };
+    };
+    generate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["SvoOrderResponse"];
+                };
+            };
+        };
+    };
+    note: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddSvoOrderNoteRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["SvoOrderResponse"];
+                };
+            };
+        };
+    };
+    transition: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TransitionSvoOrderRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["SvoOrderResponse"];
+                };
+            };
+        };
+    };
+    list_12: {
+        parameters: {
+            query?: {
+                status?: "WAITING_ASSIGNMENT" | "ASSIGNED" | "IN_PROGRESS" | "COLLECTED" | "DELIVERED" | "CANCELED";
+                search?: string;
+                from?: string;
+                to?: string;
+                teamId?: string;
+                vehicleId?: string;
+                requestId?: string;
+                page?: number;
+                size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PageResponseSvoOrderResponse"];
+                };
+            };
+        };
+    };
+    find_8: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["SvoOrderResponse"];
+                };
+            };
+        };
+    };
+    resources: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["SvoOrderResourcesResponse"];
+                };
+            };
+        };
+    };
+    report: {
+        parameters: {
+            query?: {
+                from?: string;
+                to?: string;
+                teamId?: string;
+                vehicleId?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["SvoOrderReportResponse"];
                 };
             };
         };

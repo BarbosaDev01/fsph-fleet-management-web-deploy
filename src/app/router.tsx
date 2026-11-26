@@ -70,6 +70,24 @@ export const routes: RouteObject[] = [
         },
       },
       {
+        path: 'coletas-svo',
+        lazy: async () => ({
+          Component: (await import('@/features/svo-orders/SvoOrdersPage')).SvoOrdersPage,
+        }),
+      },
+      {
+        path: 'coletas-svo/:id',
+        lazy: async () => ({
+          Component: (await import('@/features/svo-orders/SvoOrderDetailPage')).SvoOrderDetailPage,
+        }),
+      },
+      {
+        path: 'indicadores-svo',
+        lazy: async () => ({
+          Component: (await import('@/features/svo-orders/SvoOrderReportPage')).SvoOrderReportPage,
+        }),
+      },
+      {
         path: 'atendimento-svo',
         lazy: async () => ({
           Component: (await import('@/features/atendimento-svo/AtendimentoSvoPage'))
