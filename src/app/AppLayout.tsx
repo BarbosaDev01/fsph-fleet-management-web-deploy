@@ -10,6 +10,7 @@ import DirectionsCarOutlined from '@mui/icons-material/DirectionsCarOutlined';
 import EventNoteOutlined from '@mui/icons-material/EventNoteOutlined';
 import GroupOutlined from '@mui/icons-material/GroupOutlined';
 import HomeOutlined from '@mui/icons-material/HomeOutlined';
+import LocalGasStationOutlined from '@mui/icons-material/LocalGasStationOutlined';
 import LogoutRounded from '@mui/icons-material/LogoutRounded';
 import MenuRounded from '@mui/icons-material/MenuRounded';
 import PersonOutlineRounded from '@mui/icons-material/PersonOutlineRounded';
@@ -70,6 +71,7 @@ const navigation: readonly { group: string; items: readonly NavEntry[] }[] = [
       ['/veiculos', 'Veículos', DirectionsCarOutlined],
       ['/motoristas', 'Motoristas', BadgeOutlined],
       ['/cartoes-combustivel', 'Cartões de combustível', CreditCardOutlined],
+      ['/abastecimentos', 'Abastecimentos', LocalGasStationOutlined],
     ],
   },
   {
